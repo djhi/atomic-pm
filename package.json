@@ -1,0 +1,47 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx ./src",
+    "format": "prettier --write ./src"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.2",
+    "@mui/material": "^6.4.2",
+    "react": "^19.0.0",
+    "react-admin": "^5.5.2",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.4",
+    "react-router-dom": "^7.1.4",
+    "ra-data-simple-rest": "^5.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "fakerest": "^4.1.1",
+    "msw": "^2.7.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.11"
+  },
+  "name": "atomic-pm",
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}
