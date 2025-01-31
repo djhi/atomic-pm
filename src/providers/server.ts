@@ -9,13 +9,17 @@ const handler = getMswHandler({
   data: {
     users,
     boards: [
-      { id: 1, user_id: 1, name: "React-admin" },
-      { id: 2, user_id: 2, name: "Atomic PM" },
+      {
+        id: 1,
+        user_id: 1,
+        name: "React-admin",
+        description: "Some very very very very very very looooong description",
+      },
+      { id: 2, user_id: 1, name: "Atomic PM", description: "Some description" },
     ],
     board_members: [
       { id: 1, board_id: 1, user_id: 1 },
-      { id: 2, board_id: 2, user_id: 1 },
-      { id: 3, board_id: 2, user_id: 2 },
+      { id: 2, board_id: 1, user_id: 2 },
     ],
     columns: [
       {
@@ -24,18 +28,37 @@ const handler = getMswHandler({
         name: "Backlog",
         created_by: 1,
         created_at: new Date().toISOString(),
+        position: 0,
+      },
+      {
+        id: 2,
+        board_id: 1,
+        name: "In development",
+        created_by: 1,
+        created_at: new Date().toISOString(),
+        position: 1,
       },
     ],
     cards: [
-        {
-            id: 1,
-            column_id: 1,
-            title: "Task 1",
-            description: "Do something",
-            created_by: 1,
-            created_at: new Date().toISOString(),
-        }
-    ]
+      {
+        id: 1,
+        column_id: 1,
+        title: "Task 1",
+        description: "Do something",
+        created_by: 1,
+        created_at: new Date().toISOString(),
+        position: 0,
+      },
+      {
+        id: 2,
+        column_id: 1,
+        title: "Task 2",
+        description: "Do something",
+        created_by: 2,
+        created_at: new Date().toISOString(),
+        position: 1,
+      },
+    ],
   },
 });
 
