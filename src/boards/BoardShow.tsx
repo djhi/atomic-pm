@@ -15,9 +15,7 @@ import { RichTextInput } from "ra-input-rich-text";
 import {
   DeleteButton,
   Empty,
-  FunctionField,
   RecordContextProvider,
-  ReferenceField,
   ReferenceManyField,
   required,
   SaveButton,
@@ -169,9 +167,6 @@ const CardListItem = () => {
     <Card>
       <CardContent>
         <TextField source="title" gutterBottom variant="h5" component="h2" />
-        <ReferenceField source="created_by" reference="users">
-          <FunctionField render={(user) => `Created by ${user.fullName}`} />
-        </ReferenceField>
       </CardContent>
       <CardActions>
         <EditInDialogButton resource="cards" maxWidth="md" fullWidth>
