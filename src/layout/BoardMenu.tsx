@@ -1,42 +1,14 @@
 import { Button, Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-  ContainerLayout,
-  ContainerLayoutClasses,
-  Header,
-  HeaderClasses,
-} from "@react-admin/ra-navigation";
-import { type MouseEvent, useState, type ReactNode } from "react";
-import {
-  CheckForApplicationUpdate,
-  ListBase,
-  useListContext,
-} from "react-admin";
+import { type MouseEvent, useState } from "react";
+import { ListBase, useListContext } from "react-admin";
 import { Link } from "react-router";
+import { ListLiveUpdate } from "@react-admin/ra-realtime";
 
-export const Layout = ({ children }: { children: ReactNode }) => (
-  <ContainerLayout
-    appBar={<AppBar />}
-    sx={{ [`& .${ContainerLayoutClasses.content}`]: { maxWidth: "unset" } }}
-  >
-    {children}
-    <CheckForApplicationUpdate />
-  </ContainerLayout>
-);
-
-const AppBar = () => (
-  <Header
-    menu={<BoardMenu />}
-    sx={{
-      [`& .${HeaderClasses.toolbar}`]: { justifyContent: "unset", gap: 1 },
-      [`& .${HeaderClasses.menu}`]: { flexGrow: 1 },
-    }}
-  />
-);
-
-const BoardMenu = () => (
+export const BoardMenu = () => (
   <ListBase resource="boards">
     <BoardMenuView />
+    <ListLiveUpdate />
   </ListBase>
 );
 

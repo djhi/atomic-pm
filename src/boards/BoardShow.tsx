@@ -18,17 +18,20 @@ import {
   RecordContextProvider,
   ReferenceManyField,
   required,
-  SaveButton,
   Show,
   SimpleForm,
   TextField,
   TextInput,
-  Toolbar,
   TopToolbar,
   useGetManyReference,
   useListContext,
   useRecordContext,
 } from "react-admin";
+import { BoardMembersEdit } from "./BoardMembersEdit";
+import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
+import { LockOnMount } from "./LockOnMount";
+import { FormWithLockSupport } from "./FormWithLockSupport";
 
 export const BoardShow = () => (
   <Show component="div" actions={<BoardShowActions />}>
@@ -39,6 +42,7 @@ export const BoardShow = () => (
       sort={{ field: "position", order: "ASC" }}
     >
       <ColumnListView />
+      <ListLiveUpdate />
     </ReferenceManyField>
   </Show>
 );
@@ -53,6 +57,7 @@ const BoardShowActions = () => {
 
   return (
     <TopToolbar>
+      <BoardMembersEdit />
       <CreateInDialogButton
         resource="columns"
         label="New column"
@@ -101,12 +106,11 @@ const ColumnListItem = (props: StackProps) => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <TextField source="name" gutterBottom variant="h5" component="h2" />
         <EditInDialogButton resource="columns" maxWidth="md" fullWidth>
-          <SimpleForm toolbar={<Toolbar>
-            <SaveButton />
-            <DeleteButton redirect={false} />
-          </Toolbar>}>
+          <LockOnMount />
+          <RecordLiveUpdate />
+          <FormWithLockSupport>
             <TextInput source="name" validate={required()} />
-          </SimpleForm>
+          </FormWithLockSupport>
         </EditInDialogButton>
       </Stack>
       <ReferenceManyField
@@ -116,6 +120,7 @@ const ColumnListItem = (props: StackProps) => {
         perPage={10000}
       >
         <CardListView />
+        <ListLiveUpdate />
       </ReferenceManyField>
     </Stack>
   );
@@ -165,10 +170,12 @@ const CardListItem = () => {
       </CardContent>
       <CardActions>
         <EditInDialogButton resource="cards" maxWidth="md" fullWidth>
-          <SimpleForm>
+          <LockOnMount />
+          <ListLiveUpdate />
+          <FormWithLockSupport>
             <TextInput source="title" validate={required()} />
             <RichTextInput source="description" />
-          </SimpleForm>
+          </FormWithLockSupport>
         </EditInDialogButton>
         <DeleteButton color="inherit" redirect={false} />
       </CardActions>

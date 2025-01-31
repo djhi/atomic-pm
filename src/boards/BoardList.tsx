@@ -15,11 +15,13 @@ import {
 } from "react-admin";
 import { BoardCreate } from "./BoardCreate";
 import { BoardEdit } from "./BoardEdit";
+import { ListLiveUpdate } from "@react-admin/ra-realtime";
 
 export const BoardList = () => (
   <>
     <List component="div" actions={<BoardListActions />} empty={<Empty hasCreate />}>
       <BoardListView />
+      <ListLiveUpdate />
     </List>
     <BoardCreate />
     <BoardEdit />

@@ -6,7 +6,7 @@ import {
   SetPasswordPage,
   defaultI18nProvider,
 } from "ra-supabase";
-import { Layout } from './Layout';
+import { Layout } from './layout/Layout';
 import { dataProvider } from './providers/dataProvider';
 import { authProvider } from './providers/authProvider';
 import { BoardList } from './boards/BoardList';
