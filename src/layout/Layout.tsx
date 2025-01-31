@@ -4,6 +4,7 @@ import {
 } from "@react-admin/ra-navigation";
 import type { ReactNode } from "react";
 import { CheckForApplicationUpdate } from "react-admin";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { AppBar } from "./AppBar";
 
 export const Layout = ({ children }: { children: ReactNode }) => (
@@ -13,5 +14,6 @@ export const Layout = ({ children }: { children: ReactNode }) => (
   >
     {children}
     <CheckForApplicationUpdate />
+    <ReactQueryDevtools />
   </ContainerLayout>
 );

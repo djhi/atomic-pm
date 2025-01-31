@@ -52,4 +52,42 @@ export const dataProvider = {
 
     return { data: {} };
   },
+  moveCard: async ({
+    data,
+  }: {
+    data: { card_id: number; column_id: number; position: number };
+  }) => {
+    const { data: response, error } = await supabaseClient.functions.invoke(
+      "move-card",
+      {
+        method: "POST",
+        body: data,
+      },
+    );
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { data: response };
+  },
+  moveColumn: async ({
+    data,
+  }: {
+    data: { column_id: number; position: number };
+  }) => {
+    const { data: response, error } = await supabaseClient.functions.invoke(
+      "move-column",
+      {
+        method: "POST",
+        body: data,
+      },
+    );
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { data: response };
+  },
 };
