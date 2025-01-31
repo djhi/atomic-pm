@@ -1,9 +1,11 @@
 import {
+  lighten,
   Card,
   CardActions,
   CardContent,
   Stack,
   type StackProps,
+  darken,
 } from "@mui/material";
 import {
   CreateInDialogButton,
@@ -17,6 +19,7 @@ import {
   ReferenceManyField,
   required,
   Show,
+  ShowClasses,
   SimpleForm,
   TextField,
   TextInput,
@@ -73,7 +76,11 @@ export const BoardShow = () => {
   });
 
   return (
-    <Show component="div" actions={<BoardShowActions />}>
+    <Show
+      component="div"
+      actions={<BoardShowActions />}
+      sx={{ [`& .${ShowClasses.card}`]: { mt: 4 } }}
+    >
       <DragDropContext onDragEnd={onDragEnd}>
         <ReferenceManyField
           reference="columns"
@@ -88,6 +95,9 @@ export const BoardShow = () => {
                   {...droppableProvided.droppableProps}
                   className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
                   sx={{
+                    overflowX: "auto",
+                    flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" },
+                    pb: 2,
                     "&.isDraggingOver": {
                       bgcolor: "action.hover",
                     },
@@ -113,7 +123,13 @@ const BoardShowActions = () => {
   });
 
   return (
-    <TopToolbar>
+    <TopToolbar sx={{ justifyContent: "unset" }}>
+      <TextField
+        source="name"
+        component="h1"
+        variant="h4"
+        sx={{ flexGrow: 1 }}
+      />
       <BoardMembersEdit />
       <CreateInDialogButton
         resource="columns"
@@ -142,12 +158,12 @@ const ColumnListView = (props: StackProps) => {
   if (data.length === 0) return <Empty />;
 
   return (
-    <Stack direction="row" flexWrap="wrap" minHeight="80vh" {...props}>
+    <Stack direction="row" minHeight="80vh" gap={2} {...props}>
       {data.map((record) => (
         <RecordContextProvider key={record.id} value={record}>
           <ColumnListItem
             sx={{
-              minWidth: { xs: "100%", md: "50%", lg: "25%" },
+              width: { xs: "100%", sm: "100%", md: "400px" },
               padding: 2,
             }}
           />
@@ -171,7 +187,11 @@ const ColumnListItem = ({ sx, ...props }: StackProps) => {
           {...props}
           sx={{
             ...sx,
-            bgcolor: (theme) => theme.palette.background.default,
+            borderRadius: (theme) => theme.shape.borderRadius,
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark"
+                ? lighten(theme.palette.background.default, 0.1)
+                : darken(theme.palette.background.default, 0.1),
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
           }}
