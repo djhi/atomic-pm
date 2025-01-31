@@ -1,5 +1,8 @@
-import simpleRestProvider from 'ra-data-simple-rest';
+import { supabaseDataProvider } from "ra-supabase";
+import { supabaseClient } from "./supabaseClient";
 
-export const dataProvider = simpleRestProvider(
-    import.meta.env.VITE_SIMPLE_REST_URL
-);
+export const dataProvider = supabaseDataProvider({
+  instanceUrl: import.meta.env.VITE_SUPABASE_URL,
+  apiKey: import.meta.env.VITE_SUPAPASE_ANON_KEY,
+  supabaseClient,
+});

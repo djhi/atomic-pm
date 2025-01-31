@@ -25,7 +25,6 @@ import {
   TextInput,
   Toolbar,
   TopToolbar,
-  useGetIdentity,
   useGetManyReference,
   useListContext,
   useRecordContext,
@@ -51,7 +50,6 @@ const BoardShowActions = () => {
     id: board?.id,
     pagination: { page: 1, perPage: 10000 },
   });
-  const { identity } = useGetIdentity();
 
   return (
     <TopToolbar>
@@ -62,7 +60,6 @@ const BoardShowActions = () => {
         fullWidth
         record={{
           board_id: board?.id,
-          created_by: identity?.id,
           created_at: new Date().toISOString(),
           position: total,
         }}
@@ -126,7 +123,6 @@ const ColumnListItem = (props: StackProps) => {
 
 const CardListView = () => {
   const column = useRecordContext();
-  const { identity } = useGetIdentity();
   const { data, error, isPending } = useListContext();
 
   if (isPending) return <p>Loading...</p>;
@@ -147,7 +143,6 @@ const CardListView = () => {
         record={{
           column_id: column?.id,
           position: data.length,
-          created_by: identity?.id,
           created_at: new Date().toISOString(),
         }}
         maxWidth="md"

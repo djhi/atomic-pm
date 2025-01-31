@@ -62,8 +62,8 @@ const BoardListItem = () => {
           variant="body2"
           sx={{ color: "text.secondary" }}
         />
-        <ReferenceField source="user_id" reference="users">
-          <FunctionField render={(user) => `Created by ${user.fullName}`} />
+        <ReferenceField source="user_id" reference="profiles">
+          <FunctionField render={(user) => `Created by ${user.email}`} />
         </ReferenceField>
       </CardContent>
       <CardActions>
