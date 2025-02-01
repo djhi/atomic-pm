@@ -9,7 +9,6 @@ import type {
   GetOneResult,
   RaRecord,
 } from "react-admin";
-import merge from "lodash/merge";
 import { queryClient } from "./queryClient";
 import { supabaseClient } from "./supabaseClient";
 
@@ -138,33 +137,46 @@ const populateQueryCache = (data: Record<string, any>) => {
 
     // setQueryData doesn't accept a stale time option
     // So we set an updatedAt in the future to make sure the data isn't considered stale
-    const updatedAt = Date.now() + 1000;
+    const updatedAt = Date.now() + 10000;
     const target = References[resource];
-    const id = data[resource.toString()][0][References[resource]];
-    const records = data[resource.toString()].sort(
-      (a: any, b: any) => a.position - b.position,
-    );
-    console.log(resource, { target, id, records });
-    queryClient.setQueryData(
-      [
-        resource,
-        "getManyReference",
-        {
-          target,
-          // We know we only use numbers for boards ids
-          id: typeof id === "number" ? id : parseInt(id),
-          pagination: { page: 1, perPage: 10000 },
-          sort: { field: "position", order: "ASC" },
-          filter: {},
-          meta: undefined,
-        },
-      ],
-      {
-        data: records,
-        total: records.length,
+    const groupByParentId = data[resource.toString()].reduce(
+      (acc: Record<string, any>, record: any) => {
+        const parentId = record[target];
+        if (!acc[parentId]) {
+          acc[parentId] = [];
+        }
+        acc[parentId].push(record);
+        return acc;
       },
-      { updatedAt },
+      {},
     );
+
+    Object.keys(groupByParentId).forEach((parentId) => {
+      const id = groupByParentId[parentId][0][References[resource]];
+      const records = groupByParentId[parentId].sort(
+        (a: any, b: any) => a.position - b.position,
+      );
+      queryClient.setQueryData(
+        [
+          resource,
+          "getManyReference",
+          {
+            target,
+            // We know we only use numbers for boards ids
+            id: typeof id === "number" ? id : parseInt(id),
+            pagination: { page: 1, perPage: 10000 },
+            sort: { field: "position", order: "ASC" },
+            filter: {},
+            meta: undefined,
+          },
+        ],
+        {
+          data: records,
+          total: records.length,
+        },
+        { updatedAt },
+      );
+    });
   });
 };
 
@@ -216,11 +228,19 @@ const handlePrefetch = (
         embbededResourcePrefetch.data,
       );
 
-      result.meta.prefetched = merge(
-        {},
-        result.meta.prefetched,
-        embbededResourcePrefetch.meta?.prefetched,
-      );
+      if (embbededResourcePrefetch.meta?.prefetched) {
+        for (const prefetchedResource of Object.keys(
+          embbededResourcePrefetch.meta.prefetched,
+        )) {
+          if (!result.meta.prefetched[prefetchedResource]) {
+            result.meta.prefetched[prefetchedResource] = [];
+          }
+
+          result.meta.prefetched[prefetchedResource].push(
+            ...embbededResourcePrefetch.meta.prefetched[prefetchedResource],
+          );
+        }
+      }
     }
   } else {
     // TODO

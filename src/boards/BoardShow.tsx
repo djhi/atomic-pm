@@ -6,6 +6,7 @@ import {
   Stack,
   type StackProps,
   darken,
+  Box,
 } from "@mui/material";
 import {
   CreateInDialogButton,
@@ -240,42 +241,41 @@ const CardListView = () => {
   return (
     <Droppable droppableId={column!.id.toString()} type="card">
       {(droppableProvided, snapshot) => (
-        <div ref={droppableProvided.innerRef}>
-          <Stack
-            spacing={2}
-            direction="column"
-            {...droppableProvided.droppableProps}
-            className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
-            sx={{
-              "&.isDraggingOver": {
-                bgcolor: "action.hover",
-              },
+        <Box
+          ref={droppableProvided.innerRef}
+          {...droppableProvided.droppableProps}
+          className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
+          sx={{
+            maxHeight: "80vh",
+            overflowY: "auto",
+            "&.isDraggingOver": {
+              bgcolor: "action.hover",
+            },
+          }}
+        >
+          {data.map((record) => (
+            <RecordContextProvider key={record.id} value={record}>
+              <CardListItem />
+            </RecordContextProvider>
+          ))}
+          {droppableProvided.placeholder}
+          <CreateInDialogButton
+            resource="cards"
+            label="New card"
+            record={{
+              column_id: column?.id,
+              position: data.length,
+              created_at: new Date().toISOString(),
             }}
+            maxWidth="md"
+            fullWidth
           >
-            {data.map((record) => (
-              <RecordContextProvider key={record.id} value={record}>
-                <CardListItem />
-              </RecordContextProvider>
-            ))}
-            {droppableProvided.placeholder}
-            <CreateInDialogButton
-              resource="cards"
-              label="New card"
-              record={{
-                column_id: column?.id,
-                position: data.length,
-                created_at: new Date().toISOString(),
-              }}
-              maxWidth="md"
-              fullWidth
-            >
-              <SimpleForm>
-                <TextInput source="title" validate={required()} />
-                <RichTextInput source="description" />
-              </SimpleForm>
-            </CreateInDialogButton>
-          </Stack>
-        </div>
+            <SimpleForm>
+              <TextInput source="title" validate={required()} />
+              <RichTextInput source="description" />
+            </SimpleForm>
+          </CreateInDialogButton>
+        </Box>
       )}
     </Droppable>
   );
@@ -297,6 +297,8 @@ const CardListItem = () => {
             bgcolor: (theme) => theme.palette.background.default,
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
+            my: 1,
+            mr: 1,
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
