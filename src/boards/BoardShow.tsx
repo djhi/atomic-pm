@@ -80,6 +80,7 @@ export const BoardShow = () => {
       component="div"
       actions={<BoardShowActions />}
       sx={{ [`& .${ShowClasses.card}`]: { mt: 4 } }}
+      queryOptions={{ meta: { columns: ["*, columns(*, cards(*))"] } }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <ReferenceManyField
@@ -120,6 +121,7 @@ const BoardShowActions = () => {
     target: "board_id",
     id: board?.id,
     pagination: { page: 1, perPage: 10000 },
+    sort: { field: "position", order: "ASC" },
   });
 
   return (

@@ -1,18 +1,18 @@
 
 import { Admin, CustomRoutes, Resource } from 'react-admin';
+import { Route } from "react-router";
 import {
   ForgotPasswordPage,
   LoginPage,
   SetPasswordPage,
   defaultI18nProvider,
 } from "ra-supabase";
-import { Layout } from './layout/Layout';
 import { dataProvider } from './providers/dataProvider';
 import { authProvider } from './providers/authProvider';
+import { queryClient } from './providers/queryClient';
+import { Layout } from './layout/Layout';
 import { BoardList } from './boards/BoardList';
 import { BoardShow } from './boards/BoardShow';
-import { Route } from 'react-router';
-
 
 export const App = () => (
   <Admin
@@ -21,6 +21,7 @@ export const App = () => (
     authProvider={authProvider}
     loginPage={LoginPage}
     i18nProvider={defaultI18nProvider}
+    queryClient={queryClient}
     title="SupaBoards"
   >
     <CustomRoutes noLayout>
