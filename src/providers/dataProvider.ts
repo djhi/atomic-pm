@@ -176,6 +176,26 @@ const populateQueryCache = (data: Record<string, any>) => {
         },
         { updatedAt },
       );
+      queryClient.setQueryData(
+        [
+          resource,
+          "getManyReference",
+          {
+            target,
+            // We know we only use numbers for boards ids
+            id: typeof id === "number" ? id : parseInt(id),
+            pagination: { page: 1, perPage: 1 },
+            sort: { field: "position", order: "ASC" },
+            filter: {},
+            meta: undefined,
+          },
+        ],
+        {
+          data: records,
+          total: records.length,
+        },
+        { updatedAt },
+      );
     });
   });
 };

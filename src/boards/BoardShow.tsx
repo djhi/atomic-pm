@@ -7,6 +7,7 @@ import {
   type StackProps,
   darken,
   Box,
+  Chip,
 } from "@mui/material";
 import {
   CreateInDialogButton,
@@ -17,6 +18,7 @@ import {
   DeleteButton,
   Empty,
   RecordContextProvider,
+  ReferenceManyCount,
   ReferenceManyField,
   required,
   Show,
@@ -25,6 +27,7 @@ import {
   TextField,
   TextInput,
   TopToolbar,
+  useDefaultTitle,
   useEvent,
   useGetManyReference,
   useListContext,
@@ -82,6 +85,7 @@ export const BoardShow = () => {
       actions={<BoardShowActions />}
       sx={{ [`& .${ShowClasses.card}`]: { mt: 4 } }}
       queryOptions={{ meta: { columns: ["*, columns(*, cards(*))"] } }}
+      title={<BoardTitle />}
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <ReferenceManyField
@@ -116,6 +120,18 @@ export const BoardShow = () => {
   );
 };
 
+const BoardTitle = () => {
+  const record = useRecordContext();
+  const appTitle = useDefaultTitle();
+  return (
+    <>
+      <span>{record?.name}</span>
+      <title>
+        {record?.name} - {appTitle}
+      </title>
+    </>
+  );
+};
 const BoardShowActions = () => {
   const board = useRecordContext();
   const { total } = useGetManyReference("columns", {
@@ -126,13 +142,7 @@ const BoardShowActions = () => {
   });
 
   return (
-    <TopToolbar sx={{ justifyContent: "unset" }}>
-      <TextField
-        source="name"
-        component="h1"
-        variant="h4"
-        sx={{ flexGrow: 1 }}
-      />
+    <TopToolbar>
       <BoardMembersEdit />
       <CreateInDialogButton
         resource="columns"
@@ -207,14 +217,29 @@ const ColumnListItem = ({ sx, ...props }: StackProps) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <TextField source="name" gutterBottom variant="h5" component="h2" />
-            <EditInDialogButton resource="columns" maxWidth="md" fullWidth>
-              <LockOnMount />
-              <RecordLiveUpdate />
-              <FormWithLockSupport>
-                <TextInput source="name" validate={required()} />
-              </FormWithLockSupport>
-            </EditInDialogButton>
+            <TextField source="name" gutterBottom variant="h6" component="h2" />
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Chip
+                label={
+                  <ReferenceManyCount
+                    reference="cards"
+                    target="column_id"
+                    sort={{ field: "position", order: "ASC" }}
+                  />
+                }
+              />
+              <EditInDialogButton resource="columns" maxWidth="md" fullWidth>
+                <LockOnMount />
+                <RecordLiveUpdate />
+                <FormWithLockSupport>
+                  <TextInput source="name" validate={required()} />
+                </FormWithLockSupport>
+              </EditInDialogButton>
+            </Stack>
           </Stack>
           <ReferenceManyField
             reference="cards"
