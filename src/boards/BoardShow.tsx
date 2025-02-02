@@ -8,6 +8,8 @@ import {
   darken,
   Box,
   Chip,
+  Badge,
+  BadgeProps,
 } from "@mui/material";
 import {
   CreateInDialogButton,
@@ -40,12 +42,14 @@ import {
   Droppable,
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
+import { Virtuoso } from "react-virtuoso";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { useMoveCard } from "./useMoveCard";
 import { useMoveColumn } from "./useMoveColumn";
+import { NewCardButton } from "./NewCardButton";
 
 export const BoardShow = () => {
   const moveCard = useMoveCard();
@@ -217,21 +221,20 @@ const ColumnListItem = ({ sx, ...props }: StackProps) => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <TextField source="name" gutterBottom variant="h6" component="h2" />
+            <ColumnsCardCount>
+              <TextField
+                source="name"
+                gutterBottom
+                variant="h6"
+                component="h2"
+              />
+            </ColumnsCardCount>
             <Stack
               direction="row"
               justifyContent="space-between"
               alignItems="center"
             >
-              <Chip
-                label={
-                  <ReferenceManyCount
-                    reference="cards"
-                    target="column_id"
-                    sort={{ field: "position", order: "ASC" }}
-                  />
-                }
-              />
+              <NewCardButton />
               <EditInDialogButton resource="columns" maxWidth="md" fullWidth>
                 <LockOnMount />
                 <RecordLiveUpdate />
@@ -256,9 +259,36 @@ const ColumnListItem = ({ sx, ...props }: StackProps) => {
   );
 };
 
+const ColumnsCardCount = (props: Partial<BadgeProps>) => {
+  const column = useRecordContext();
+  const { total } = useGetManyReference(
+    "cards",
+    {
+      target: "column_id",
+      id: column?.id,
+      pagination: { page: 1, perPage: 1 },
+      sort: { field: "position", order: "ASC" },
+      filter: {},
+      meta: undefined,
+    },
+    {
+      enabled: !!column?.id,
+    },
+  );
+
+  return (
+    <Badge
+      badgeContent={total}
+      color="primary"
+      max={Number.POSITIVE_INFINITY}
+      {...props}
+    />
+  );
+};
+
 const CardListView = () => {
   const column = useRecordContext();
-  const { data, error, isPending } = useListContext();
+  const { data, error, isPending, total } = useListContext();
 
   if (isPending) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -271,35 +301,26 @@ const CardListView = () => {
           {...droppableProvided.droppableProps}
           className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
           sx={{
-            maxHeight: "80vh",
-            overflowY: "auto",
+            height: "80vh",
             "&.isDraggingOver": {
               bgcolor: "action.hover",
             },
           }}
         >
-          {data.map((record) => (
-            <RecordContextProvider key={record.id} value={record}>
-              <CardListItem />
-            </RecordContextProvider>
-          ))}
-          {droppableProvided.placeholder}
-          <CreateInDialogButton
-            resource="cards"
-            label="New card"
-            record={{
-              column_id: column?.id,
-              position: data.length,
-              created_at: new Date().toISOString(),
-            }}
-            maxWidth="md"
-            fullWidth
-          >
-            <SimpleForm>
-              <TextInput source="title" validate={required()} />
-              <RichTextInput source="description" />
-            </SimpleForm>
-          </CreateInDialogButton>
+          <Virtuoso
+            style={{ height: "100%" }}
+            // Add one for the drag placeholder
+            totalCount={total + 1}
+            itemContent={(index) =>
+              index < total ? (
+                <RecordContextProvider value={data[index]}>
+                  <CardListItem />
+                </RecordContextProvider>
+              ) : (
+                <>{droppableProvided.placeholder}</>
+              )
+            }
+          />
         </Box>
       )}
     </Droppable>

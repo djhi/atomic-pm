@@ -6,7 +6,7 @@ const supabaseAdmin = createClient(
 );
 
 const column_id = process.argv.length > 2 ? parseInt(process.argv[2]) : 1;
-const count = process.argv.length > 3 ? parseInt(process.argv[4]) : 100;
+const count = process.argv.length > 3 ? parseInt(process.argv[3]) : 100;
 const cards: any[] = [];
 for (let i = 0; i < count; i++) {
   cards.push({

@@ -129,8 +129,7 @@ const populateQueryCache = (data: Record<string, any>) => {
     const reference = References[resource];
     if (
       reference == null ||
-      data[resource.toString()] == null ||
-      data[resource.toString()].length === 0
+      data[resource.toString()] == null
     ) {
       return;
     }
