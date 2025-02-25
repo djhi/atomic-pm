@@ -1,7 +1,7 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Card as MuiCard, CardActions, CardContent } from "@mui/material";
 import { EditInDialogButton } from "@react-admin/ra-form-layout";
-import { DeleteButton, required, TextField, TextInput, useRecordContext } from "react-admin";
+import { required, TextField, TextInput, useRecordContext } from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { RichTextInput } from "ra-input-rich-text";
 import { FormWithLockSupport } from "./FormWithLockSupport";
@@ -24,6 +24,8 @@ export const Card = () => {
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
             my: 1,
+            cursor: 'pointer',
+            "&:hover": { bgcolor: (theme) => theme.palette.action.hover },
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
@@ -46,7 +48,6 @@ export const Card = () => {
                 <RichTextInput source="description" />
               </FormWithLockSupport>
             </EditInDialogButton>
-            <DeleteButton color="primary" redirect={false} />
           </CardActions>
         </MuiCard>
       )}
