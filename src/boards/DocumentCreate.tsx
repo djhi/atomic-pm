@@ -6,6 +6,8 @@ import {
   required,
   SimpleForm,
   TextInput,
+  useDefaultTitle,
+  useGetOne,
   useNotify,
   useTranslate,
 } from "react-admin";
@@ -21,15 +23,15 @@ export const DocumentCreate = () => {
   return (
     <Drawer
       open={!!match}
-      onClose={() => navigate(`/boards/${params.boardId}`)}
+      onClose={() => navigate(`/boards/${params.boardId}/documents`)}
       anchor="right"
       PaperProps={{
         sx: {
+          mr: "30vw",
           flexDirection: "row",
           "& form": { flex: 1, display: "flex", flexDirection: "column" },
         },
       }}
-      sx={{ mr: "80vw" }}
     >
       <CreateBase
         resource="documents"
@@ -46,6 +48,7 @@ export const DocumentCreate = () => {
           },
         }}
       >
+        <DocumentTitle />
         <SimpleForm sx={{ flex: 1 }}>
           <Stack
             width="100%"
@@ -61,5 +64,16 @@ export const DocumentCreate = () => {
         </SimpleForm>
       </CreateBase>
     </Drawer>
+  );
+};
+
+const DocumentTitle = () => {
+  const params = useParams<"boardId">();
+  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const appTitle = useDefaultTitle();
+  return (
+    <>
+      <title>{`New Document - ${board?.name} - ${appTitle}`}</title>
+    </>
   );
 };

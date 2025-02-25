@@ -133,7 +133,7 @@ const BoardTitle = () => {
     <>
       <span>{record?.name}</span>
       <title>
-        {record?.name} - {appTitle}
+        {`${record?.name} - ${appTitle}`}
       </title>
     </>
   );

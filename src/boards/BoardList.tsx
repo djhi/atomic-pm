@@ -9,6 +9,7 @@ import {
   ReferenceField,
   TextField,
   TopToolbar,
+  useDefaultTitle,
   useListContext,
   useRecordContext,
 } from "react-admin";
@@ -18,12 +19,22 @@ import { BoardCreate } from "./BoardCreate";
 
 export const BoardList = () => (
   <>
-    <List component="div" actions={<BoardListActions />} empty={<Empty hasCreate />}>
+    <List component="div" actions={<BoardListActions />} empty={<Empty hasCreate />} title={<BoardListTitle />}>
       <BoardListView />
       <ListLiveUpdate />
     </List>
   </>
 );
+
+const BoardListTitle = () => {
+  const appTitle = useDefaultTitle();
+  return (
+    <>
+      <span>Boards</span>
+      <title>{`Boards - ${appTitle}`}</title>
+    </>
+  );
+};
 
 const BoardListActions = () => (
   <TopToolbar>

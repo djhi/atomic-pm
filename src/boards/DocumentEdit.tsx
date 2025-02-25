@@ -6,7 +6,10 @@ import {
   required,
   SimpleForm,
   TextInput,
+  useDefaultTitle,
+  useGetOne,
   useNotify,
+  useRecordContext,
   useTranslate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
@@ -25,11 +28,11 @@ export const DocumentEdit = () => {
       anchor="right"
       PaperProps={{
         sx: {
+          mr: "30vw",
           flexDirection: "row",
           "& form": { flex: 1, display: "flex", flexDirection: "column" },
         },
       }}
-      sx={{ mr: "80vw" }}
     >
       {match?.params.id ? (
         <EditBase
@@ -49,6 +52,7 @@ export const DocumentEdit = () => {
             },
           }}
         >
+          <DocumentTitle />
           <SimpleForm sx={{ flex: 1 }}>
             <Stack
               width="100%"
@@ -65,5 +69,17 @@ export const DocumentEdit = () => {
         </EditBase>
       ) : null}
     </Drawer>
+  );
+};
+
+const DocumentTitle = () => {
+  const record = useRecordContext();
+  const params = useParams<"boardId">();
+  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const appTitle = useDefaultTitle();
+  return (
+    <>
+      <title>{`${record?.title} - ${board?.name} - ${appTitle}`}</title>
+    </>
   );
 };

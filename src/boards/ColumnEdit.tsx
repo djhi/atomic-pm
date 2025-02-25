@@ -1,5 +1,5 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
-import { NumberInput, RecordRepresentation, required, TextInput } from "react-admin";
+import { NumberInput, required, TextInput, useDefaultTitle, useGetOne, useRecordContext } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { LockOnMount } from "./LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
@@ -16,7 +16,7 @@ export const ColumnEdit = () => {
       close={() => navigate(`/boards/${params.boardId}`)}
       fullWidth
       maxWidth="md"
-      title={<RecordRepresentation />}
+      title={<ColumnTitle />}
     >
       <LockOnMount />
       <RecordLiveUpdate />
@@ -28,5 +28,20 @@ export const ColumnEdit = () => {
         </Stack>
       </FormWithLockSupport>
     </EditDialog>
+  );
+};
+
+
+const ColumnTitle = () => {
+  const record = useRecordContext();
+  const params = useParams<"boardId">();
+  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const appTitle = useDefaultTitle();
+  if (!record) return null;
+  return (
+    <>
+      <span>{record?.name}</span>
+      <title>{`${record?.name} - ${board?.name} - ${appTitle}`}</title>
+    </>
   );
 };

@@ -1,6 +1,6 @@
 import { Drawer, Stack, Typography } from "@mui/material";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
-import { CreateButton, ReferenceManyField, SimpleList } from "react-admin";
+import { CreateButton, ReferenceManyField, SimpleList, useDefaultTitle, useGetOne } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
 import { DocumentIconField } from "./DocumentIconField";
 
@@ -18,7 +18,9 @@ export const DocumentList = () => {
       open={!!match}
       onClose={() => navigate(`/boards/${params.boardId}`)}
       anchor="right"
+      PaperProps={{ sx: { width: '30vw' } }}
     >
+      <DocumentsTitle />
       <Stack
         direction="row"
         alignItems="center"
@@ -50,5 +52,16 @@ export const DocumentList = () => {
         <ListLiveUpdate />
       </ReferenceManyField>
     </Drawer>
+  );
+};
+
+const DocumentsTitle = () => {
+  const params = useParams<"boardId">();
+  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const appTitle = useDefaultTitle();
+  return (
+    <>
+      <title>{`Documents - ${board?.name} - ${appTitle}`}</title>
+    </>
   );
 };

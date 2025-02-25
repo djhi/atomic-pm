@@ -1,11 +1,13 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
 import {
-  RecordRepresentation,
   ReferenceField,
   required,
   TextField,
   TextInput,
+  useDefaultTitle,
+  useGetOne,
+  useRecordContext,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -28,7 +30,7 @@ export const CardEdit = () => {
       close={() => navigate(`/boards/${params.boardId}`)}
       fullWidth
       maxWidth="md"
-      title={<RecordRepresentation />}
+      title={<CardTitle />}
     >
       <LockOnMount />
       <RecordLiveUpdate />
@@ -49,5 +51,26 @@ export const CardEdit = () => {
         />
       </Box>
     </EditDialog>
+  );
+};
+
+const CardTitle = () => {
+  const record = useRecordContext();
+  const params = useParams<"boardId">();
+  const { data: column } = useGetOne(
+    "columns",
+    { id: record?.column_id },
+    { enabled: record?.column_id != null },
+  );
+  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const appTitle = useDefaultTitle();
+  if (!record) return null;
+  return (
+    <>
+      <span>
+        {record?.title} - {column?.name}
+      </span>
+      <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
+    </>
   );
 };
