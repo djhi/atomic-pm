@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { LockOnMount } from "./LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { FormWithLockSupport } from "./FormWithLockSupport";
+import { Stack } from "@mui/material";
 
 export const ColumnEdit = () => {
   const navigate = useNavigate();
@@ -20,7 +21,10 @@ export const ColumnEdit = () => {
       <RecordLiveUpdate />
       <FormWithLockSupport>
         <TextInput source="name" validate={required()} />
-        <NumberInput source="maxEstimates" />
+        <Stack direction="row" spacing={1}>
+          <NumberInput source="maxCards" />
+          <NumberInput source="maxEstimates" />
+        </Stack>
       </FormWithLockSupport>
     </EditDialog>
   );

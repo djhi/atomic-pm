@@ -48,6 +48,7 @@ export const Card = () => {
               gutterBottom
               variant="h5"
               component="h2"
+              sx={{ maxWidth: "80%" }}
             />
             <Chip
               color="info"

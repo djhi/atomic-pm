@@ -2,7 +2,6 @@ import { Draggable } from "@hello-pangea/dnd";
 import { Chip, darken, lighten, Stack, StackProps } from "@mui/material";
 import {
   EditButton,
-  ReferenceManyCount,
   ReferenceManyField,
   TextField,
   useGetManyReference,
@@ -16,7 +15,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const params = useParams<"boardId">();
   // TODO: Ideally we should have a view for columns that include the total estimates
-  const { data: cards } = useGetManyReference("cards", {
+  const { data: cards, total: totalCards } = useGetManyReference("cards", {
     target: "column_id",
     id: column?.id,
     sort: { field: "position", order: "ASC" },
@@ -66,19 +65,24 @@ export const Column = ({ sx, ...props }: StackProps) => {
               gap={1}
             >
               <Chip
+                color={
+                  column?.maxCards != null &&
+                  (totalCards || 0) > column?.maxCards
+                    ? "warning"
+                    : "info"
+                }
                 label={
-                  <ReferenceManyCount
-                    reference="cards"
-                    target="column_id"
-                    sort={{ field: "position", order: "ASC" }}
-                  />
+                  column?.maxCards != null
+                    ? `${totalCards} / ${column?.maxEstimates}`
+                    : totalCards
                 }
               />
               <Chip
                 color={
-                  column?.maxEstimates != null && totalEstimates > column?.maxEstimates
-                    ? 'warning'
-                    : 'info'
+                  column?.maxEstimates != null &&
+                  totalEstimates > column?.maxEstimates
+                    ? "warning"
+                    : "info"
                 }
                 label={
                   column?.maxEstimates != null

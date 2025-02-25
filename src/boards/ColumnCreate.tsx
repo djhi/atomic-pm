@@ -1,3 +1,4 @@
+import { Stack } from "@mui/material";
 import { CreateDialog } from "@react-admin/ra-form-layout";
 import { NumberInput, required, SimpleForm, TextInput } from "react-admin";
 import { useNavigate, useParams } from "react-router";
@@ -15,7 +16,10 @@ export const ColumnCreate = () => {
     >
       <SimpleForm>
         <TextInput source="name" validate={required()} />
-        <NumberInput source="maxEstimates" />
+        <Stack direction="row" spacing={1}>
+          <NumberInput source="maxCards" />
+          <NumberInput source="maxEstimates" />
+        </Stack>
       </SimpleForm>
     </CreateDialog>
   );
