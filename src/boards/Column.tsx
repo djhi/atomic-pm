@@ -47,6 +47,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 : darken(theme.palette.background.default, 0.1),
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
+            width: { xs: "100%", sm: "100%", md: "350px" },
+            flexShrink: 0,
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
