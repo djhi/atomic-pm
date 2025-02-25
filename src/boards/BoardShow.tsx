@@ -222,6 +222,7 @@ const ColumnListItem = ({ sx, ...props }: StackProps) => {
               direction="row"
               justifyContent="space-between"
               alignItems="center"
+              gap={1}
             >
               <Chip
                 label={
@@ -323,7 +324,6 @@ const CardListItem = () => {
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
             my: 1,
-            mr: 1,
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
@@ -346,7 +346,7 @@ const CardListItem = () => {
                 <RichTextInput source="description" />
               </FormWithLockSupport>
             </EditInDialogButton>
-            <DeleteButton color="inherit" redirect={false} />
+            <DeleteButton color="primary" redirect={false} />
           </CardActions>
         </Card>
       )}

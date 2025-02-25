@@ -11,6 +11,7 @@ export const AppBar = () => (
         direction="row"
         justifyContent="space-between"
         alignItems="center"
+        gap={1}
       >
         <TitlePortal />
         <BoardMenu />

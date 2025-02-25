@@ -42,7 +42,6 @@ const InvitationNotifierListView = () => {
     <>
       <Button
         label="Invitations"
-        color="inherit"
         disabled={isPending}
         onClick={handleClick}
       >

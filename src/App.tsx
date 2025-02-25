@@ -1,5 +1,5 @@
 
-import { Admin, CustomRoutes, Resource } from 'react-admin';
+import { Admin, bwLightTheme, bwDarkTheme, CustomRoutes, Resource } from 'react-admin';
 import { Route } from "react-router";
 import {
   ForgotPasswordPage,
@@ -23,6 +23,8 @@ export const App = () => (
     i18nProvider={defaultI18nProvider}
     queryClient={queryClient}
     title="SupaBoards"
+    lightTheme={bwLightTheme}
+    darkTheme={bwDarkTheme}
   >
     <CustomRoutes noLayout>
       <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
