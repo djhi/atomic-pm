@@ -44,6 +44,8 @@ const InvitationNotifierListView = () => {
         label="Invitations"
         disabled={isPending}
         onClick={handleClick}
+        color="inherit"
+        variant="text"
       >
         <Badge color="secondary" badgeContent={total}>
           <MailIcon />
@@ -51,10 +53,7 @@ const InvitationNotifierListView = () => {
       </Button>
       <Popover
         anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         open={open}
         onClose={handleClose}
       >

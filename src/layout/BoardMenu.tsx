@@ -39,7 +39,9 @@ const BoardMenuView = () => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        size="medium"
+        size="small"
+        variant="text"
+        color="inherit"
         endIcon={<KeyboardArrowDownIcon />}
       >
         Boards
