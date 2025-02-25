@@ -1,6 +1,5 @@
 import { Card, CardActions, CardContent, Grid2 } from "@mui/material";
 import {
-  CreateButton,
   DeleteButton,
   EditButton,
   Empty,
@@ -13,9 +12,9 @@ import {
   useListContext,
   useRecordContext,
 } from "react-admin";
-import { BoardCreate } from "./BoardCreate";
 import { BoardEdit } from "./BoardEdit";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { BoardCreate } from "./BoardCreate";
 
 export const BoardList = () => (
   <>
@@ -23,13 +22,12 @@ export const BoardList = () => (
       <BoardListView />
       <ListLiveUpdate />
     </List>
-    <BoardCreate />
   </>
 );
 
 const BoardListActions = () => (
   <TopToolbar>
-    <CreateButton label="New board" />
+    <BoardCreate />
   </TopToolbar>
 );
 
