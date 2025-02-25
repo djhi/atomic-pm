@@ -1,5 +1,5 @@
 import { CreateDialog } from "@react-admin/ra-form-layout";
-import { required, SimpleForm, TextInput } from "react-admin";
+import { NumberInput, required, SimpleForm, TextInput } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 
 export const ColumnCreate = () => {
@@ -15,6 +15,7 @@ export const ColumnCreate = () => {
     >
       <SimpleForm>
         <TextInput source="name" validate={required()} />
+        <NumberInput source="maxEstimates" />
       </SimpleForm>
     </CreateDialog>
   );

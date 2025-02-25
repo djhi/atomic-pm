@@ -1,6 +1,13 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Chip, darken, lighten, Stack, StackProps } from "@mui/material";
-import { EditButton, ReferenceManyCount, ReferenceManyField, TextField, useRecordContext } from "react-admin";
+import {
+  EditButton,
+  ReferenceManyCount,
+  ReferenceManyField,
+  TextField,
+  useGetManyReference,
+  useRecordContext,
+} from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CardList } from "./CardList";
 import { useParams } from "react-router";
@@ -8,6 +15,18 @@ import { useParams } from "react-router";
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const params = useParams<"boardId">();
+  // TODO: Ideally we should have a view for columns that include the total estimates
+  const { data: cards } = useGetManyReference("cards", {
+    target: "column_id",
+    id: column?.id,
+    sort: { field: "position", order: "ASC" },
+    pagination: { page: 1, perPage: 10000 },
+  });
+  const totalEstimates = cards?.reduce(
+    (acc: number, card: any) => acc + card.estimate,
+    0,
+  );
+  console.log({ totalEstimates })
 
   return (
     <Draggable
@@ -52,6 +71,18 @@ export const Column = ({ sx, ...props }: StackProps) => {
                     target="column_id"
                     sort={{ field: "position", order: "ASC" }}
                   />
+                }
+              />
+              <Chip
+                color={
+                  column?.maxEstimates != null && totalEstimates > column?.maxEstimates
+                    ? 'warning'
+                    : 'info'
+                }
+                label={
+                  column?.maxEstimates != null
+                    ? `${totalEstimates} / ${column?.maxEstimates}`
+                    : totalEstimates
                 }
               />
               <EditButton

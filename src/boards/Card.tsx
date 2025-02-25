@@ -1,6 +1,11 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { Card as MuiCard, CardActions, CardContent } from "@mui/material";
-import { EditButton, TextField, useRecordContext } from "react-admin";
+import { Card as MuiCard, CardActions, CardContent, Chip } from "@mui/material";
+import {
+  EditButton,
+  NumberField,
+  TextField,
+  useRecordContext,
+} from "react-admin";
 import { useNavigate, useParams } from "react-router";
 
 export const Card = () => {
@@ -23,9 +28,12 @@ export const Card = () => {
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
             my: 1,
             cursor: "pointer",
-            "&:hover": { bgcolor: (theme) => theme.palette.action.hover, '& .RaEditButton-root': {
-              bgcolor: (theme) => theme.palette.background.default,
-            } },
+            "&:hover": {
+              bgcolor: (theme) => theme.palette.action.hover,
+              "& .RaEditButton-root": {
+                bgcolor: (theme) => theme.palette.background.default,
+              },
+            },
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
@@ -34,12 +42,21 @@ export const Card = () => {
             navigate(`/boards/${params.boardId}/cards/${card?.id}`);
           }}
         >
-          <CardContent>
+          <CardContent sx={{ position: "relative" }}>
             <TextField
               source="title"
               gutterBottom
               variant="h5"
               component="h2"
+            />
+            <Chip
+              color="info"
+              label={<NumberField source="estimate" />}
+              sx={{
+                position: "absolute",
+                right: (theme) => theme.spacing(1),
+                top: (theme) => theme.spacing(1),
+              }}
             />
           </CardContent>
           <CardActions>

@@ -1,5 +1,5 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
-import { required, TextInput } from "react-admin";
+import { NumberInput, required, TextInput } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { LockOnMount } from "./LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
@@ -20,6 +20,7 @@ export const ColumnEdit = () => {
       <RecordLiveUpdate />
       <FormWithLockSupport>
         <TextInput source="name" validate={required()} />
+        <NumberInput source="maxEstimates" />
       </FormWithLockSupport>
     </EditDialog>
   );

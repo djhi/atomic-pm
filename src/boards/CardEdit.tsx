@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router";
 import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
+import { EstimateInput } from "./EstimateInput";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export const CardEdit = () => {
       <RecordLiveUpdate />
       <FormWithLockSupport>
         <TextInput source="title" validate={required()} />
+        <EstimateInput source="estimate" validate={required()} />
         <RichTextInput source="description" />
       </FormWithLockSupport>
     </EditDialog>
