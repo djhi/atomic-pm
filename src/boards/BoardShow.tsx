@@ -24,6 +24,12 @@ import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
 import { CardCreate } from "./CardCreate";
 import { CardEdit } from "./CardEdit";
+import { DocumentsButton } from "./DocumentsButton";
+import { FavoriteDocuments } from "./FavoriteDocuments";
+import { Stack } from "@mui/material";
+import { DocumentCreate } from "./DocumentCreate";
+import { DocumentEdit } from "./DocumentEdit";
+import { DocumentList } from "./DocumentList";
 
 export const BoardShow = () => {
   const moveCard = useMoveCard();
@@ -82,12 +88,7 @@ export const BoardShow = () => {
                   <ColumnList
                     {...droppableProvided.droppableProps}
                     className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
-                    sx={{
-                      overflowX: "auto",
-                      flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" },
-                      pb: 2,
-                      "&.isDraggingOver": { bgcolor: "action.hover" },
-                    }}
+                    sx={{ "&.isDraggingOver": { bgcolor: "action.hover" } }}
                   />
                   {droppableProvided.placeholder}
                 </div>
@@ -117,6 +118,9 @@ export const BoardShow = () => {
           }
         />
       </Routes>
+      <DocumentList />
+      <DocumentCreate />
+      <DocumentEdit />
     </>
   );
 };
@@ -145,20 +149,24 @@ const BoardShowActions = () => {
   });
 
   return (
-    <TopToolbar>
-      <BoardMembersEdit />
-      <CreateButton
-        resource="columns"
-        label="New column"
-        to={{
-          pathname: `/boards/${board?.id}/columns/create`,
-          search: `?source=${JSON.stringify({
-            board_id: board?.id,
-            created_at: new Date().toISOString(),
-            position: total,
-          })}`,
-        }}
-      />
+    <TopToolbar sx={{ justifyContent: "space-between" }}>
+      <FavoriteDocuments />
+      <Stack direction="row" spacing={1} ml="auto">
+        <DocumentsButton />
+        <BoardMembersEdit />
+        <CreateButton
+          resource="columns"
+          label="New column"
+          to={{
+            pathname: `/boards/${board?.id}/columns/create`,
+            search: `?source=${JSON.stringify({
+              board_id: board?.id,
+              created_at: new Date().toISOString(),
+              position: total,
+            })}`,
+          }}
+        />
+      </Stack>
     </TopToolbar>
   );
 };

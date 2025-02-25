@@ -26,7 +26,6 @@ export const Column = ({ sx, ...props }: StackProps) => {
     (acc: number, card: any) => acc + card.estimate,
     0,
   );
-  console.log({ totalEstimates })
 
   return (
     <Draggable
