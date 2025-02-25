@@ -8,6 +8,7 @@ import {
   useDefaultTitle,
   useGetOne,
   useRecordContext,
+  WithRecord,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import {
@@ -19,6 +20,7 @@ import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
+import { CommentList } from "./CommentList";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
@@ -41,6 +43,7 @@ export const CardEdit = () => {
           <RichTextInput source="description" />
         </FormWithLockSupport>
       </CreateRevisionOnSave>
+      <WithRecord render={(record) => <CommentList cardId={record?.id} />} />
       <Box sx={{ p: 2 }}>
         <RevisionListWithDetailsInDialog
           renderName={(id) => (
@@ -62,7 +65,11 @@ const CardTitle = () => {
     { id: record?.column_id },
     { enabled: record?.column_id != null },
   );
-  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const { data: board } = useGetOne(
+    "boards",
+    { id: params.boardId },
+    { enabled: !!params.boardId },
+  );
   const appTitle = useDefaultTitle();
   if (!record) return null;
   return (
