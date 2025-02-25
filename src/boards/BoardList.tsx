@@ -8,10 +8,10 @@ import {
   List,
   RecordContextProvider,
   ReferenceField,
-  ShowButton,
   TextField,
   TopToolbar,
   useListContext,
+  useRecordContext,
 } from "react-admin";
 import { BoardCreate } from "./BoardCreate";
 import { BoardEdit } from "./BoardEdit";
@@ -24,7 +24,6 @@ export const BoardList = () => (
       <ListLiveUpdate />
     </List>
     <BoardCreate />
-    <BoardEdit />
   </>
 );
 
@@ -54,6 +53,7 @@ const BoardListView = () => {
 };
 
 const BoardListItem = () => {
+  const record = useRecordContext();
   return (
     <Card>
       <CardContent>
@@ -69,9 +69,9 @@ const BoardListItem = () => {
         </ReferenceField>
       </CardContent>
       <CardActions>
-        <ShowButton />
-        <EditButton color="inherit" />
-        <DeleteButton color="inherit" />
+        <EditButton label="ra.action.show" to={`/boards/${record?.id}`} />
+        <BoardEdit />
+        <DeleteButton />
       </CardActions>
     </Card>
   );

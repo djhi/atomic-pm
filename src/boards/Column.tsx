@@ -1,15 +1,14 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Chip, darken, lighten, Stack, StackProps } from "@mui/material";
-import { EditInDialogButton } from "@react-admin/ra-form-layout";
-import { ReferenceManyCount, ReferenceManyField, required, TextField, TextInput, useRecordContext } from "react-admin";
+import { EditButton, ReferenceManyCount, ReferenceManyField, TextField, useRecordContext } from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
-import { LockOnMount } from "./LockOnMount";
-import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
-import { FormWithLockSupport } from "./FormWithLockSupport";
 import { CardList } from "./CardList";
+import { useParams } from "react-router";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
+  const params = useParams<"boardId">();
+
   return (
     <Draggable
       draggableId={`column-${column!.id}`}
@@ -22,10 +21,10 @@ export const Column = ({ sx, ...props }: StackProps) => {
           {...props}
           sx={{
             ...sx,
-            borderRadius: (theme) => theme.shape.borderRadius,
+            borderRadius: (theme) => theme.shape.borderRadius / 4,
             bgcolor: (theme) =>
               theme.palette.mode === "dark"
-                ? lighten(theme.palette.background.default, 0.1)
+                ? lighten(theme.palette.background.default, 0.2)
                 : darken(theme.palette.background.default, 0.1),
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
@@ -55,13 +54,11 @@ export const Column = ({ sx, ...props }: StackProps) => {
                   />
                 }
               />
-              <EditInDialogButton resource="columns" maxWidth="md" fullWidth>
-                <LockOnMount />
-                <RecordLiveUpdate />
-                <FormWithLockSupport>
-                  <TextInput source="name" validate={required()} />
-                </FormWithLockSupport>
-              </EditInDialogButton>
+              <EditButton
+                to={{
+                  pathname: `/boards/${params.boardId}/columns/${column?.id}`,
+                }}
+              />
             </Stack>
           </Stack>
           <ReferenceManyField

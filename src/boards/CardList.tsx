@@ -1,13 +1,13 @@
 import { Droppable } from "@hello-pangea/dnd";
 import { Box } from "@mui/material";
-import { RecordContextProvider, required, SimpleForm, TextInput, useListContext, useRecordContext } from "react-admin";
-import { CreateInDialogButton } from "@react-admin/ra-form-layout";
-import { RichTextInput } from "ra-input-rich-text";
+import { CreateButton, RecordContextProvider, useListContext, useRecordContext } from "react-admin";
+import { useParams } from "react-router";
 import { Card } from "./Card";
 
 export const CardList = () => {
   const column = useRecordContext();
   const { data, error, isPending } = useListContext();
+  const params = useParams<"boardId">();
 
   if (isPending) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -31,22 +31,18 @@ export const CardList = () => {
             </RecordContextProvider>
           ))}
           {droppableProvided.placeholder}
-          <CreateInDialogButton
+          <CreateButton
             resource="cards"
             label="New card"
-            record={{
-              column_id: column?.id,
-              position: data.length,
-              created_at: new Date().toISOString(),
+            to={{
+              pathname: `/boards/${params.boardId}/cards/create`,
+              search: `?source=${JSON.stringify({
+                column_id: column?.id,
+                position: data.length,
+                created_at: new Date().toISOString(),
+              })}`,
             }}
-            maxWidth="md"
-            fullWidth
-          >
-            <SimpleForm>
-              <TextInput source="title" validate={required()} />
-              <RichTextInput source="description" />
-            </SimpleForm>
-          </CreateInDialogButton>
+          />
         </Box>
       )}
     </Droppable>

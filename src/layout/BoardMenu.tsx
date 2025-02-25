@@ -57,7 +57,7 @@ const BoardMenuView = () => {
           <MenuItem
             key={record.id}
             component={Link}
-            to={`/boards/${record.id}/show`}
+            to={`/boards/${record.id}`}
           >
             {record.name}
           </MenuItem>

@@ -1,18 +1,23 @@
-
-import { Admin, bwLightTheme, bwDarkTheme, CustomRoutes, Resource } from 'react-admin';
-import { Route } from "react-router";
+import {
+  Admin,
+  bwLightTheme,
+  bwDarkTheme,
+  CustomRoutes,
+  ResourceContextProvider,
+} from "react-admin";
+import { Navigate, Route } from "react-router";
 import {
   ForgotPasswordPage,
   LoginPage,
   SetPasswordPage,
   defaultI18nProvider,
 } from "ra-supabase";
-import { dataProvider } from './providers/dataProvider';
-import { authProvider } from './providers/authProvider';
-import { queryClient } from './providers/queryClient';
-import { Layout } from './layout/Layout';
-import { BoardList } from './boards/BoardList';
-import { BoardShow } from './boards/BoardShow';
+import { dataProvider } from "./providers/dataProvider";
+import { authProvider } from "./providers/authProvider";
+import { queryClient } from "./providers/queryClient";
+import { Layout } from "./layout/Layout";
+import { BoardList } from "./boards/BoardList";
+import { BoardShow } from "./boards/BoardShow";
 
 export const App = () => (
   <Admin
@@ -25,13 +30,29 @@ export const App = () => (
     title="SupaBoards"
     lightTheme={bwLightTheme}
     darkTheme={bwDarkTheme}
+    dashboard={() => <Navigate to="/boards" />}
   >
     <CustomRoutes noLayout>
       <Route path={SetPasswordPage.path} element={<SetPasswordPage />} />
       <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
     </CustomRoutes>
-    <Resource name="boards" list={BoardList} show={BoardShow} />
+    <CustomRoutes>
+      <Route
+        path="/boards/*"
+        element={
+          <ResourceContextProvider value="boards">
+            <BoardList />
+          </ResourceContextProvider>
+        }
+      />
+      <Route
+        path="/boards/:boardId/*"
+        element={
+          <ResourceContextProvider value="boards">
+            <BoardShow />
+          </ResourceContextProvider>
+        }
+      />
+    </CustomRoutes>
   </Admin>
 );
-
-    
