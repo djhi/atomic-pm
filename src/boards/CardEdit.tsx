@@ -1,7 +1,12 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
-import { required, TextInput } from "react-admin";
+import { ReferenceField, required, TextField, TextInput } from "react-admin";
 import { useNavigate, useParams } from "react-router";
+import {
+  CreateRevisionOnSave,
+  RevisionListWithDetailsInDialog,
+} from "@react-admin/ra-history";
+import { Box } from "@mui/material";
 import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
@@ -20,11 +25,22 @@ export const CardEdit = () => {
     >
       <LockOnMount />
       <RecordLiveUpdate />
-      <FormWithLockSupport>
-        <TextInput source="title" validate={required()} />
-        <EstimateInput source="estimate" validate={required()} />
-        <RichTextInput source="description" />
-      </FormWithLockSupport>
+      <CreateRevisionOnSave skipUserDetails>
+        <FormWithLockSupport>
+          <TextInput source="title" validate={required()} />
+          <EstimateInput source="estimate" validate={required()} />
+          <RichTextInput source="description" />
+        </FormWithLockSupport>
+      </CreateRevisionOnSave>
+      <Box sx={{ p: 2 }}>
+        <RevisionListWithDetailsInDialog
+          renderName={(id) => (
+            <ReferenceField reference="profiles" source="id" record={{ id }}>
+              <TextField source="email" />
+            </ReferenceField>
+          )}
+        />
+      </Box>
     </EditDialog>
   );
 };

@@ -10,6 +10,7 @@
         "@mui/icons-material": "^6.4.5",
         "@mui/material": "^6.4.5",
         "@react-admin/ra-form-layout": "^5.6.0",
+        "@react-admin/ra-history": "^5.0.0",
         "@react-admin/ra-navigation": "^5.0.2",
         "@react-admin/ra-realtime": "^5.0.0",
         "@supabase/supabase-js": "^2.49.1",
@@ -238,6 +239,8 @@
     "@raphiniert/ra-data-postgrest": ["@raphiniert/ra-data-postgrest@2.4.1", "", { "dependencies": { "lodash.isequal": "^4.5.0", "qs": "^6.12.1" }, "peerDependencies": { "ra-core": "^3.0.0 || ^4.1.0 || ^5.0.1" } }, "sha512-2v4XE/9wy7dTfafJuDFDb3u0ZvyBpURZ0hNv3uc0TcnxLR+sXHYeOv3WNzIMKLKN2dsDllU3qytQE63/Z8SmLA=="],
 
     "@react-admin/ra-form-layout": ["@react-admin/ra-form-layout@5.6.1", "https://registry.marmelab.com/download/@react-admin/ra-form-layout/5.6.1/a5fd20a2d25c8c47ba368ce53a15e3ba0e1cfa9d", { "dependencies": { "@mui/x-date-pickers": "^7.24.0", "date-fns": "^3.6.0" }, "peerDependencies": { "@mui/x-date-pickers-pro": "^7.23.6", "react": "^18.0.0 || ^19.0.0", "react-admin": "^5.0.2", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-8BFwAzCsKZFxet3aLTkjUiF6JB2ZGxaMWxfysnmfADxO8oHtvVLw4aP6LJH9t4rUeC+0CUKCK/CwBZrxg0Zk9w=="],
+
+    "@react-admin/ra-history": ["@react-admin/ra-history@5.0.0", "https://registry.marmelab.com/download/@react-admin/ra-history/5.0.0/2e62783ebe0cee89d5bd840da699220e06be10a9", { "dependencies": { "date-fns": "^3.6.0", "diff": "^5.2.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-admin": "^5.0.2", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-+hOUzbhLsOs+GRR/HiXVk7bHUaXA9F4exlxX2/VuNRnFNZqFeR4GFYVu0hXb5B0Xw6nx8z884LtreWQSUc03Cg=="],
 
     "@react-admin/ra-navigation": ["@react-admin/ra-navigation@5.0.3", "https://registry.marmelab.com/download/@react-admin/ra-navigation/5.0.3/44c3b7146414ff63ae1534eaabd2c2ac955b9396", { "dependencies": { "react-error-boundary": "^4.0.13" }, "peerDependencies": { "lodash": "^4.17.20", "react": "^18.0.0 || ^19.0.0", "react-admin": "^5.0.2", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-oa0zAx0qoY+h1AjyZJOBtS+k2XnMn3H5D0sZM3EYphHi3rhM68w9o1w+Fbot+XvBGVaZhW+gbxTHCBxSMPmdcA=="],
 
@@ -536,6 +539,8 @@
     "define-data-property": ["define-data-property@1.1.4", "", { "dependencies": { "es-define-property": "^1.0.0", "es-errors": "^1.3.0", "gopd": "^1.0.1" } }, "sha512-rBMvIzlpA8v6E+SJZoo++HAYqsLrkg7MSfIinMPFhmkorw7X+dOXVJQs+QT69zGkzMyfDnIMN2Wid1+NbL3T+A=="],
 
     "define-properties": ["define-properties@1.2.1", "", { "dependencies": { "define-data-property": "^1.0.1", "has-property-descriptors": "^1.0.0", "object-keys": "^1.1.1" } }, "sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg=="],
+
+    "diff": ["diff@5.2.0", "", {}, "sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A=="],
 
     "doctrine": ["doctrine@2.1.0", "", { "dependencies": { "esutils": "^2.0.2" } }, "sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw=="],
 

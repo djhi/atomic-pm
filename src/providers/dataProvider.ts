@@ -3,6 +3,7 @@ import {
   addLocksMethodsBasedOnALockResource,
   addRealTimeMethodsBasedOnSupabase,
 } from "@react-admin/ra-realtime";
+import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
 import type {
   DataProvider,
   GetOneParams,
@@ -12,15 +13,17 @@ import type {
 import { queryClient } from "./queryClient";
 import { supabaseClient } from "./supabaseClient";
 
-export const baseDataProvider = addLocksMethodsBasedOnALockResource(
-  addRealTimeMethodsBasedOnSupabase({
-    dataProvider: supabaseDataProvider({
-      instanceUrl: import.meta.env.VITE_SUPABASE_URL,
-      apiKey: import.meta.env.VITE_SUPAPASE_ANON_KEY,
+export const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
+  addLocksMethodsBasedOnALockResource(
+    addRealTimeMethodsBasedOnSupabase({
+      dataProvider: supabaseDataProvider({
+        instanceUrl: import.meta.env.VITE_SUPABASE_URL,
+        apiKey: import.meta.env.VITE_SUPAPASE_ANON_KEY,
+        supabaseClient,
+      }),
       supabaseClient,
     }),
-    supabaseClient,
-  }),
+  ),
 );
 
 export const dataProvider: DataProvider = {
@@ -44,10 +47,7 @@ export const dataProvider: DataProvider = {
   invite: async ({ data }: { data: { email: string; board_id: number } }) => {
     const { data: invitation, error } = await supabaseClient.functions.invoke(
       "invite",
-      {
-        method: "POST",
-        body: data,
-      },
+      { method: "POST", body: data },
     );
 
     if (error) {
@@ -63,10 +63,7 @@ export const dataProvider: DataProvider = {
   }) => {
     const { error } = await supabaseClient.functions.invoke(
       "answer_invitation",
-      {
-        method: "PATCH",
-        body: data,
-      },
+      { method: "PATCH", body: data },
     );
 
     if (error) {
@@ -82,10 +79,7 @@ export const dataProvider: DataProvider = {
   }) => {
     const { data: response, error } = await supabaseClient.functions.invoke(
       "move-card",
-      {
-        method: "POST",
-        body: data,
-      },
+      { method: "POST", body: data },
     );
 
     if (error) {
@@ -101,10 +95,7 @@ export const dataProvider: DataProvider = {
   }) => {
     const { data: response, error } = await supabaseClient.functions.invoke(
       "move-column",
-      {
-        method: "POST",
-        body: data,
-      },
+      { method: "POST", body: data },
     );
 
     if (error) {
@@ -170,10 +161,7 @@ const populateQueryCache = (data: Record<string, any>) => {
             meta: undefined,
           },
         ],
-        {
-          data: records,
-          total: records.length,
-        },
+        { data: records, total: records.length },
         { updatedAt },
       );
       queryClient.setQueryData(
@@ -190,10 +178,7 @@ const populateQueryCache = (data: Record<string, any>) => {
             meta: undefined,
           },
         ],
-        {
-          data: records,
-          total: records.length,
-        },
+        { data: records, total: records.length },
         { updatedAt },
       );
     });
