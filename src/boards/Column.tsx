@@ -20,6 +20,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
     id: column?.id,
     sort: { field: "position", order: "ASC" },
     pagination: { page: 1, perPage: 10000 },
+  }, {
+    enabled: !!column,
   });
   const totalEstimates = cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,

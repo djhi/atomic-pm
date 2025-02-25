@@ -146,6 +146,8 @@ const BoardShowActions = () => {
     id: board?.id,
     pagination: { page: 1, perPage: 10000 },
     sort: { field: "position", order: "ASC" },
+  }, {
+    enabled: !!board,
   });
 
   return (
