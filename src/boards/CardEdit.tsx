@@ -1,6 +1,12 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
-import { ReferenceField, required, TextField, TextInput } from "react-admin";
+import {
+  RecordRepresentation,
+  ReferenceField,
+  required,
+  TextField,
+  TextInput,
+} from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import {
   CreateRevisionOnSave,
@@ -22,6 +28,7 @@ export const CardEdit = () => {
       close={() => navigate(`/boards/${params.boardId}`)}
       fullWidth
       maxWidth="md"
+      title={<RecordRepresentation />}
     >
       <LockOnMount />
       <RecordLiveUpdate />

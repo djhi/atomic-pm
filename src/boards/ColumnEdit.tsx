@@ -1,5 +1,5 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
-import { NumberInput, required, TextInput } from "react-admin";
+import { NumberInput, RecordRepresentation, required, TextInput } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { LockOnMount } from "./LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
@@ -16,6 +16,7 @@ export const ColumnEdit = () => {
       close={() => navigate(`/boards/${params.boardId}`)}
       fullWidth
       maxWidth="md"
+      title={<RecordRepresentation />}
     >
       <LockOnMount />
       <RecordLiveUpdate />
