@@ -40,7 +40,7 @@ export const CardEdit = () => {
         <FormWithLockSupport>
           <TextInput source="title" validate={required()} />
           <EstimateInput source="estimate" validate={required()} />
-          <RichTextInput source="description" />
+          <RichTextInput source="description" fullWidth />
         </FormWithLockSupport>
       </CreateRevisionOnSave>
       <WithRecord render={(record) => <CommentList cardId={record?.id} />} />
