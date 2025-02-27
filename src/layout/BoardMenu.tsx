@@ -1,8 +1,8 @@
 import { Button, Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { type MouseEvent, useState } from "react";
-import { ListBase, useListContext } from "react-admin";
-import { Link } from "react-router";
+import { ListBase, RaRecord, useListContext } from "react-admin";
+import { Link, useMatch } from "react-router";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 
 export const BoardMenu = () => (
@@ -56,15 +56,23 @@ const BoardMenuView = () => {
         }}
       >
         {data.map((record) => (
-          <MenuItem
-            key={record.id}
-            component={Link}
-            to={`/boards/${record.id}`}
-          >
-            {record.name}
-          </MenuItem>
+          <BoardMenuItem key={record.id} record={record} />
         ))}
       </Menu>
     </>
+  );
+};
+
+const BoardMenuItem = ({ record }: { record: RaRecord }) => {
+  const match = useMatch(`/boards/${record.id}/*`);
+  return (
+    <MenuItem
+      key={record.id}
+      component={Link}
+      to={`/boards/${record.id}`}
+      selected={!!match}
+    >
+      {record.name}
+    </MenuItem>
   );
 };
