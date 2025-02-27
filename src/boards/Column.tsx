@@ -15,14 +15,18 @@ export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const params = useParams<"boardId">();
   // TODO: Ideally we should have a view for columns that include the total estimates
-  const { data: cards, total: totalCards } = useGetManyReference("cards", {
-    target: "column_id",
-    id: column?.id,
-    sort: { field: "position", order: "ASC" },
-    pagination: { page: 1, perPage: 10000 },
-  }, {
-    enabled: !!column,
-  });
+  const { data: cards, total: totalCards } = useGetManyReference(
+    "cards",
+    {
+      target: "column_id",
+      id: column?.id,
+      sort: { field: "position", order: "ASC" },
+      pagination: { page: 1, perPage: 10000 },
+    },
+    {
+      enabled: !!column,
+    },
+  );
   const totalEstimates = cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,
     0,
@@ -78,6 +82,23 @@ export const Column = ({ sx, ...props }: StackProps) => {
                     ? `${totalCards} / ${column?.maxEstimates}`
                     : totalCards
                 }
+                sx={{
+                  lineHeight: 1.5,
+                  fontSize: "0.8rem",
+                  height: "auto",
+                  py: 0.5,
+                  px: 1,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderColor: (theme) =>
+                    column?.maxCards != null &&
+                    (totalCards || 0) > column?.maxCards
+                      ? theme.palette.warning.main
+                      : theme.palette.info.main,
+                  "& .MuiChip-label": {
+                    p: 0,
+                  },
+                }}
               />
               <Chip
                 color={
@@ -91,6 +112,23 @@ export const Column = ({ sx, ...props }: StackProps) => {
                     ? `${totalEstimates} / ${column?.maxEstimates}`
                     : totalEstimates
                 }
+                sx={{
+                  lineHeight: 1.5,
+                  fontSize: "0.8rem",
+                  height: "auto",
+                  py: 0.5,
+                  px: 1,
+                  borderStyle: "solid",
+                  borderWidth: 1,
+                  borderColor: (theme) =>
+                    column?.maxEstimates != null &&
+                    (totalCards || 0) > column.maxEstimates
+                      ? theme.palette.warning.main
+                      : theme.palette.info.main,
+                  "& .MuiChip-label": {
+                    p: 0,
+                  },
+                }}
               />
               <EditButton
                 to={{
