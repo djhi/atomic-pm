@@ -1,10 +1,4 @@
-import {
-  Admin,
-  bwLightTheme,
-  bwDarkTheme,
-  CustomRoutes,
-  ResourceContextProvider,
-} from "react-admin";
+import { Admin, bwLightTheme, bwDarkTheme, CustomRoutes } from "react-admin";
 import { Navigate, Route } from "react-router";
 import {
   ForgotPasswordPage,
@@ -37,21 +31,13 @@ export const App = () => (
       <Route path={ForgotPasswordPage.path} element={<ForgotPasswordPage />} />
     </CustomRoutes>
     <CustomRoutes>
+      <Route path="/boards/*" element={<BoardList />} />
       <Route
-        path="/boards/*"
-        element={
-          <ResourceContextProvider value="boards">
-            <BoardList />
-          </ResourceContextProvider>
-        }
-      />
-      <Route
+        // Here it's important to name the board id parameter "boardId" and not "id"
+        // to avoid conflicts with the default "id" used by sub resources that leverage
+        // the default react-admin components (Edit, Show)
         path="/boards/:boardId/*"
-        element={
-          <ResourceContextProvider value="boards">
-            <BoardShow />
-          </ResourceContextProvider>
-        }
+        element={<BoardShow />}
       />
     </CustomRoutes>
   </Admin>

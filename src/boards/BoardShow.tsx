@@ -69,6 +69,7 @@ export const BoardShow = () => {
     <>
       <Show
         id={params.boardId}
+        resource="boards"
         component="div"
         actions={<BoardShowActions />}
         sx={{ [`& .${ShowClasses.card}`]: { mt: 4 } }}

@@ -19,7 +19,13 @@ import { BoardCreate } from "./BoardCreate";
 
 export const BoardList = () => (
   <>
-    <List component="div" actions={<BoardListActions />} empty={<Empty hasCreate />} title={<BoardListTitle />}>
+    <List
+      resource="boards"
+      component="div"
+      actions={<BoardListActions />}
+      empty={<Empty hasCreate />}
+      title={<BoardListTitle />}
+    >
       <BoardListView />
       <ListLiveUpdate />
     </List>
