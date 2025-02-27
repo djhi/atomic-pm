@@ -6,6 +6,7 @@
       "dependencies": {
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
+        "@faker-js/faker": "^9.5.0",
         "@hello-pangea/dnd": "^18.0.1",
         "@mui/icons-material": "^6.4.5",
         "@mui/material": "^6.4.5",
@@ -16,7 +17,9 @@
         "@supabase/supabase-js": "^2.49.1",
         "@tanstack/react-query": "^5.66.9",
         "@tanstack/react-query-devtools": "^5.66.9",
+        "cross-env": "^7.0.3",
         "lodash": "^4.17.21",
+        "ra-data-fakerest": "^5.6.1",
         "ra-data-simple-rest": "^5.6.1",
         "ra-input-rich-text": "^5.6.1",
         "ra-supabase": "^3.4.0",
@@ -177,6 +180,8 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.2.7", "", { "dependencies": { "@eslint/core": "^0.12.0", "levn": "^0.4.1" } }, "sha512-JubJ5B2pJ4k4yGxaNLdbjrnk9d/iDz6/q8wOilpIowd6PJPgaxCuHBnBszq7Ce2TyMrywm5r4PnKm6V3iiZF+g=="],
+
+    "@faker-js/faker": ["@faker-js/faker@9.5.0", "", {}, "sha512-3qbjLv+fzuuCg3umxc9/7YjrEXNaKwHgmig949nfyaTx8eL4FAsvFbu+1JcFUj1YAXofhaDn6JdEUBTYuk0Ssw=="],
 
     "@hello-pangea/dnd": ["@hello-pangea/dnd@18.0.1", "", { "dependencies": { "@babel/runtime": "^7.26.7", "css-box-model": "^1.2.1", "raf-schd": "^4.0.3", "react-redux": "^9.2.0", "redux": "^5.0.1" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0" } }, "sha512-xojVWG8s/TGrKT1fC8K2tIWeejJYTAeJuj36zM//yEm/ZrnZUSFGS15BpO+jGZT1ybWvyXmeDJwPYb4dhWlbZQ=="],
 
@@ -512,6 +517,8 @@
 
     "crelt": ["crelt@1.0.6", "", {}, "sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g=="],
 
+    "cross-env": ["cross-env@7.0.3", "", { "dependencies": { "cross-spawn": "^7.0.1" }, "bin": { "cross-env": "src/bin/cross-env.js", "cross-env-shell": "src/bin/cross-env-shell.js" } }, "sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw=="],
+
     "cross-spawn": ["cross-spawn@7.0.6", "", { "dependencies": { "path-key": "^3.1.0", "shebang-command": "^2.0.0", "which": "^2.0.1" } }, "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA=="],
 
     "css-box-model": ["css-box-model@1.2.1", "", { "dependencies": { "tiny-invariant": "^1.0.6" } }, "sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw=="],
@@ -607,6 +614,8 @@
     "event-source-polyfill": ["event-source-polyfill@1.0.31", "", {}, "sha512-4IJSItgS/41IxN5UVAVuAyczwZF7ZIEsM1XAoUzIHA6A+xzusEZUutdXz2Nr+MQPLxfTiCvqE79/C8HT8fKFvA=="],
 
     "eventemitter3": ["eventemitter3@5.0.1", "", {}, "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="],
+
+    "fakerest": ["fakerest@4.1.2", "", { "dependencies": { "lodash": "^4.17.21" } }, "sha512-Dct66xRpUGgUJYJl2YTNRD+2bLhpTSCiIfm2i/Vm5S3HOOOtTjW89z7NMeY+dByCdQTGPvMxbWMKjUIJWsHZoA=="],
 
     "fast-deep-equal": ["fast-deep-equal@3.1.3", "", {}, "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q=="],
 
@@ -939,6 +948,8 @@
     "queue-microtask": ["queue-microtask@1.2.3", "", {}, "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="],
 
     "ra-core": ["ra-core@5.6.1", "", { "dependencies": { "@tanstack/react-query": "^5.21.7", "clsx": "^2.1.1", "date-fns": "^3.6.0", "eventemitter3": "^5.0.1", "inflection": "^3.0.0", "jsonexport": "^3.2.0", "lodash": "^4.17.21", "query-string": "^7.1.3", "react-error-boundary": "^4.0.13", "react-is": "^18.2.0 || ^19.0.0" }, "peerDependencies": { "react": "^18.0.0 || ^19.0.0", "react-dom": "^18.0.0 || ^19.0.0", "react-hook-form": "^7.53.0", "react-router": "^6.28.1 || ^7.1.1", "react-router-dom": "^6.28.1 || ^7.1.1" } }, "sha512-1NomkRcOIsDsNpdd/bS39y8J1Vf3KNlgWqZtzPYR4uV/6tEFE+VbjVN1nf/+RhMD4r6i17yZJ4VimnJ0xdD/xQ=="],
+
+    "ra-data-fakerest": ["ra-data-fakerest@5.6.1", "", { "dependencies": { "fakerest": "^4.0.1" }, "peerDependencies": { "ra-core": "^5.0.0" } }, "sha512-FQfkLrwfwb3mMQl8jdLFxmrSz10PNk0b2ZcjPIpq7OVshcPoy3a9hOxdnZLaj3XliAT1usro/KPOE/sKbBmNLg=="],
 
     "ra-data-simple-rest": ["ra-data-simple-rest@5.6.1", "", { "dependencies": { "query-string": "^7.1.3" }, "peerDependencies": { "ra-core": "^5.0.0" } }, "sha512-A81H3PpM704zs6HrzUbQSobAyXBeEaHSy+AmTKQ9z3wg2zpdjpP0ZOBc4l8hOKAFgqirXrAQSh7m8bCZh2fkFQ=="],
 

@@ -32,6 +32,7 @@ export const Card = () => {
               bgcolor: (theme) => theme.palette.action.hover,
               "& .RaEditButton-root": {
                 bgcolor: (theme) => theme.palette.background.default,
+                opacity: 1,
               },
             },
           }}
@@ -62,7 +63,11 @@ export const Card = () => {
           </CardContent>
           <CardActions>
             <EditButton
+              variant="text"
+              // @ts-ignore Until react-admin is updated
+              icon={null}
               to={{ pathname: `/boards/${params.boardId}/cards/${card?.id}` }}
+              sx={{ opacity: 0, transition: "opacity 0.3s" }}
             />
           </CardActions>
         </MuiCard>

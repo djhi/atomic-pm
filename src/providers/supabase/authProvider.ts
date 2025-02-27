@@ -1,5 +1,5 @@
 import { supabaseAuthProvider } from "ra-supabase";
-import { supabaseClient } from "./supabaseClient";
+import { supabaseClient } from "../supabaseClient";
 
 export const authProvider = supabaseAuthProvider(supabaseClient, {
   getIdentity: async (user) => {

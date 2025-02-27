@@ -10,10 +10,10 @@ import type {
   GetOneResult,
   RaRecord,
 } from "react-admin";
-import { queryClient } from "./queryClient";
-import { supabaseClient } from "./supabaseClient";
+import { queryClient } from "../queryClient";
+import { supabaseClient } from "../supabaseClient";
 
-export const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
+const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
   addLocksMethodsBasedOnALockResource(
     addRealTimeMethodsBasedOnSupabase({
       dataProvider: supabaseDataProvider({
