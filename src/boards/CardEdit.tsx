@@ -38,7 +38,7 @@ export const CardEdit = () => {
       <RecordLiveUpdate />
       <CreateRevisionOnSave skipUserDetails>
         <FormWithLockSupport>
-          <TextInput source="title" validate={required()} />
+          <TextInput source="title" validate={required()} fullWidth />
           <EstimateInput source="estimate" validate={required()} />
           <RichTextInput source="description" fullWidth />
         </FormWithLockSupport>

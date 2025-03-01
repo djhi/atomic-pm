@@ -85,7 +85,13 @@ const NewMessageInput = () => {
   };
   return (
     <>
-      <TextInput multiline source="message" onKeyDown={handleKeyPress} placeholder="Ctrl + Enter to send" />
+      <TextInput
+        multiline
+        source="message"
+        onKeyDown={handleKeyPress}
+        placeholder="Ctrl + Enter to send"
+        fullWidth
+      />
       <input type="submit" style={visuallyHidden} ref={button} />
     </>
   );
