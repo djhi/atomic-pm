@@ -3,15 +3,11 @@ import {
   RecordRepresentation,
   ReferenceManyField,
   SingleFieldList,
-  useRecordContext,
-  WithRecord,
 } from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
-import { Link } from "react-router";
-import { DocumentIconField } from "./DocumentIconField";
+import { DocumentLink } from "./DocumentLink";
 
 export const FavoriteDocuments = () => {
-  const board = useRecordContext();
   return (
     <ReferenceManyField
       target="board_id"
@@ -20,24 +16,18 @@ export const FavoriteDocuments = () => {
       filter={{ favorite: true }}
     >
       <SingleFieldList linkType={false}>
-        <WithRecord
-          render={(document) => (
-            <Link to={`/boards/${board?.id}/documents/${document.id}`}>
-              <Chip
-                color="info"
-                size="small"
-                sx={{ cursor: "inherit" }}
-                label={
-                  <Stack direction="row" alignItems="center" gap={1}>
-                    <DocumentIconField source="type" />
-                    <RecordRepresentation />
-                  </Stack>
-                }
-                clickable
-              />
-            </Link>
-          )}
-        />
+        <DocumentLink>
+          <Chip
+            color="info"
+            sx={{ cursor: "inherit" }}
+            label={
+              <Stack direction="row" alignItems="center" gap={1}>
+                <RecordRepresentation />
+              </Stack>
+            }
+            clickable
+          />
+        </DocumentLink>
       </SingleFieldList>
       <ListLiveUpdate />
     </ReferenceManyField>

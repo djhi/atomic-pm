@@ -1,7 +1,6 @@
 import { Drawer, Stack } from "@mui/material";
 import { RichTextInput } from "ra-input-rich-text";
 import {
-  BooleanInput,
   EditBase,
   required,
   SimpleForm,
@@ -62,7 +61,6 @@ export const DocumentEdit = () => {
               gap={1}
             >
               <TextInput source="title" validate={required()} />
-              <BooleanInput source="favorite" />
             </Stack>
             <RichTextInput source="content" validate={required()} />
           </SimpleForm>

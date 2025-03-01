@@ -4,11 +4,12 @@ import {
   addRealTimeMethodsBasedOnSupabase,
 } from "@react-admin/ra-realtime";
 import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
-import type {
-  DataProvider,
-  GetOneParams,
-  GetOneResult,
-  RaRecord,
+import {
+  withLifecycleCallbacks,
+  type DataProvider,
+  type GetOneParams,
+  type GetOneResult,
+  type RaRecord,
 } from "react-admin";
 import { queryClient } from "../queryClient";
 import { supabaseClient } from "../supabaseClient";
@@ -26,85 +27,121 @@ const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
   ),
 );
 
-export const dataProvider: DataProvider = {
-  ...baseDataProvider,
-  getOne: async <RecordType extends RaRecord = any>(
-    resource: string,
-    params: GetOneParams,
-  ) => {
-    const response = await baseDataProvider.getOne(resource, params);
-    const result = handlePrefetch(
-      response,
-      params?.meta?.columns ? params?.meta?.columns[0] : undefined,
-    );
+export const dataProvider: DataProvider = withLifecycleCallbacks(
+  {
+    ...baseDataProvider,
+    getOne: async <RecordType extends RaRecord = any>(
+      resource: string,
+      params: GetOneParams,
+    ) => {
+      const response = await baseDataProvider.getOne(resource, params);
+      const result = handlePrefetch(
+        response,
+        params?.meta?.columns ? params?.meta?.columns[0] : undefined,
+      );
 
-    // React-admin cannot apply prefetching to getManyReferences for boards so we do it ourselves
-    if (result.meta?.prefetched?.columns) {
-      populateQueryCache(result.meta.prefetched);
-    }
-    return result as GetOneResult<RecordType>;
+      // React-admin cannot apply prefetching to getManyReferences for boards so we do it ourselves
+      if (result.meta?.prefetched?.columns) {
+        populateQueryCache(result.meta.prefetched);
+      }
+      return result as GetOneResult<RecordType>;
+    },
+    invite: async ({ data }: { data: { email: string; board_id: number } }) => {
+      const { data: invitation, error } = await supabaseClient.functions.invoke(
+        "invite",
+        { method: "POST", body: data },
+      );
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data: invitation };
+    },
+    answerInvitation: async ({
+      data,
+    }: {
+      data: { invitation_id: number; accepted: boolean };
+    }) => {
+      const { error } = await supabaseClient.functions.invoke(
+        "answer_invitation",
+        { method: "PATCH", body: data },
+      );
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data: {} };
+    },
+    moveCard: async ({
+      data,
+    }: {
+      data: { card_id: number; column_id: number; position: number };
+    }) => {
+      const { data: response, error } = await supabaseClient.functions.invoke(
+        "move-card",
+        { method: "POST", body: data },
+      );
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data: response };
+    },
+    moveColumn: async ({
+      data,
+    }: {
+      data: { column_id: number; position: number };
+    }) => {
+      const { data: response, error } = await supabaseClient.functions.invoke(
+        "move-column",
+        { method: "POST", body: data },
+      );
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data: response };
+    },
+    getDocumentUrl: async ({ data }: { data: { bucket: string, filePath: string } }) => {
+      const oneHour = 60 * 60 * 24;
+      const { data: signedUrl, error } = await supabaseClient.storage
+        .from(data.bucket)
+        .createSignedUrl(data.filePath, oneHour);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data: signedUrl.signedUrl };
+    },
   },
-  invite: async ({ data }: { data: { email: string; board_id: number } }) => {
-    const { data: invitation, error } = await supabaseClient.functions.invoke(
-      "invite",
-      { method: "POST", body: data },
-    );
+  [
+    {
+      resource: "documents",
+      beforeCreate: async ({ data, meta }) => {
+        if (data.content instanceof File) {
+          const { data: file, error } = await supabaseClient.storage
+            .from("documents")
+            .upload(`${data.board_id}/${data.content.name}`, data.content, {
+              upsert: true,
+            });
 
-    if (error) {
-      throw new Error(error.message);
-    }
+          if (error) {
+            throw new Error(error.message);
+          }
 
-    return { data: invitation };
-  },
-  answerInvitation: async ({
-    data,
-  }: {
-    data: { invitation_id: number; accepted: boolean };
-  }) => {
-    const { error } = await supabaseClient.functions.invoke(
-      "answer_invitation",
-      { method: "PATCH", body: data },
-    );
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return { data: {} };
-  },
-  moveCard: async ({
-    data,
-  }: {
-    data: { card_id: number; column_id: number; position: number };
-  }) => {
-    const { data: response, error } = await supabaseClient.functions.invoke(
-      "move-card",
-      { method: "POST", body: data },
-    );
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return { data: response };
-  },
-  moveColumn: async ({
-    data,
-  }: {
-    data: { column_id: number; position: number };
-  }) => {
-    const { data: response, error } = await supabaseClient.functions.invoke(
-      "move-column",
-      { method: "POST", body: data },
-    );
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return { data: response };
-  },
-};
+          data.type = data.content.type;
+          data.content = file.fullPath;
+        }
+        return { data, meta };
+      },
+    },
+  ],
+);
 
 const References: Record<string, string> = {
   columns: "board_id",
