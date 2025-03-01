@@ -1,7 +1,7 @@
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { type MouseEvent, useState } from "react";
-import { ListBase, RaRecord, useListContext } from "react-admin";
+import { Button, ListBase, RaRecord, useListContext } from "react-admin";
 import { Link, useMatch } from "react-router";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 
@@ -43,16 +43,15 @@ const BoardMenuView = () => {
         variant="text"
         color="inherit"
         endIcon={<KeyboardArrowDownIcon />}
-      >
-        Boards
-      </Button>
+        label="Boards"
+      />
       <Menu
         id="boards-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "boards-button",
+        slotProps={{
+          list: { "aria-labelledby": "boards-button" },
         }}
       >
         {data.map((record) => (
