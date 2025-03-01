@@ -11,7 +11,6 @@ import {
   TopToolbar,
   useDefaultTitle,
   useListContext,
-  useRecordContext,
 } from "react-admin";
 import { BoardEdit } from "./BoardEdit";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
@@ -68,7 +67,6 @@ const BoardListView = () => {
 };
 
 const BoardListItem = () => {
-  const record = useRecordContext();
   return (
     <Card>
       <CardContent>
@@ -84,7 +82,7 @@ const BoardListItem = () => {
         </ReferenceField>
       </CardContent>
       <CardActions>
-        <EditButton label="ra.action.show" to={`/boards/${record?.id}`} />
+        <EditButton label="ra.action.show" />
         <BoardEdit />
         <DeleteButton />
       </CardActions>

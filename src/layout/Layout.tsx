@@ -10,7 +10,15 @@ import { AppBar } from "./AppBar";
 export const Layout = ({ children }: { children: ReactNode }) => (
   <ContainerLayout
     appBar={<AppBar />}
-    sx={{ [`& .${ContainerLayoutClasses.content}`]: { maxWidth: "unset" } }}
+    sx={{
+      [`&`]: {
+        bgcolor: "transparent",
+      },
+      [`& .${ContainerLayoutClasses.content}`]: {
+        maxWidth: "unset",
+        bgcolor: "transparent",
+      },
+    }}
   >
     {children}
     <CheckForApplicationUpdate />

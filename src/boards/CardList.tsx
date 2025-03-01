@@ -20,8 +20,14 @@ export const CardList = () => {
           {...droppableProvided.droppableProps}
           className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
           sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
             maxHeight: "80vh",
             overflowY: "auto",
+            scrollbarWidth: 'thin',
+            p: 1,
+            mx: -1,
             "&.isDraggingOver": { bgcolor: "action.hover" },
           }}
         >

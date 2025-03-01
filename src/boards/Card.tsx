@@ -1,8 +1,16 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { Card as MuiCard, CardActions, CardContent, Chip } from "@mui/material";
+import {
+  Card as MuiCard,
+  CardActions,
+  CardContent,
+  lighten,
+  darken,
+  Theme,
+  Typography,
+} from "@mui/material";
 import {
   EditButton,
-  NumberField,
+  FunctionField,
   TextField,
   useRecordContext,
 } from "react-admin";
@@ -23,10 +31,15 @@ export const Card = () => {
         <MuiCard
           elevation={snapshot?.isDragging ? 3 : 1}
           sx={{
-            bgcolor: (theme) => theme.palette.background.default,
+            flexShrink: 0,
+            flexGrow: 0,
+            bgcolor: (theme: Theme) =>
+              theme.palette.mode === "dark"
+                ? lighten(theme.palette.background.default, 0.05)
+                : darken(theme.palette.background.default, 0.1),
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
-            my: 1,
+            m: 0,
             cursor: "pointer",
             "&:hover": {
               bgcolor: (theme) => theme.palette.action.hover,
@@ -51,15 +64,23 @@ export const Card = () => {
               component="h2"
               sx={{ maxWidth: "80%" }}
             />
-            <Chip
+            <Typography
+              variant="body2"
               color="info"
-              label={<NumberField source="estimate" />}
               sx={{
                 position: "absolute",
                 right: (theme) => theme.spacing(1),
                 top: (theme) => theme.spacing(1),
               }}
-            />
+            >
+              <FunctionField
+                render={(record) =>
+                  record.estimate > 1
+                    ? `${record.estimate} points`
+                    : `${record.estimate} point`
+                }
+              />
+            </Typography>
           </CardContent>
           <CardActions>
             <EditButton

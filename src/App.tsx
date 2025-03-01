@@ -1,11 +1,4 @@
-import {
-  Admin,
-  bwLightTheme,
-  bwDarkTheme,
-  CustomRoutes,
-  DataProvider,
-  AuthProvider,
-} from "react-admin";
+import { Admin, CustomRoutes, DataProvider, AuthProvider } from "react-admin";
 import { Navigate, Route } from "react-router";
 import {
   ForgotPasswordPage,
@@ -13,13 +6,12 @@ import {
   SetPasswordPage,
   defaultI18nProvider,
 } from "ra-supabase";
-import * as supabaseProviders from "./providers/supabase";
-import * as fakerestProviders from "./providers/fakerest";
 import { queryClient } from "./providers/queryClient";
 import { Layout } from "./layout/Layout";
 import { BoardList } from "./boards/BoardList";
 import { BoardShow } from "./boards/BoardShow";
 import { useEffect, useState } from "react";
+import { darkTheme, lightTheme } from "./layout/themes";
 
 export const App = () => {
   const [dataProvider, setDataProvider] = useState<DataProvider>();
@@ -52,8 +44,8 @@ export const App = () => {
       i18nProvider={defaultI18nProvider}
       queryClient={queryClient}
       title="SupaBoards"
-      lightTheme={bwLightTheme}
-      darkTheme={bwDarkTheme}
+      lightTheme={lightTheme}
+      darkTheme={darkTheme}
       dashboard={() => <Navigate to="/boards" />}
     >
       <CustomRoutes noLayout>

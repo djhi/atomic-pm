@@ -72,7 +72,7 @@ export const BoardShow = () => {
         resource="boards"
         component="div"
         actions={<BoardShowActions />}
-        sx={{ [`& .${ShowClasses.card}`]: { mt: 4 } }}
+        sx={{ [`& .${ShowClasses.card}`]: { mt: 1, bgcolor: "transparent" } }}
         queryOptions={{ meta: { columns: ["*, columns(*, cards(*))"] } }}
         title={<BoardTitle />}
       >
@@ -133,23 +133,25 @@ const BoardTitle = () => {
   return (
     <>
       <span>{record?.name}</span>
-      <title>
-        {`${record?.name} - ${appTitle}`}
-      </title>
+      <title>{`${record?.name} - ${appTitle}`}</title>
     </>
   );
 };
 
 const BoardShowActions = () => {
   const board = useRecordContext();
-  const { total } = useGetManyReference("columns", {
-    target: "board_id",
-    id: board?.id,
-    pagination: { page: 1, perPage: 10000 },
-    sort: { field: "position", order: "ASC" },
-  }, {
-    enabled: !!board,
-  });
+  const { total } = useGetManyReference(
+    "columns",
+    {
+      target: "board_id",
+      id: board?.id,
+      pagination: { page: 1, perPage: 10000 },
+      sort: { field: "position", order: "ASC" },
+    },
+    {
+      enabled: !!board,
+    },
+  );
 
   return (
     <TopToolbar sx={{ justifyContent: "space-between" }}>
