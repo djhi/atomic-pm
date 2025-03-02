@@ -44,6 +44,10 @@ export const useMoveCard = () => {
         },
       });
 
+      queryClient.invalidateQueries({
+        queryKey: ["columns", "getManyReference"],
+      });
+
       addRevision("cards", {
         recordId: cardId,
         data: { ...sourceCard, card_id: cardId, column_id: columnId, position },
@@ -52,7 +56,8 @@ export const useMoveCard = () => {
           columnId !== destinationColumn.id
             ? `Moved card from column ${sourceColumn.name} to column ${destinationColumn.name} at position ${position + 1}`
             : `Moved card to position ${position + 1} in column ${destinationColumn.name}`,
-        description: columnId !== destinationColumn.id
+        description:
+          columnId !== destinationColumn.id
             ? `Moved card from column ${sourceColumn.name} to column ${destinationColumn.name} at position ${position + 1}`
             : `Moved card to position ${position + 1} in column ${destinationColumn.name}`,
         authorId: identity?.id,
