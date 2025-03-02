@@ -135,7 +135,7 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
           }
 
           data.type = data.content.type;
-          data.content = file.fullPath;
+          data.content = file.path;
         }
         return { data, meta };
       },

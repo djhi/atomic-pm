@@ -20,3 +20,9 @@ $function$
 ;
 
 SELECT executeSchemaTables('public', 'ALTER PUBLICATION supabase_realtime ADD TABLE %I;');
+
+-- Create the documents bucket
+INSERT INTO storage.buckets
+  (id, name, public)
+VALUES
+  ('documents', 'documents', false);
