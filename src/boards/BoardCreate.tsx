@@ -16,8 +16,8 @@ export const BoardCreate = () => {
       mutationOptions={{ onSuccess: (data) => navigate(`/boards/${data.id}`) }}
     >
       <SimpleForm>
-        <TextInput source="name" validate={required()} />
-        <TextInput source="description" multiline minRows={4} />
+        <TextInput source="name" validate={required()} fullWidth />
+        <TextInput source="description" multiline minRows={4} fullWidth />
       </SimpleForm>
     </CreateInDialogButton>
   );
