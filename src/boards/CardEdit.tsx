@@ -21,6 +21,7 @@ import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
 import { CommentList } from "./CommentList";
+import { grey } from "@mui/material/colors";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
@@ -40,7 +41,24 @@ export const CardEdit = () => {
         <FormWithLockSupport>
           <TextInput source="title" validate={required()} fullWidth />
           <EstimateInput source="estimate" validate={required()} />
-          <RichTextInput source="description" fullWidth />
+          <RichTextInput
+            source="description"
+            fullWidth
+            sx={{
+              [`& .RaRichTextInput-editorContent`]: {
+                "& .ProseMirror": {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark" ? grey[800] : grey[300],
+                  minHeight: "20vh",
+
+                  "&:focus": {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? grey[800] : grey[300],
+                  },
+                },
+              },
+            }}
+          />
         </FormWithLockSupport>
       </CreateRevisionOnSave>
       <WithRecord render={(record) => <CommentList cardId={record?.id} />} />

@@ -1,8 +1,16 @@
 import { CreateDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
-import { required, SimpleForm, TextInput, useDefaultTitle, useGetOne, useRecordFromLocation } from "react-admin";
+import {
+  required,
+  SimpleForm,
+  TextInput,
+  useDefaultTitle,
+  useGetOne,
+  useRecordFromLocation,
+} from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { EstimateInput } from "./EstimateInput";
+import { grey } from "@mui/material/colors";
 
 export const CardCreate = () => {
   const navigate = useNavigate();
@@ -19,7 +27,24 @@ export const CardCreate = () => {
       <SimpleForm>
         <TextInput source="title" validate={required()} fullWidth />
         <EstimateInput source="estimate" validate={required()} />
-        <RichTextInput source="description" />
+        <RichTextInput
+          source="description"
+          fullWidth
+          sx={{
+            [`& .RaRichTextInput-editorContent`]: {
+              "& .ProseMirror": {
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "dark" ? grey[800] : grey[300],
+                minHeight: "20vh",
+
+                "&:focus": {
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark" ? grey[800] : grey[300],
+                },
+              },
+            },
+          }}
+        />
       </SimpleForm>
     </CreateDialog>
   );
@@ -33,7 +58,11 @@ const CardTitle = () => {
     { id: record?.column_id },
     { enabled: record?.column_id != null },
   );
-  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const { data: board } = useGetOne(
+    "boards",
+    { id: params.boardId },
+    { enabled: !!params.boardId },
+  );
   const appTitle = useDefaultTitle();
   return (
     <>
