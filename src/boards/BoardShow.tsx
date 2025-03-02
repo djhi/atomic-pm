@@ -73,14 +73,14 @@ export const BoardShow = () => {
         component="div"
         actions={<BoardShowActions />}
         sx={{ [`& .${ShowClasses.card}`]: { mt: 1, bgcolor: "transparent" } }}
-        queryOptions={{ meta: { columns: ["*, columns(*, cards(*))"] } }}
+        queryOptions={{ meta: { columns: ["*, documents(*), columns(*, cards(*))"] } }}
         title={<BoardTitle />}
       >
         <DragDropContext onDragEnd={onDragEnd}>
           <ReferenceManyField
             reference="columns"
             target="board_id"
-            perPage={10000}
+            perPage={1000}
             sort={{ field: "position", order: "ASC" }}
           >
             <Droppable droppableId="board" type="column" direction="horizontal">
@@ -145,7 +145,7 @@ const BoardShowActions = () => {
     {
       target: "board_id",
       id: board?.id,
-      pagination: { page: 1, perPage: 10000 },
+      pagination: { page: 1, perPage: 1000 },
       sort: { field: "position", order: "ASC" },
     },
     {

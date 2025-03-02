@@ -21,7 +21,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
       target: "column_id",
       id: column?.id,
       sort: { field: "position", order: "ASC" },
-      pagination: { page: 1, perPage: 10000 },
+      pagination: { page: 1, perPage: 1000 },
     },
     {
       enabled: !!column,
@@ -109,7 +109,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
             reference="cards"
             target="column_id"
             sort={{ field: "position", order: "ASC" }}
-            perPage={10000}
+            perPage={1000}
           >
             <CardList />
             <ListLiveUpdate />

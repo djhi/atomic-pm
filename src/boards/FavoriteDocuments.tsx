@@ -14,6 +14,7 @@ export const FavoriteDocuments = () => {
       reference="documents"
       perPage={1000}
       filter={{ favorite: true }}
+      sort={{ field: "created_at", order: "ASC" }}
     >
       <SingleFieldList linkType={false}>
         <DocumentLink>
