@@ -9,7 +9,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import MailIcon from "@mui/icons-material/Mail";
-import { Button, ListBase, useDataProvider, useGetIdentity, useListContext, useNotify } from "react-admin";
+import {
+  Button,
+  ListBase,
+  useDataProvider,
+  useGetIdentity,
+  useListContext,
+  useNotify,
+} from "react-admin";
 import { type MouseEvent, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
@@ -21,6 +28,7 @@ export const InvitationNotifier = () => {
       resource="invitations"
       sort={{ field: "created_at", order: "DESC" }}
       filter={{ email: identity?.fullName }}
+      queryOptions={{ enabled: !!identity }}
     >
       <InvitationNotifierListView />
       <ListLiveUpdate />
@@ -74,7 +82,7 @@ const InvitationNotifierListView = () => {
       </Popover>
     </>
   );
-}
+};
 
 const InvitationItem = ({
   invitation,
