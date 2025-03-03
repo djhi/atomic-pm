@@ -11,6 +11,10 @@ export const Column = ({ sx, ...props }: StackProps) => {
     (acc: number, card: any) => acc + card.estimate,
     0,
   );
+  const hasTooManyCards =
+    column?.maxCards != null && (column?.cards.length || 0) > column?.maxCards;
+  const hasTooManyEstimates =
+    column?.maxEstimates != null && totalEstimates > column?.maxEstimates;
 
   return (
     <Draggable
@@ -25,6 +29,11 @@ export const Column = ({ sx, ...props }: StackProps) => {
           sx={{
             ...sx,
             borderRadius: (theme) => theme.shape.borderRadius / 4,
+            borderWidth: 6,
+            borderStyle: "solid",
+            borderColor: theme => hasTooManyEstimates
+              ? theme.palette.warning.dark
+              : theme.palette.background.default,
             bgcolor: "background.paper",
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
@@ -57,26 +66,16 @@ export const Column = ({ sx, ...props }: StackProps) => {
             <Stack direction="row" justifyContent="space-between">
               <Typography
                 variant="body1"
-                color={
-                  column?.maxCards != null &&
-                  (column?.cards.length || 0) > column?.maxCards
-                    ? "warning"
-                    : "info"
-                }
+                color={hasTooManyCards ? "warning" : "info"}
               >
                 {column?.maxCards != null
-                  ? `${column?.cards.length} / ${column?.maxEstimates}`
+                  ? `${column?.cards.length} / ${column?.maxCards}`
                   : column?.cards.length}{" "}
                 Cards
               </Typography>
               <Typography
                 variant="body1"
-                color={
-                  column?.maxEstimates != null &&
-                  totalEstimates > column?.maxEstimates
-                    ? "warning"
-                    : "info"
-                }
+                color={hasTooManyEstimates ? "warning" : "info"}
               >
                 {column?.maxEstimates != null
                   ? `${totalEstimates} / ${column?.maxEstimates}`
