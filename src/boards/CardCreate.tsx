@@ -25,7 +25,7 @@ export const CardCreate = () => {
       title={<CardTitle />}
     >
       <SimpleForm>
-        <TextInput source="title" validate={required()} fullWidth />
+        <TextInput source="title" validate={required()} />
         <EstimateInput source="estimate" validate={required()} />
         <RichTextInput
           source="description"

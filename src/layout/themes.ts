@@ -4,6 +4,7 @@ import { bwLightTheme, bwDarkTheme } from "react-admin";
 export const darkTheme = {
   ...bwDarkTheme,
   components: {
+    ...bwDarkTheme.components,
     MuiCssBaseline: {
       styleOverrides: {
         body: {
@@ -20,6 +21,7 @@ export const darkTheme = {
 export const lightTheme = {
   ...bwLightTheme,
   components: {
+    ...bwLightTheme.components,
     MuiCssBaseline: {
       styleOverrides: {
         body: {

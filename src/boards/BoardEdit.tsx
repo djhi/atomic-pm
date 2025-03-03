@@ -14,8 +14,8 @@ export const BoardEdit = () => (
     title={<RecordRepresentation />}
   >
     <SimpleForm>
-      <TextInput source="name" validate={required()} fullWidth />
-      <TextInput source="description" multiline minRows={4} fullWidth />
+      <TextInput source="name" validate={required()} />
+      <TextInput source="description" multiline minRows={4} />
     </SimpleForm>
   </EditInDialogButton>
 );
