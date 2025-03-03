@@ -1,11 +1,10 @@
 import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
 import { addLocksMethodsBasedOnALockResource } from "@react-admin/ra-realtime";
-import createFakeRestProvider from "ra-data-fakerest";
-import { generateData } from "./dataGenerator/generateData";
+import createSimpleRestProvider from "ra-data-simple-rest";
 import { withLifecycleCallbacks } from "react-admin";
 import { getUserFromStorage } from "./utils";
 
-const fakerestDataProvider = createFakeRestProvider(generateData(), true);
+const fakerestDataProvider = createSimpleRestProvider('http://localhost:3000');
 
 const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
   addLocksMethodsBasedOnALockResource(fakerestDataProvider),
@@ -115,6 +114,23 @@ export const dataProvider = withLifecycleCallbacks(
         position: data.position,
       });
     },
+    getDocumentUrl: async ({
+          data,
+        }: {
+          data: { bucket: string; filePath: string };
+        }) => {
+          const base64Document = localStorage.getItem(data.filePath);
+          if (!base64Document) return null;
+          const [, base64DocumentWithoutPrefix] = base64Document.split(",");
+          const document = Uint8Array.from(
+            atob(base64DocumentWithoutPrefix),
+            (c) => c.charCodeAt(0),
+          );
+          const blob = new Blob([document]);
+          const signedUrl = URL.createObjectURL(blob);
+    
+          return { data: signedUrl };
+        },
   },
   [
     {
@@ -147,6 +163,25 @@ export const dataProvider = withLifecycleCallbacks(
             user_id: user.id,
           },
         });
+      },
+    },
+    {
+      resource: "documents",
+      beforeCreate: async ({ data, meta }) => {
+        if (data.content instanceof File) {
+          const base64Document = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              resolve(reader.result as string);
+            };
+            reader.readAsDataURL(data.content);
+          });
+          localStorage.setItem(data.content.name, base64Document);
+
+          data.type = data.content.type;
+          data.content = data.content.name;
+        }
+        return { data, meta };
       },
     },
   ],
