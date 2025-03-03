@@ -90,8 +90,8 @@ export const useBoardDragAndDrop = ({
         data: {
           column_id: columnId,
           position,
-          column: previousData,
         },
+        previousData,
       });
     },
   );
@@ -211,8 +211,8 @@ export const useBoardDragAndDrop = ({
           card_id: cardId,
           column_id: destinationColumnId,
           position,
-          previousData,
         },
+        previousData,
       });
     },
   );
