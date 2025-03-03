@@ -75,8 +75,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 color={hasTooManyCards ? "warning" : "info"}
               >
                 {column?.maxCards != null
-                  ? `${column?.cards.length} / ${column?.maxCards}`
-                  : column?.cards.length}{" "}
+                  ? `${column?.cards?.length} / ${column?.maxCards}`
+                  : column?.cards?.length}{" "}
                 Cards
               </Typography>
               <Typography

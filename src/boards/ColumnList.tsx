@@ -21,7 +21,7 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
       }}
       {...props}
     >
-      {board.columns.map((record: any) => (
+      {board.columns?.map((record: any) => (
         <RecordContextProvider key={record.id} value={record}>
           <Column
             sx={{ width: { xs: "100%", sm: "100%", md: "400px" }, padding: 2 }}

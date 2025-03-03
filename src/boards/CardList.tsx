@@ -28,7 +28,7 @@ export const CardList = () => {
             "&.isDraggingOver": { bgcolor: "action.hover" },
           }}
         >
-          {column.cards.map((record: any) => (
+          {column.cards?.map((record: any) => (
             <RecordContextProvider key={record.id} value={record}>
               <Card />
             </RecordContextProvider>
@@ -41,7 +41,7 @@ export const CardList = () => {
               pathname: `/boards/${params.boardId}/cards/create`,
               search: `?source=${JSON.stringify({
                 column_id: column?.id,
-                position: column.cards.length,
+                position: column.cards?.length,
                 created_at: new Date().toISOString(),
               })}`,
             }}
