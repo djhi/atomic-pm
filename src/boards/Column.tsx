@@ -42,7 +42,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
             width: { xs: "100%", sm: "100%", md: "350px" },
             flexShrink: 0,
             maxHeight: "85vh",
-            transition: "all 300ms ease",
+            transition: "borderColor 300ms ease",
             "&.warning": {
               borderColor: (theme) => theme.palette.warning.dark,
             },

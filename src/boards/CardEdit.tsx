@@ -16,16 +16,18 @@ import {
   RevisionListWithDetailsInDialog,
 } from "@react-admin/ra-history";
 import { Box } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import { useQueryClient } from "@tanstack/react-query";
 import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
 import { CommentList } from "./CommentList";
-import { grey } from "@mui/material/colors";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
   const params = useParams<"boardId">();
+  const queryClient = useQueryClient();
 
   return (
     <EditDialog
@@ -34,6 +36,35 @@ export const CardEdit = () => {
       fullWidth
       maxWidth="md"
       title={<CardTitle />}
+      mutationOptions={{
+        onSuccess: (data: any) => {
+          queryClient.setQueryData<any>(
+            [
+              "boards",
+              "getOne",
+              {
+                id: String(params.boardId),
+                meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+              },
+            ],
+            (record: any) => {
+              return {
+                ...record,
+                columns: record.columns.map((column: any) =>
+                  column.id === data.column_id
+                    ? {
+                        ...column,
+                        cards: column.cards.map((card: any) =>
+                          card.id === data.id ? { ...card, ...data } : card,
+                        ),
+                      }
+                    : column,
+                ),
+              };
+            },
+          );
+        },
+      }}
     >
       <LockOnMount />
       <RecordLiveUpdate />
