@@ -14,6 +14,7 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
+import { Stack } from "@mui/material";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
@@ -22,11 +23,10 @@ import { CardCreate } from "./CardCreate";
 import { CardEdit } from "./CardEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { FavoriteDocuments } from "./FavoriteDocuments";
-import { Stack } from "@mui/material";
 import { DocumentCreate } from "./DocumentCreate";
 import { DocumentEdit } from "./DocumentEdit";
 import { DocumentList } from "./DocumentList";
-import { useBoardDragAndDrop } from "./useBoardDragAndDrop";
+import { useBoard } from "./useBoard";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
@@ -74,7 +74,7 @@ export const BoardShow = () => {
 };
 
 const BoardShowLayout = () => {
-  const [board, { moveCard, moveColumn }] = useBoardDragAndDrop();
+  const [board, { moveCard, moveColumn }] = useBoard();
 
   const onDragEnd: OnDragEndResponder = useEvent(async (result) => {
     const { destination, source, draggableId, type } = result;

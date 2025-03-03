@@ -1,42 +1,35 @@
-import { useEffect, useState } from "react";
-import {
-  RaRecord,
-  useDataProvider,
-  useEvent,
-  useRecordContext,
-} from "react-admin";
+import { Identifier, RaRecord, useDataProvider, useEvent } from "react-admin";
 import cloneDeep from "lodash/cloneDeep";
+import { useMemo } from "react";
 
-export const useBoardDragAndDrop = (): [
-  RaRecord | undefined,
-  {
-    moveCard: ({
-      cardId,
-      sourceColumnId,
-      destinationColumnId,
-      position,
-    }: {
-      cardId: number;
-      sourceColumnId: number;
-      destinationColumnId: number;
-      position: number;
-    }) => void;
-    moveColumn: ({
-      columnId,
-      position,
-    }: {
-      columnId: number;
-      position: number;
-    }) => void;
-  },
-] => {
-  const record = useRecordContext();
-
-  const [board, setBoard] = useState(cloneDeep(record));
-  useEffect(() => {
-    setBoard(cloneDeep(record));
-  }, [record]);
-
+export const useBoardDragAndDrop = ({
+  board,
+  setBoard,
+}: {
+  board: RaRecord | undefined;
+  setBoard: React.Dispatch<
+    React.SetStateAction<RaRecord<Identifier> | undefined>
+  >;
+}): {
+  moveCard: ({
+    cardId,
+    sourceColumnId,
+    destinationColumnId,
+    position,
+  }: {
+    cardId: number;
+    sourceColumnId: number;
+    destinationColumnId: number;
+    position: number;
+  }) => void;
+  moveColumn: ({
+    columnId,
+    position,
+  }: {
+    columnId: number;
+    position: number;
+  }) => void;
+} => {
   const dataProvider = useDataProvider();
 
   const moveColumn = useEvent(
@@ -224,5 +217,5 @@ export const useBoardDragAndDrop = (): [
     },
   );
 
-  return [board, { moveCard, moveColumn }];
+  return useMemo(() => ({ moveCard, moveColumn }), []);
 };
