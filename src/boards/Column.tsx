@@ -1,8 +1,9 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Stack, StackProps, Typography } from "@mui/material";
 import { EditButton, TextField, useRecordContext } from "react-admin";
-import { CardList } from "./CardList";
 import { useParams } from "react-router";
+import clsx from "clsx";
+import { CardList } from "./CardList";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
@@ -26,20 +27,25 @@ export const Column = ({ sx, ...props }: StackProps) => {
       {(provided, snapshot) => (
         <Stack
           {...props}
+          className={clsx({
+            warning: hasTooManyCards || hasTooManyEstimates,
+          })}
           sx={{
             ...sx,
             borderRadius: (theme) => theme.shape.borderRadius / 4,
             borderWidth: 6,
             borderStyle: "solid",
-            borderColor: theme => hasTooManyEstimates
-              ? theme.palette.warning.dark
-              : theme.palette.background.default,
+            borderColor: (theme) => theme.palette.background.default,
             bgcolor: "background.paper",
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
             width: { xs: "100%", sm: "100%", md: "350px" },
             flexShrink: 0,
             maxHeight: "85vh",
+            transition: "all 300ms ease",
+            "&.warning": {
+              borderColor: (theme) => theme.palette.warning.dark,
+            },
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
