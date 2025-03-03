@@ -1,16 +1,13 @@
 import { Droppable } from "@hello-pangea/dnd";
 import { Box } from "@mui/material";
-import { CreateButton, RecordContextProvider, useListContext, useRecordContext } from "react-admin";
+import { CreateButton, RecordContextProvider, useRecordContext } from "react-admin";
 import { useParams } from "react-router";
 import { Card } from "./Card";
 
 export const CardList = () => {
   const column = useRecordContext();
-  const { data, error, isPending } = useListContext();
+  if (!column) return null;
   const params = useParams<"boardId">();
-
-  if (isPending) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
   return (
     <Droppable droppableId={column!.id.toString()} type="card">
@@ -25,13 +22,13 @@ export const CardList = () => {
             gap: 2,
             maxHeight: "80vh",
             overflowY: "auto",
-            scrollbarWidth: 'thin',
+            scrollbarWidth: "thin",
             p: 1,
             mx: -1,
             "&.isDraggingOver": { bgcolor: "action.hover" },
           }}
         >
-          {data.map((record) => (
+          {column.cards.map((record: any) => (
             <RecordContextProvider key={record.id} value={record}>
               <Card />
             </RecordContextProvider>
@@ -44,7 +41,7 @@ export const CardList = () => {
               pathname: `/boards/${params.boardId}/cards/create`,
               search: `?source=${JSON.stringify({
                 column_id: column?.id,
-                position: data.length,
+                position: column.cards.length,
                 created_at: new Date().toISOString(),
               })}`,
             }}

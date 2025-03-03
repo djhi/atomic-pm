@@ -1,33 +1,13 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Stack, StackProps, Typography } from "@mui/material";
-import {
-  EditButton,
-  ReferenceManyField,
-  TextField,
-  useGetManyReference,
-  useRecordContext,
-} from "react-admin";
-import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { EditButton, TextField, useRecordContext } from "react-admin";
 import { CardList } from "./CardList";
 import { useParams } from "react-router";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const params = useParams<"boardId">();
-  // TODO: Ideally we should have a view for columns that include the total estimates
-  const { data: cards, total: totalCards } = useGetManyReference(
-    "cards",
-    {
-      target: "column_id",
-      id: column?.id,
-      sort: { field: "position", order: "ASC" },
-      pagination: { page: 1, perPage: 1000 },
-    },
-    {
-      enabled: !!column,
-    },
-  );
-  const totalEstimates = cards?.reduce(
+  const totalEstimates = column?.cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,
     0,
   );
@@ -79,14 +59,14 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 variant="body1"
                 color={
                   column?.maxCards != null &&
-                  (totalCards || 0) > column?.maxCards
+                  (column?.cards.length || 0) > column?.maxCards
                     ? "warning"
                     : "info"
                 }
               >
                 {column?.maxCards != null
-                  ? `${totalCards} / ${column?.maxEstimates}`
-                  : totalCards}{" "}
+                  ? `${column?.cards.length} / ${column?.maxEstimates}`
+                  : column?.cards.length}{" "}
                 Cards
               </Typography>
               <Typography
@@ -105,15 +85,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
               </Typography>
             </Stack>
           </Stack>
-          <ReferenceManyField
-            reference="cards"
-            target="column_id"
-            sort={{ field: "position", order: "ASC" }}
-            perPage={1000}
-          >
-            <CardList />
-            <ListLiveUpdate />
-          </ReferenceManyField>
+          <CardList />
         </Stack>
       )}
     </Draggable>

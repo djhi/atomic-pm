@@ -1,15 +1,13 @@
 import {
   CreateButton,
-  ReferenceManyField,
+  RecordContextProvider,
   Show,
   ShowClasses,
   TopToolbar,
   useDefaultTitle,
   useEvent,
-  useGetManyReference,
   useRecordContext,
 } from "react-admin";
-import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import {
   DragDropContext,
   Droppable,
@@ -17,8 +15,6 @@ import {
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
 import { BoardMembersEdit } from "./BoardMembersEdit";
-import { useMoveCard } from "./useMoveCard";
-import { useMoveColumn } from "./useMoveColumn";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
@@ -30,40 +26,10 @@ import { Stack } from "@mui/material";
 import { DocumentCreate } from "./DocumentCreate";
 import { DocumentEdit } from "./DocumentEdit";
 import { DocumentList } from "./DocumentList";
+import { useBoardDragAndDrop } from "./useBoardDragAndDrop";
 
 export const BoardShow = () => {
-  const moveCard = useMoveCard();
-  const moveColumn = useMoveColumn();
   const params = useParams<"boardId">();
-
-  const onDragEnd: OnDragEndResponder = useEvent(async (result) => {
-    const { destination, source, draggableId, type } = result;
-
-    if (!destination) {
-      return;
-    }
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    if (type === "card") {
-      await moveCard({
-        cardId: parseInt(draggableId.replace("card-", "")),
-        columnId: parseInt(destination.droppableId),
-        position: destination.index,
-      });
-    }
-    if (type === "column") {
-      await moveColumn({
-        columnId: parseInt(draggableId.replace("column-", "")),
-        position: destination.index,
-      });
-    }
-  });
 
   return (
     <>
@@ -73,31 +39,12 @@ export const BoardShow = () => {
         component="div"
         actions={<BoardShowActions />}
         sx={{ [`& .${ShowClasses.card}`]: { mt: 1, bgcolor: "transparent" } }}
-        queryOptions={{ meta: { columns: ["*, documents(*), columns(*, cards(*))"] } }}
+        queryOptions={{
+          meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+        }}
         title={<BoardTitle />}
       >
-        <DragDropContext onDragEnd={onDragEnd}>
-          <ReferenceManyField
-            reference="columns"
-            target="board_id"
-            perPage={1000}
-            sort={{ field: "position", order: "ASC" }}
-          >
-            <Droppable droppableId="board" type="column" direction="horizontal">
-              {(droppableProvided, snapshot) => (
-                <div ref={droppableProvided.innerRef}>
-                  <ColumnList
-                    {...droppableProvided.droppableProps}
-                    className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
-                    sx={{ "&.isDraggingOver": { bgcolor: "action.hover" } }}
-                  />
-                  {droppableProvided.placeholder}
-                </div>
-              )}
-            </Droppable>
-            <ListLiveUpdate />
-          </ReferenceManyField>
-        </DragDropContext>
+        <BoardShowLayout />
       </Show>
       <Routes>
         <Route
@@ -126,6 +73,65 @@ export const BoardShow = () => {
   );
 };
 
+const BoardShowLayout = () => {
+  const [board, { moveCard, moveColumn }] = useBoardDragAndDrop();
+
+  const onDragEnd: OnDragEndResponder = useEvent(async (result) => {
+    const { destination, source, draggableId, type } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    if (type === "card") {
+      // draggableId for cards is `card-${columnId}-${cardId}`. Extract both values:
+      const [, columnIdString, cardIdString] = draggableId.split("-");
+
+      const cardId = parseInt(cardIdString);
+      const sourceColumnId = parseInt(columnIdString);
+      const destinationColumnId = parseInt(destination.droppableId);
+      await moveCard({
+        cardId,
+        sourceColumnId,
+        destinationColumnId,
+        position: destination.index,
+      });
+    }
+    if (type === "column") {
+      await moveColumn({
+        columnId: parseInt(draggableId.replace("column-", "")),
+        position: destination.index,
+      });
+    }
+  });
+
+  return (
+    <RecordContextProvider value={board}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="board" type="column" direction="horizontal">
+          {(droppableProvided, snapshot) => (
+            <div ref={droppableProvided.innerRef}>
+              <ColumnList
+                {...droppableProvided.droppableProps}
+                className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
+                sx={{ "&.isDraggingOver": { bgcolor: "action.hover" } }}
+              />
+              {droppableProvided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </RecordContextProvider>
+  );
+};
+
 const BoardTitle = () => {
   const record = useRecordContext();
   const appTitle = useDefaultTitle();
@@ -140,18 +146,6 @@ const BoardTitle = () => {
 
 const BoardShowActions = () => {
   const board = useRecordContext();
-  const { total } = useGetManyReference(
-    "columns",
-    {
-      target: "board_id",
-      id: board?.id,
-      pagination: { page: 1, perPage: 1000 },
-      sort: { field: "position", order: "ASC" },
-    },
-    {
-      enabled: !!board,
-    },
-  );
 
   return (
     <TopToolbar sx={{ justifyContent: "space-between" }}>
@@ -167,7 +161,7 @@ const BoardShowActions = () => {
             search: `?source=${JSON.stringify({
               board_id: board?.id,
               created_at: new Date().toISOString(),
-              position: total,
+              position: board?.columns.length,
             })}`,
           }}
         />

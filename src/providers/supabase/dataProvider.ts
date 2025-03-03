@@ -4,13 +4,7 @@ import {
   addRealTimeMethodsBasedOnSupabase,
 } from "@react-admin/ra-realtime";
 import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
-import {
-  withLifecycleCallbacks,
-  type DataProvider,
-  type GetOneResult,
-  type RaRecord,
-} from "react-admin";
-import { queryClient } from "../queryClient";
+import { withLifecycleCallbacks, type DataProvider } from "react-admin";
 import { supabaseClient } from "../supabaseClient";
 
 const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
@@ -109,86 +103,21 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
   [
     {
       resource: "boards",
-      afterGetOne: async (response: GetOneResult<RaRecord>) => {
-        const { data, meta } = response;
-        if (!data) {
-          return response;
-        }
-        const updatedAt = Date.now() + 10000;
-        let columnsWithoutCards = [];
-        const { columns, documents, ...board } = data;
-        for (const column of columns) {
-          const { cards, ...columnWithoutCards } = column;
-          columnsWithoutCards.push(columnWithoutCards);
-
-          queryClient.setQueryData(
-            [
-              "cards",
-              "getManyReference",
-              {
-                target: "column_id",
-                id: columnWithoutCards.id,
-                pagination: { page: 1, perPage: 1000 },
-                sort: { field: "position", order: "ASC" },
-                filter: {},
-                meta: undefined,
-              },
-            ],
-            { data: cards, total: cards.length },
-            { updatedAt },
-          );
-        }
-
-        queryClient.setQueryData(
-          [
-            "columns",
-            "getManyReference",
-            {
-              target: "board_id",
-              id: data.id,
-              pagination: { page: 1, perPage: 1000 },
-              sort: { field: "position", order: "ASC" },
-              filter: {},
-              meta: undefined,
-            },
-          ],
-          { data: columnsWithoutCards, total: columnsWithoutCards.length },
-          { updatedAt },
-        );
-        queryClient.setQueryData(
-          [
-            "documents",
-            "getManyReference",
-            {
-              target: "board_id",
-              id: data.id,
-              pagination: { page: 1, perPage: 1000 },
-              sort: { field: "created_at", order: "ASC" },
-              filter: {},
-              meta: undefined,
-            },
-          ],
-          { data: documents, total: documents.length },
-          { updatedAt },
-        );
-        const favoriteDocuments = documents.filter((document: any) => document.favorite);
-        queryClient.setQueryData(
-          [
-            "documents",
-            "getManyReference",
-            {
-              target: "board_id",
-              id: data.id,
-              pagination: { page: 1, perPage: 1000 },
-              sort: { field: "created_at", order: "ASC" },
-              filter: { favorite: true },
-              meta: undefined,
-            },
-          ],
-          { data: favoriteDocuments, total: favoriteDocuments.length },
-          { updatedAt },
-        );
-        return { data: board, meta };
+      afterGetOne: async (response) => {
+        return {
+          ...response,
+          data: {
+            ...response.data,
+            columns: response.data.columns
+              .map((column: any) => ({
+                ...column,
+                cards: column.cards.sort(
+                  (a: any, b: any) => a.position - b.position,
+                ),
+              }))
+              .sort((a: any, b: any) => a.position - b.position),
+          },
+        };
       },
     },
     {

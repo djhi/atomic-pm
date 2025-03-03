@@ -18,11 +18,12 @@ import { useNavigate, useParams } from "react-router";
 
 export const Card = () => {
   const card = useRecordContext();
+  if (!card) return null;
   const navigate = useNavigate();
   const params = useParams<"boardId">();
   return (
     <Draggable
-      draggableId={`card-${card!.id}`}
+      draggableId={`card-${card.column_id}-${card!.id}`}
       index={card!.position}
       // @ts-expect-error Draggable type is not defined in @hello-pangea/dnd
       type="card"
