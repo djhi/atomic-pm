@@ -1,33 +1,35 @@
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
 import {
+  DateField,
   ReferenceField,
+  ReferenceManyField,
   required,
+  SimpleList,
   TextField,
   TextInput,
   useDefaultTitle,
   useGetOne,
+  useNotify,
   useRecordContext,
-  WithRecord,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
-import {
-  CreateRevisionOnSave,
-  RevisionListWithDetailsInDialog,
-} from "@react-admin/ra-history";
-import { Box } from "@mui/material";
+import { CreateRevisionOnSave } from "@react-admin/ra-history";
+import { Box, Stack } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useQueryClient } from "@tanstack/react-query";
 import { LockOnMount } from "./LockOnMount";
 import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
-import { CommentList } from "./CommentList";
+import { NewMessage } from "./NewMessage";
+import { ListLiveUpdate } from "@react-admin/ra-realtime";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
   const params = useParams<"boardId">();
   const queryClient = useQueryClient();
+  const notify = useNotify();
 
   return (
     <EditDialog
@@ -38,6 +40,11 @@ export const CardEdit = () => {
       title={<CardTitle />}
       mutationOptions={{
         onSuccess: (data: any) => {
+          notify("ra.notification.updated", {
+            type: "info",
+            messageArgs: { smart_count: 1 },
+            undoable: true,
+          });
           queryClient.setQueryData<any>(
             [
               "boards",
@@ -92,15 +99,55 @@ export const CardEdit = () => {
           />
         </FormWithLockSupport>
       </CreateRevisionOnSave>
-      <WithRecord render={(record) => <CommentList cardId={record?.id} />} />
       <Box sx={{ p: 2 }}>
-        <RevisionListWithDetailsInDialog
-          renderName={(id) => (
-            <ReferenceField reference="profiles" source="id" record={{ id }}>
-              <TextField source="email" />
-            </ReferenceField>
-          )}
-        />
+        <NewMessage />
+        <ReferenceManyField
+          reference="card_events"
+          target="card_id"
+          perPage={1000}
+        >
+          <SimpleList
+            disablePadding
+            sx={{ "& li": { px: 0 } }}
+            primaryText={(record) => (
+              <Stack direction="column" spacing={1} mb={1}>
+                <ReferenceField
+                  source="user_id"
+                  reference="profiles"
+                  link={false}
+                >
+                  <TextField
+                    source="email"
+                    variant="body1"
+                    sx={{ fontWeight: "bold" }}
+                  />
+                </ReferenceField>
+                <TextField
+                  source="message"
+                  variant="body1"
+                  sx={
+                    record?.type === "revision"
+                      ? {}
+                      : {
+                          p: 2,
+                          bgcolor: (theme) => theme.palette.action.hover,
+                          borderRadius: (theme) => theme.shape.borderRadius,
+                        }
+                  }
+                />
+              </Stack>
+            )}
+            secondaryText={(record) => (
+              <DateField
+                record={record}
+                source="date"
+                showTime
+                options={{ dateStyle: "short", timeStyle: "short" }}
+              />
+            )}
+          />
+          <ListLiveUpdate />
+        </ReferenceManyField>
       </Box>
     </EditDialog>
   );

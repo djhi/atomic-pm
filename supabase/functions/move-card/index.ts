@@ -98,6 +98,42 @@ Deno.serve(async (req: Request) => {
     .select("*")
     .single();
 
+  // Insert a revision
+  const { data: sourceColumn } = await supabaseClient
+    .from("columns")
+    .select("name")
+    .eq("id", previous.column_id)
+    .single();
+
+  if (previous.column_id !== column_id) {
+    const { data: destinationColumn } = await supabaseClient
+      .from("columns")
+      .select("name")
+      .eq("id", column_id)
+      .single();
+    const { error } = await supabaseClient.from("revisions").insert({
+      authorId: userData.user.id,
+      date: new Date().toISOString(),
+      resource: "cards",
+      recordId: card_id,
+      data: JSON.stringify(data),
+      message: `Moved card from column "${sourceColumn.name}" to "${destinationColumn.name}" at position ${position}`,
+      description: `Moved card from column "${sourceColumn.name}" to "${destinationColumn.name}" at position ${position}`,
+    });
+    console.log(error);
+  } else {
+    const { error } = await supabaseClient.from("revisions").insert({
+      authorId: userData.user.id,
+      date: new Date().toISOString(),
+      resource: "cards",
+      recordId: card_id,
+      data: JSON.stringify(data),
+      message: `Moved card to position ${position} `,
+      description: `Moved card to position ${position} `,
+    });
+    console.log(error);
+  }
+
   if (!data) {
     return new Response(null, {
       status: 404,
