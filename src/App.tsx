@@ -1,17 +1,14 @@
 import { Admin, CustomRoutes, DataProvider, AuthProvider } from "react-admin";
 import { Navigate, Route } from "react-router";
-import {
-  ForgotPasswordPage,
-  LoginPage,
-  SetPasswordPage,
-  defaultI18nProvider,
-} from "ra-supabase";
+import { ForgotPasswordPage, LoginPage, SetPasswordPage } from "ra-supabase";
+
 import { queryClient } from "./providers/queryClient";
 import { Layout } from "./layout/Layout";
 import { BoardList } from "./boards/BoardList";
 import { BoardShow } from "./boards/BoardShow";
 import { useEffect, useState } from "react";
 import { darkTheme, lightTheme } from "./layout/themes";
+import { i18nProvider } from "./providers/i18nProvider";
 
 export const App = () => {
   const [dataProvider, setDataProvider] = useState<DataProvider>();
@@ -41,7 +38,7 @@ export const App = () => {
       dataProvider={dataProvider}
       authProvider={authProvider}
       loginPage={LoginPage}
-      i18nProvider={defaultI18nProvider}
+      i18nProvider={i18nProvider}
       queryClient={queryClient}
       title="SupaBoards"
       lightTheme={lightTheme}

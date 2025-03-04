@@ -1,12 +1,18 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { Stack, StackProps, Typography } from "@mui/material";
-import { EditButton, TextField, useRecordContext } from "react-admin";
+import {
+  EditButton,
+  TextField,
+  useRecordContext,
+  useTranslate,
+} from "react-admin";
 import { useParams } from "react-router";
 import clsx from "clsx";
 import { CardList } from "./CardList";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
+  const translate = useTranslate();
   const params = useParams<"boardId">();
   const totalEstimates = column?.cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,
@@ -74,19 +80,33 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 variant="body1"
                 color={hasTooManyCards ? "warning" : "info"}
               >
-                {column?.maxCards != null
-                  ? `${column?.cards?.length} / ${column?.maxCards}`
-                  : column?.cards?.length}{" "}
-                Cards
+                {translate(
+                  column?.maxCards != null
+                    ? "pm.cardCountWithLimit"
+                    : "pm.cardCount",
+                  {
+                    smart_count: column?.maxCards
+                      ? column?.maxCards
+                      : column?.cards?.length,
+                    cards: column?.cards?.length,
+                  },
+                )}
               </Typography>
               <Typography
                 variant="body1"
                 color={hasTooManyEstimates ? "warning" : "info"}
               >
-                {column?.maxEstimates != null
-                  ? `${totalEstimates} / ${column?.maxEstimates}`
-                  : totalEstimates}{" "}
-                Points
+                {translate(
+                  column?.maxEstimates != null
+                    ? "pm.pointCountWithLimit"
+                    : "pm.pointCount",
+                  {
+                    smart_count: column?.maxEstimates
+                      ? column?.maxEstimates
+                      : totalEstimates,
+                    points: totalEstimates,
+                  },
+                )}
               </Typography>
             </Stack>
           </Stack>

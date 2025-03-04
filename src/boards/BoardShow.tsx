@@ -155,7 +155,7 @@ const BoardShowActions = () => {
         <BoardMembersEdit />
         <CreateButton
           resource="columns"
-          label="New column"
+          label="pm.newColumn"
           to={{
             pathname: `/boards/${board?.id}/columns/create`,
             search: `?source=${JSON.stringify({

@@ -49,7 +49,7 @@ const InvitationNotifierListView = () => {
   return (
     <>
       <Button
-        label="Invitations"
+        label="pm.invitations"
         disabled={isPending}
         onClick={handleClick}
         color="inherit"

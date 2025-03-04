@@ -8,7 +8,7 @@ export const BoardCreate = () => {
 
   return (
     <CreateInDialogButton
-      label="New board"
+      label="pm.newBoard"
       resource="boards"
       maxWidth="md"
       fullWidth

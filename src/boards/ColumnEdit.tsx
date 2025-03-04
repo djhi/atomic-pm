@@ -5,6 +5,7 @@ import {
   TextInput,
   useDefaultTitle,
   useGetOne,
+  useNotify,
   useRecordContext,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
@@ -16,6 +17,7 @@ import { FormWithLockSupport } from "./FormWithLockSupport";
 
 export const ColumnEdit = () => {
   const navigate = useNavigate();
+  const notify = useNotify();
   const params = useParams<"boardId">();
   const queryClient = useQueryClient();
 
@@ -28,6 +30,11 @@ export const ColumnEdit = () => {
       title={<ColumnTitle />}
       mutationOptions={{
         onSuccess: (data: any) => {
+          notify("ra.notification.updated", {
+            type: "info",
+            messageArgs: { smart_count: 1 },
+            undoable: true,
+          });
           queryClient.setQueryData<any>(
             [
               "boards",

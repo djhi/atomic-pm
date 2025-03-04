@@ -1,9 +1,10 @@
-import { Alert, AlertTitle, Box } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import { useGetLockLive, useLockOnMount } from "@react-admin/ra-realtime";
-import { useGetOne } from "react-admin";
+import { useGetOne, useTranslate } from "react-admin";
 
 export const LockOnMount = () => {
   const { isLocked, error } = useLockOnMount();
+  const translate = useTranslate();
   const { data: lock } = useGetLockLive();
   const { data: editor } = useGetOne(
     "profiles",
@@ -17,12 +18,7 @@ export const LockOnMount = () => {
     <Box>
       {error ? (
         <Alert severity="info" sx={{ borderRadius: 0 }}>
-          <AlertTitle>Post is readonly</AlertTitle> Edited by {editor?.email}.
-        </Alert>
-      ) : null}
-      {isLocked ? (
-        <Alert severity="success" sx={{ borderRadius: 0 }}>
-          <AlertTitle>Post locked</AlertTitle> Only you can edit it.
+          {translate("pm.locked", { name: editor?.email })}
         </Alert>
       ) : null}
     </Box>

@@ -36,7 +36,7 @@ export const CardList = () => {
           {droppableProvided.placeholder}
           <CreateButton
             resource="cards"
-            label="New card"
+            label="pm.newCard"
             to={{
               pathname: `/boards/${params.boardId}/cards/create`,
               search: `?source=${JSON.stringify({

@@ -43,7 +43,7 @@ const BoardMenuView = () => {
         variant="text"
         color="inherit"
         endIcon={<KeyboardArrowDownIcon />}
-        label="Boards"
+        label="pm.boards"
       />
       <Menu
         id="boards-menu"

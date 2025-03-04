@@ -33,10 +33,11 @@ export const BoardList = () => (
 
 const BoardListTitle = () => {
   const appTitle = useDefaultTitle();
+  const { defaultTitle } = useListContext();
   return (
     <>
-      <span>Boards</span>
-      <title>{`Boards - ${appTitle}`}</title>
+      <span>{defaultTitle}</span>
+      <title>{`${defaultTitle} - ${appTitle}`}</title>
     </>
   );
 };

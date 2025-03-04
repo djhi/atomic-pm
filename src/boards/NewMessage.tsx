@@ -1,10 +1,16 @@
 import { KeyboardEvent, useRef, useState } from "react";
-import { CreateBase, Form, TextInput, useGetIdentity, useRecordContext } from "react-admin";
+import {
+  CreateBase,
+  Form,
+  TextInput,
+  useGetIdentity,
+  useRecordContext,
+} from "react-admin";
 import { useParams } from "react-router";
 import { visuallyHidden } from "@mui/utils";
 
 export const NewMessage = () => {
-    const card = useRecordContext();
+  const card = useRecordContext();
   const { identity } = useGetIdentity();
   const params = useParams<"boardId">();
   const [key, setKey] = useState(0);
