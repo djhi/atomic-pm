@@ -3,8 +3,9 @@ import { addLocksMethodsBasedOnALockResource } from "@react-admin/ra-realtime";
 import createSimpleRestProvider from "ra-data-simple-rest";
 import { withLifecycleCallbacks } from "react-admin";
 import { getUserFromStorage } from "./utils";
+import { queryClient } from "../queryClient";
 
-const fakerestDataProvider = createSimpleRestProvider('http://localhost:3000');
+const fakerestDataProvider = createSimpleRestProvider("http://localhost:3000");
 
 const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
   addLocksMethodsBasedOnALockResource(fakerestDataProvider),
@@ -113,24 +114,52 @@ export const dataProvider = withLifecycleCallbacks(
         column_id: data.column_id,
         position: data.position,
       });
+
+      // @ts-expect-error _database is set by ra-data-fakerest
+      const sourceColumn = window._database.collections.columns.getOne(
+        previousData.column_id,
+      );
+      const user = getUserFromStorage();
+      if (previousData.column_id !== data.column_id) {
+        // @ts-expect-error _database is set by ra-data-fakerest
+        const destinationColumn = window._database.collections.columns.getOne(
+          data.column_id,
+        );
+        // @ts-expect-error _database is set by ra-data-fakerest
+        window._database.collections.card_events.addOne({
+          card_id: data.card_id,
+          user_id: user.id,
+          date: new Date().toISOString(),
+          type: "revision",
+          message: `Moved card from column "${sourceColumn.name}" to "${destinationColumn.name}" at position ${data.position}`,
+        });
+      } else {
+        // @ts-expect-error _database is set by ra-data-fakerest
+        window._database.collections.card_events.addOne({
+          card_id: data.card_id,
+          user_id: user.id,
+          date: new Date().toISOString(),
+          type: "revision",
+          message: `Moved card to position ${data.position} `,
+        });
+      }
     },
     getDocumentUrl: async ({
-          data,
-        }: {
-          data: { bucket: string; filePath: string };
-        }) => {
-          const base64Document = localStorage.getItem(data.filePath);
-          if (!base64Document) return null;
-          const [, base64DocumentWithoutPrefix] = base64Document.split(",");
-          const document = Uint8Array.from(
-            atob(base64DocumentWithoutPrefix),
-            (c) => c.charCodeAt(0),
-          );
-          const blob = new Blob([document]);
-          const signedUrl = URL.createObjectURL(blob);
-    
-          return { data: signedUrl };
-        },
+      data,
+    }: {
+      data: { bucket: string; filePath: string };
+    }) => {
+      const base64Document = localStorage.getItem(data.filePath);
+      if (!base64Document) return null;
+      const [, base64DocumentWithoutPrefix] = base64Document.split(",");
+      const document = Uint8Array.from(atob(base64DocumentWithoutPrefix), (c) =>
+        c.charCodeAt(0),
+      );
+      const blob = new Blob([document]);
+      const signedUrl = URL.createObjectURL(blob);
+
+      return { data: signedUrl };
+    },
   },
   [
     {
@@ -181,6 +210,25 @@ export const dataProvider = withLifecycleCallbacks(
           data.type = data.content.type;
           data.content = data.content.name;
         }
+        return { data, meta };
+      },
+    },
+    {
+      resource: "comments",
+      afterCreate: async ({ data, meta }) => {
+        const user = getUserFromStorage();
+        // @ts-expect-error _database is set by ra-data-fakerest
+        window._database.collections.card_events.addOne({
+          card_id: data.card_id,
+          user_id: user.id,
+          date: new Date().toISOString(),
+          type: "comment",
+          message: data.message,
+        });
+        // Simulate a real-time update
+        queryClient.invalidateQueries({
+          queryKey: ["card_events", "getManyReference"],
+        });
         return { data, meta };
       },
     },

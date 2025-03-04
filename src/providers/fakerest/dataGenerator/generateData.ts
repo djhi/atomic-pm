@@ -20,6 +20,7 @@ export const generateData = () => {
     revisions: [],
     comments: [],
     invitations: [],
+    card_events: [],
     documents
   };
 };
