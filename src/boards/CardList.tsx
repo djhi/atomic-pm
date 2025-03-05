@@ -37,6 +37,7 @@ export const CardList = () => {
           <CreateButton
             resource="cards"
             label="pm.newCard"
+            variant="text"
             to={{
               pathname: `/boards/${params.boardId}/cards/create`,
               search: `?source=${JSON.stringify({

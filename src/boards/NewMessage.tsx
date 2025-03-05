@@ -1,13 +1,14 @@
-import { KeyboardEvent, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   CreateBase,
   Form,
+  required,
+  SaveButton,
   TextInput,
   useGetIdentity,
   useRecordContext,
 } from "react-admin";
 import { useParams } from "react-router";
-import { visuallyHidden } from "@mui/utils";
 
 export const NewMessage = () => {
   const card = useRecordContext();
@@ -31,31 +32,22 @@ export const NewMessage = () => {
       }}
     >
       <Form>
-        <NewMessageInput />
+        <TextInput
+          multiline
+          rows={4}
+          source="message"
+          fullWidth
+          helperText={false}
+          validate={required()}
+        />
+        <SaveButton
+          label="pm.sendMessage"
+          type="submit"
+          icon={<Fragment />}
+          size="small"
+          variant="outlined"
+        />
       </Form>
     </CreateBase>
-  );
-};
-
-const NewMessageInput = () => {
-  const button = useRef<HTMLInputElement>(null);
-  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && event.ctrlKey) {
-      event.preventDefault();
-      button.current?.click();
-    }
-  };
-  return (
-    <>
-      <TextInput
-        multiline
-        rows={4}
-        source="message"
-        onKeyDown={handleKeyPress}
-        placeholder="Ctrl + Enter to send"
-        fullWidth
-      />
-      <input type="submit" style={visuallyHidden} ref={button} />
-    </>
   );
 };

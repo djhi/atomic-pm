@@ -22,6 +22,7 @@ export const englishMessages = mergeTranslations(
       pointCountWithLimit:
         "%{points} / 1 point |||| %{points} / %{smart_count} points",
       locked: "Locked by %{name}",
+      sendMessage: "Send",
     },
   },
 );

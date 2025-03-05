@@ -3,7 +3,7 @@ import { useGetLockLive, useLockOnMount } from "@react-admin/ra-realtime";
 import { useGetOne, useTranslate } from "react-admin";
 
 export const LockOnMount = () => {
-  const { isLocked, error } = useLockOnMount();
+  const { error } = useLockOnMount();
   const translate = useTranslate();
   const { data: lock } = useGetLockLive();
   const { data: editor } = useGetOne(
@@ -11,7 +11,7 @@ export const LockOnMount = () => {
     { id: lock?.identity },
     { enabled: !!lock },
   );
-  if (!error && !isLocked) {
+  if (!error) {
     return null;
   }
   return (

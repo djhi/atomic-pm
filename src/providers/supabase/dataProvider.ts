@@ -109,13 +109,15 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
           data: {
             ...response.data,
             columns: response.data.columns
-              .map((column: any) => ({
-                ...column,
-                cards: column.cards.sort(
-                  (a: any, b: any) => a.position - b.position,
-                ),
-              }))
-              .sort((a: any, b: any) => a.position - b.position),
+              ? response.data.columns
+                  .map((column: any) => ({
+                    ...column,
+                    cards: column.cards?.sort(
+                      (a: any, b: any) => a.position - b.position,
+                    ),
+                  }))
+                  .sort((a: any, b: any) => a.position - b.position)
+              : undefined,
           },
         };
       },

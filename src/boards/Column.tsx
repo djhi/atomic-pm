@@ -1,5 +1,5 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { Stack, StackProps, Typography } from "@mui/material";
+import { alpha, Stack, StackProps, Typography } from "@mui/material";
 import {
   EditButton,
   TextField,
@@ -38,26 +38,21 @@ export const Column = ({ sx, ...props }: StackProps) => {
           })}
           sx={{
             ...sx,
-            borderRadius: (theme) => theme.shape.borderRadius / 4,
-            borderWidth: 6,
-            borderStyle: "solid",
-            borderColor: (theme) => theme.palette.background.default,
-            bgcolor: "background.paper",
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
-            width: { xs: "100%", sm: "100%", md: "350px" },
+            width: { xs: "100%", sm: "100%", md: "300px" },
             flexShrink: 0,
             maxHeight: "85vh",
-            transition: "borderColor 300ms ease",
+            transition: "bgcolor 300ms ease",
             "&.warning": {
-              borderColor: (theme) => theme.palette.warning.dark,
+              bgcolor: (theme) => alpha(theme.palette.warning.dark, 0.2),
             },
           }}
           {...provided?.draggableProps}
           {...provided?.dragHandleProps}
           ref={provided?.innerRef}
         >
-          <Stack direction="column" gap={0.5} mb={4}>
+          <Stack direction="column" gap={0.5} mb={1}>
             <Stack
               direction="row"
               justifyContent="space-between"

@@ -14,13 +14,11 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
-import { CardCreate } from "./CardCreate";
-import { CardEdit } from "./CardEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { FavoriteDocuments } from "./FavoriteDocuments";
 import { DocumentCreate } from "./DocumentCreate";
@@ -42,7 +40,6 @@ export const BoardShow = () => {
         queryOptions={{
           meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
         }}
-        title={<BoardTitle />}
       >
         <BoardShowLayout />
       </Show>
@@ -53,15 +50,6 @@ export const BoardShow = () => {
             <>
               <ColumnCreate />
               <ColumnEdit />
-            </>
-          }
-        />
-        <Route
-          path="cards/*"
-          element={
-            <>
-              <CardCreate />
-              <CardEdit />
             </>
           }
         />
@@ -138,7 +126,9 @@ const BoardTitle = () => {
   if (!record) return null;
   return (
     <>
-      <span>{record?.name}</span>
+      <Typography variant="h5" component="h2">
+        {record?.name}
+      </Typography>
       <title>{`${record?.name} - ${appTitle}`}</title>
     </>
   );
@@ -148,7 +138,8 @@ const BoardShowActions = () => {
   const board = useRecordContext();
 
   return (
-    <TopToolbar sx={{ justifyContent: "space-between" }}>
+    <TopToolbar sx={{ justifyContent: "space-between", mb: 3 }}>
+      <BoardTitle />
       <FavoriteDocuments />
       <Stack direction="row" spacing={1} ml="auto">
         <DocumentsButton />

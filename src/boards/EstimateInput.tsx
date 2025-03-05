@@ -18,6 +18,7 @@ export const EstimateInput = (props: InputProps) => {
     <FormControl
       sx={{
         minWidth: "50%",
+        maxWidth: { md: "40%" },
       }}
     >
       <FormLabel

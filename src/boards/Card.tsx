@@ -6,15 +6,10 @@ import {
   lighten,
   darken,
   Theme,
-  Typography,
 } from "@mui/material";
-import {
-  EditButton,
-  FunctionField,
-  TextField,
-  useRecordContext,
-} from "react-admin";
+import { ChipField, TextField, useRecordContext } from "react-admin";
 import { useNavigate, useParams } from "react-router";
+import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const Card = () => {
   const card = useRecordContext();
@@ -44,7 +39,7 @@ export const Card = () => {
             cursor: "pointer",
             "&:hover": {
               bgcolor: (theme) => theme.palette.action.hover,
-              "& .RaEditButton-root": {
+              "& .card-menu-button": {
                 bgcolor: (theme) => theme.palette.background.default,
                 opacity: 1,
               },
@@ -57,40 +52,43 @@ export const Card = () => {
             navigate(`/boards/${params.boardId}/cards/${card?.id}`);
           }}
         >
-          <CardContent sx={{ position: "relative" }}>
+          <CardContent
+            sx={{
+              position: "relative",
+            }}
+          >
             <TextField
               source="title"
               gutterBottom
-              variant="h5"
+              variant="h6"
               component="h2"
-              sx={{ maxWidth: "80%" }}
+              sx={{ maxWidth: "80%", fontWeight: "normal" }}
             />
-            <Typography
-              variant="body2"
-              color="info"
-              sx={{
-                position: "absolute",
-                right: (theme) => theme.spacing(1),
-                top: (theme) => theme.spacing(1),
+            <MenuButton
+              ButtonProps={{
+                className: "card-menu-button",
+                sx: {
+                  position: "absolute",
+                  opacity: 0,
+                  transition: "opacity 300ms",
+                  right: 12,
+                  top: 12,
+                },
               }}
             >
-              <FunctionField
-                render={(record) =>
-                  record.estimate > 1
-                    ? `${record.estimate} points`
-                    : `${record.estimate} point`
-                }
+              <MenuButton.LinkItem
+                label="ra.action.edit"
+                to={`/boards/${params.boardId}/cards/${card?.id}`}
               />
-            </Typography>
+              <MenuButton.DeleteItem
+                resource="cards"
+                record={card!}
+                mutationMode="pessimistic"
+              />
+            </MenuButton>
           </CardContent>
           <CardActions>
-            <EditButton
-              variant="text"
-              // @ts-ignore Until react-admin is updated
-              icon={null}
-              to={{ pathname: `/boards/${params.boardId}/cards/${card?.id}` }}
-              sx={{ opacity: 0, transition: "opacity 0.3s" }}
-            />
+            <ChipField source="estimate" size="small" color="info" />
           </CardActions>
         </MuiCard>
       )}

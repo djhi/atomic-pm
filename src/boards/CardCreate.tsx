@@ -1,6 +1,7 @@
-import { CreateDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
 import {
+  Create,
+  ReferenceInput,
   required,
   SimpleForm,
   TextInput,
@@ -8,45 +9,53 @@ import {
   useGetOne,
   useRecordFromLocation,
 } from "react-admin";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { EstimateInput } from "./EstimateInput";
 import { grey } from "@mui/material/colors";
+import { Box, Stack } from "@mui/material";
+import { CardBoardTitle } from "./CardBoardTitle";
 
 export const CardCreate = () => {
-  const navigate = useNavigate();
   const params = useParams<"boardId">();
 
   return (
-    <CreateDialog
+    <Create
       resource="cards"
-      close={() => navigate(`/boards/${params.boardId}`)}
-      fullWidth
-      maxWidth="md"
+      component="div"
+      redirect={`/boards/${params.boardId}`}
       title={<CardTitle />}
     >
-      <SimpleForm>
-        <TextInput source="title" validate={required()} />
-        <EstimateInput source="estimate" validate={required()} />
-        <RichTextInput
-          source="description"
-          fullWidth
-          sx={{
-            [`& .RaRichTextInput-editorContent`]: {
-              "& .ProseMirror": {
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "dark" ? grey[800] : grey[300],
-                minHeight: "20vh",
-
-                "&:focus": {
+      <Stack direction="column" gap={4}>
+        <CardBoardTitle />
+        <SimpleForm component={Box}>
+          <ReferenceInput
+            source="column_id"
+            reference="columns"
+            perPage={1000}
+          />
+          <TextInput source="title" validate={required()} />
+          <EstimateInput source="estimate" />
+          <RichTextInput
+            source="description"
+            fullWidth
+            sx={{
+              [`& .RaRichTextInput-editorContent`]: {
+                "& .ProseMirror": {
                   backgroundColor: (theme) =>
                     theme.palette.mode === "dark" ? grey[800] : grey[300],
+                  minHeight: "20vh",
+
+                  "&:focus": {
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark" ? grey[800] : grey[300],
+                  },
                 },
               },
-            },
-          }}
-        />
-      </SimpleForm>
-    </CreateDialog>
+            }}
+          />
+        </SimpleForm>
+      </Stack>
+    </Create>
   );
 };
 

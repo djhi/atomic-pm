@@ -1,8 +1,9 @@
-import { EditDialog } from "@react-admin/ra-form-layout";
 import { RichTextInput } from "ra-input-rich-text";
 import {
   DateField,
+  Edit,
   ReferenceField,
+  ReferenceInput,
   ReferenceManyField,
   required,
   SimpleList,
@@ -14,7 +15,6 @@ import {
   useRecordContext,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
-import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { Box, Stack } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,20 +24,22 @@ import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { CardBoardTitle } from "./CardBoardTitle";
+import { CreateRevisionOnSave } from "@react-admin/ra-history";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
-  const params = useParams<"boardId">();
+  const params = useParams<"boardId" | "id">();
   const queryClient = useQueryClient();
   const notify = useNotify();
 
   return (
-    <EditDialog
+    <Edit
       resource="cards"
-      close={() => navigate(`/boards/${params.boardId}`)}
-      fullWidth
-      maxWidth="md"
+      id={params.id}
+      component="div"
       title={<CardTitle />}
+      mutationMode="optimistic"
       mutationOptions={{
         onSuccess: (data: any) => {
           notify("ra.notification.updated", {
@@ -45,6 +47,7 @@ export const CardEdit = () => {
             messageArgs: { smart_count: 1 },
             undoable: true,
           });
+          navigate(`/boards/${params.boardId}`);
           queryClient.setQueryData<any>(
             [
               "boards",
@@ -73,83 +76,100 @@ export const CardEdit = () => {
         },
       }}
     >
-      <LockOnMount />
-      <RecordLiveUpdate />
-      <CreateRevisionOnSave skipUserDetails>
-        <FormWithLockSupport>
-          <TextInput source="title" validate={required()} />
-          <EstimateInput source="estimate" validate={required()} />
-          <RichTextInput
-            source="description"
-            fullWidth
-            sx={{
-              [`& .RaRichTextInput-editorContent`]: {
-                "& .ProseMirror": {
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "dark" ? grey[800] : grey[300],
-                  minHeight: "20vh",
-
-                  "&:focus": {
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark" ? grey[800] : grey[300],
-                  },
-                },
-              },
-            }}
-          />
-        </FormWithLockSupport>
-      </CreateRevisionOnSave>
-      <Box sx={{ p: 2 }}>
-        <NewMessage />
-        <ReferenceManyField
-          reference="card_events"
-          target="card_id"
-          perPage={1000}
-        >
-          <SimpleList
-            disablePadding
-            sx={{ "& li": { px: 0 } }}
-            primaryText={(record) => (
-              <Stack direction="column" spacing={1} mb={1}>
-                <ReferenceField
-                  source="user_id"
-                  reference="profiles"
-                  link={false}
-                >
-                  <TextField
-                    source="email"
-                    variant="body1"
-                    sx={{ fontWeight: "bold" }}
-                  />
-                </ReferenceField>
-                <TextField
-                  source="message"
-                  variant="body1"
-                  sx={
-                    record?.type === "revision"
-                      ? {}
-                      : {
-                          p: 2,
-                          bgcolor: (theme) => theme.palette.action.hover,
-                          borderRadius: (theme) => theme.shape.borderRadius,
-                        }
-                  }
+      <Stack direction="column" gap={4}>
+        <CardBoardTitle />
+        <Stack direction="row" gap={4}>
+          <Stack direction="column" sx={{ flexBasis: "75%" }}>
+            <LockOnMount />
+            <RecordLiveUpdate />
+            <CreateRevisionOnSave skipUserDetails>
+              <FormWithLockSupport component={Box}>
+                <ReferenceInput
+                  source="column_id"
+                  reference="columns"
+                  perPage={1000}
                 />
-              </Stack>
-            )}
-            secondaryText={(record) => (
-              <DateField
-                record={record}
-                source="date"
-                showTime
-                options={{ dateStyle: "short", timeStyle: "short" }}
+                <TextInput source="title" validate={required()} />
+                <EstimateInput source="estimate" />
+                <RichTextInput
+                  source="description"
+                  fullWidth
+                  sx={{
+                    [`& .RaRichTextInput-editorContent`]: {
+                      "& .ProseMirror": {
+                        backgroundColor: (theme) =>
+                          theme.palette.mode === "dark" ? grey[800] : grey[300],
+                        minHeight: "20vh",
+
+                        "&:focus": {
+                          backgroundColor: (theme) =>
+                            theme.palette.mode === "dark"
+                              ? grey[800]
+                              : grey[300],
+                        },
+                      },
+                    },
+                  }}
+                />
+              </FormWithLockSupport>
+            </CreateRevisionOnSave>
+          </Stack>
+          <Stack direction="column" gap={1}>
+            <NewMessage />
+            <ReferenceManyField
+              reference="card_events"
+              target="card_id"
+              perPage={1000}
+            >
+              <SimpleList
+                disablePadding
+                sx={{ "& li": { px: 0 } }}
+                primaryText={(record) => (
+                  <Stack direction="row" spacing={1} mb={1}>
+                    <ReferenceField
+                      source="user_id"
+                      reference="profiles"
+                      link={false}
+                    >
+                      <TextField
+                        source="email"
+                        variant="body1"
+                        sx={{ fontWeight: "bold" }}
+                      />
+                    </ReferenceField>
+                    <DateField
+                      record={record}
+                      color="textSecondary"
+                      source="date"
+                      showTime
+                      options={{ dateStyle: "short", timeStyle: "short" }}
+                    />
+                  </Stack>
+                )}
+                secondaryText={(record) => (
+                  <TextField
+                    source="message"
+                    variant="body1"
+                    sx={
+                      record?.type === "revision"
+                        ? {}
+                        : {
+                            display: "block",
+                            width: "100%",
+                            p: 2,
+                            bgcolor: (theme) => theme.palette.action.hover,
+                            borderRadius: (theme) => theme.shape.borderRadius,
+                          }
+                    }
+                  />
+                )}
               />
-            )}
-          />
-          <ListLiveUpdate />
-        </ReferenceManyField>
-      </Box>
-    </EditDialog>
+              <ListLiveUpdate />
+            </ReferenceManyField>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Edit>
   );
 };
 

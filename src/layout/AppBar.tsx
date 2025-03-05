@@ -2,18 +2,16 @@ import { Header, HeaderClasses } from "@react-admin/ra-navigation";
 import { BoardMenu } from "./BoardMenu";
 import { Stack } from "@mui/material";
 import { InvitationNotifier } from "./InvitationNotifier";
-import { TitlePortal } from "react-admin";
 
 export const AppBar = () => (
   <Header
     menu={
       <Stack
         direction="row"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         alignItems="center"
         gap={1}
       >
-        <TitlePortal />
         <BoardMenu />
         <InvitationNotifier />
       </Stack>

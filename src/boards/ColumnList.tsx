@@ -11,7 +11,7 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
     <Stack
       direction="row"
       minHeight="80vh"
-      gap={2}
+      gap={4}
       sx={{
         overflowX: "auto",
         maxWidth: "98vw",
