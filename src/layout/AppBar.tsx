@@ -1,21 +1,20 @@
 import { Header, HeaderClasses } from "@react-admin/ra-navigation";
 import { BoardMenu } from "./BoardMenu";
-import { Stack } from "@mui/material";
 import { InvitationNotifier } from "./InvitationNotifier";
+import { UserMenu } from "./UserMenu";
+import { LoadingIndicator } from "react-admin";
 
 export const AppBar = () => (
   <Header
-    menu={
-      <Stack
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-        gap={1}
-      >
+    menu={null}
+    toolbar={
+      <>
         <BoardMenu />
         <InvitationNotifier />
-      </Stack>
+        <LoadingIndicator />
+      </>
     }
+    userMenu={<UserMenu />}
     sx={{
       [`& .${HeaderClasses.toolbar}`]: { justifyContent: "unset", gap: 1 },
       [`& .${HeaderClasses.menu}`]: { flexGrow: 1 },
