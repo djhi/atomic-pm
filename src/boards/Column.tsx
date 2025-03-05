@@ -1,19 +1,15 @@
 import { Draggable } from "@hello-pangea/dnd";
 import { alpha, Stack, StackProps, Typography } from "@mui/material";
-import {
-  EditButton,
-  TextField,
-  useRecordContext,
-  useTranslate,
-} from "react-admin";
+import { TextField, useRecordContext, useTranslate } from "react-admin";
 import { useParams } from "react-router";
 import clsx from "clsx";
+import { useQueryClient } from "@tanstack/react-query";
 import { CardList } from "./CardList";
+import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const translate = useTranslate();
-  const params = useParams<"boardId">();
   const totalEstimates = column?.cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,
     0,
@@ -64,11 +60,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 variant="h6"
                 component="h2"
               />
-              <EditButton
-                to={{
-                  pathname: `/boards/${params.boardId}/columns/${column?.id}`,
-                }}
-              />
+              <ColumnMenu />
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Typography
@@ -109,5 +101,46 @@ export const Column = ({ sx, ...props }: StackProps) => {
         </Stack>
       )}
     </Draggable>
+  );
+};
+
+const ColumnMenu = () => {
+  const column = useRecordContext();
+  const queryClient = useQueryClient();
+  const params = useParams<"boardId">();
+  if (!column) return null;
+
+  return (
+    <MenuButton>
+      <MenuButton.LinkItem
+        label="ra.action.edit"
+        to={`/boards/${params.boardId}/columns/${column?.id}`}
+      />
+      <MenuButton.DeleteItem
+        resource="columns"
+        record={column!}
+        mutationMode="pessimistic"
+        mutationOptions={{
+          onSuccess: () => {
+            queryClient.setQueryData(
+              [
+                "boards",
+                "getOne",
+                {
+                  id: params.boardId,
+                  meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+                },
+              ],
+              (board: any) => ({
+                ...board,
+                columns: board.columns.filter(
+                  (oldColumn: any) => oldColumn.id !== column.id,
+                ),
+              }),
+            );
+          },
+        }}
+      />
+    </MenuButton>
   );
 };

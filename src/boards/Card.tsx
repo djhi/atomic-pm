@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { ChipField, TextField, useRecordContext } from "react-admin";
 import { useNavigate, useParams } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const Card = () => {
@@ -64,28 +65,7 @@ export const Card = () => {
               component="h2"
               sx={{ maxWidth: "80%", fontWeight: "normal" }}
             />
-            <MenuButton
-              ButtonProps={{
-                className: "card-menu-button",
-                sx: {
-                  position: "absolute",
-                  opacity: 0,
-                  transition: "opacity 300ms",
-                  right: 12,
-                  top: 12,
-                },
-              }}
-            >
-              <MenuButton.LinkItem
-                label="ra.action.edit"
-                to={`/boards/${params.boardId}/cards/${card?.id}`}
-              />
-              <MenuButton.DeleteItem
-                resource="cards"
-                record={card!}
-                mutationMode="pessimistic"
-              />
-            </MenuButton>
+            <CardMenu />
           </CardContent>
           <CardActions>
             <ChipField source="estimate" size="small" color="info" />
@@ -93,5 +73,70 @@ export const Card = () => {
         </MuiCard>
       )}
     </Draggable>
+  );
+};
+
+const CardMenu = () => {
+  const card = useRecordContext();
+  const queryClient = useQueryClient();
+  const params = useParams<"boardId">();
+  if (!card) return null;
+
+  return (
+    <MenuButton
+      ButtonProps={{
+        className: "card-menu-button",
+        sx: {
+          position: "absolute",
+          opacity: 0,
+          transition: "opacity 300ms",
+          right: 12,
+          top: 12,
+        },
+      }}
+    >
+      <MenuButton.LinkItem
+        label="ra.action.edit"
+        to={`/boards/${params.boardId}/cards/${card?.id}`}
+      />
+      <MenuButton.DeleteItem
+        resource="cards"
+        record={card!}
+        mutationMode="pessimistic"
+        mutationOptions={{
+          onSuccess: () => {
+            queryClient.setQueryData(
+              [
+                "boards",
+                "getOne",
+                {
+                  id: params.boardId,
+                  meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+                },
+              ],
+              (board: any) => ({
+                ...board,
+                columns: board.columns.map((column: any) =>
+                  column.id === card.column_id
+                    ? {
+                        ...column,
+                        cards: column.cards
+                          .filter((oldCard: any) => card.id !== oldCard.id)
+                          .map((oldCard: any) => ({
+                            ...oldCard,
+                            position:
+                              oldCard.position > card.position
+                                ? oldCard.position - 1
+                                : oldCard.position,
+                          })),
+                      }
+                    : column,
+                ),
+              }),
+            );
+          },
+        }}
+      />
+    </MenuButton>
   );
 };
