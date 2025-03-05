@@ -113,6 +113,17 @@ const ColumnMenu = () => {
   return (
     <MenuButton>
       <MenuButton.LinkItem
+        label="pm.newCard"
+        to={{
+          pathname: `/boards/${params.boardId}/cards/create`,
+          search: `?source=${JSON.stringify({
+            column_id: column?.id,
+            position: column.cards?.length,
+            created_at: new Date().toISOString(),
+          })}`,
+        }}
+      />
+      <MenuButton.LinkItem
         label="ra.action.edit"
         to={`/boards/${params.boardId}/columns/${column?.id}`}
       />
