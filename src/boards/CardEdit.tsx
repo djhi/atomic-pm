@@ -79,7 +79,7 @@ export const CardEdit = () => {
       <Stack direction="column" gap={4}>
         <CardBoardTitle />
         <Stack direction="row" gap={4}>
-          <Stack direction="column" sx={{ flexBasis: "75%" }}>
+          <Stack direction="column" flexGrow={1}>
             <LockOnMount />
             <RecordLiveUpdate />
             <CreateRevisionOnSave skipUserDetails>
@@ -114,7 +114,7 @@ export const CardEdit = () => {
               </FormWithLockSupport>
             </CreateRevisionOnSave>
           </Stack>
-          <Stack direction="column" gap={1}>
+          <Stack direction="column" gap={1} flexGrow={0}>
             <NewMessage />
             <ReferenceManyField
               reference="card_events"
