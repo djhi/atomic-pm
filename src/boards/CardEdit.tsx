@@ -1,5 +1,6 @@
 import { RichTextInput } from "ra-input-rich-text";
 import {
+  AutocompleteInput,
   DateField,
   Edit,
   ReferenceField,
@@ -84,11 +85,13 @@ export const CardEdit = () => {
             <RecordLiveUpdate />
             <CreateRevisionOnSave skipUserDetails>
               <FormWithLockSupport component={Box}>
+                <ReferenceInput source="column_id" reference="columns" />
                 <ReferenceInput
-                  source="column_id"
-                  reference="columns"
-                  perPage={1000}
-                />
+                  source="assigned_user_id"
+                  reference="profiles"
+                >
+                  <AutocompleteInput optionText="email" />
+                </ReferenceInput>
                 <TextInput source="title" validate={required()} />
                 <EstimateInput source="estimate" />
                 <RichTextInput

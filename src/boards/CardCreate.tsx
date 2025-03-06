@@ -1,5 +1,6 @@
 import { RichTextInput } from "ra-input-rich-text";
 import {
+  AutocompleteInput,
   Create,
   ReferenceInput,
   required,
@@ -33,6 +34,9 @@ export const CardCreate = () => {
             reference="columns"
             perPage={1000}
           />
+          <ReferenceInput source="assigned_user_id" reference="profiles">
+            <AutocompleteInput optionText="email" />
+          </ReferenceInput>
           <TextInput source="title" validate={required()} />
           <EstimateInput source="estimate" />
           <RichTextInput
