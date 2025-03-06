@@ -13,6 +13,7 @@ export const englishMessages = mergeTranslations(
       members: "Members",
       invitations: "Invitations",
       boards: "Boards",
+      newBoard: "New board",
       newColumn: "New column",
       newCard: "New card",
       cardCount: "1 card |||| %{smart_count} cards",
@@ -23,6 +24,7 @@ export const englishMessages = mergeTranslations(
         "%{points} / 1 point |||| %{points} / %{smart_count} points",
       locked: "Locked by %{name}",
       sendMessage: "Send",
+      editProfile: "Profile",
     },
   },
 );

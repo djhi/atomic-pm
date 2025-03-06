@@ -4,6 +4,13 @@ export const darkTheme = {
   ...bwDarkTheme,
   components: {
     ...bwDarkTheme.components,
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+        },
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         body: {

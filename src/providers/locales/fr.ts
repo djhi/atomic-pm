@@ -45,6 +45,7 @@ export const frenchMessages = mergeTranslations(
         "%{points} / 1 point |||| %{points} / %{smart_count} points",
       locked: "Verrouillé par %{name}",
       sendMessage: "Envoyer",
+      editProfile: "Profil",
     },
   },
 );
