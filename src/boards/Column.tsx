@@ -1,5 +1,5 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { alpha, Stack, StackProps, Typography } from "@mui/material";
+import { alpha, Chip, Stack, StackProps, Tooltip } from "@mui/material";
 import { TextField, useRecordContext, useTranslate } from "react-admin";
 import { useParams } from "react-router";
 import clsx from "clsx";
@@ -9,7 +9,6 @@ import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
-  const translate = useTranslate();
   const totalEstimates = column?.cards?.reduce(
     (acc: number, card: any) => acc + card.estimate,
     0,
@@ -36,7 +35,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
             ...sx,
             opacity: snapshot?.isDragging ? 0.9 : 1,
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
-            width: { xs: "100%", sm: "100%", md: "300px" },
+            width: { xs: "100%", sm: "100%", md: "350px" },
             flexShrink: 0,
             maxHeight: "85vh",
             transition: "bgcolor 300ms ease",
@@ -60,41 +59,21 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 variant="h6"
                 component="h2"
               />
-              <ColumnMenu />
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography
-                variant="body1"
-                color={hasTooManyCards ? "warning" : "info"}
-              >
-                {translate(
-                  column?.maxCards != null
-                    ? "pm.cardCountWithLimit"
-                    : "pm.cardCount",
-                  {
-                    smart_count: column?.maxCards
-                      ? column?.maxCards
-                      : column?.cards?.length,
-                    cards: column?.cards?.length,
-                  },
-                )}
-              </Typography>
-              <Typography
-                variant="body1"
-                color={hasTooManyEstimates ? "warning" : "info"}
-              >
-                {translate(
-                  column?.maxEstimates != null
-                    ? "pm.pointCountWithLimit"
-                    : "pm.pointCount",
-                  {
-                    smart_count: column?.maxEstimates
-                      ? column?.maxEstimates
-                      : totalEstimates,
-                    points: totalEstimates,
-                  },
-                )}
-              </Typography>
+              <Stack direction="row" gap={1} alignItems="center">
+                <ChipWithMax
+                  max={column?.maxCards}
+                  value={column?.cards?.length || 0}
+                  label="pm.cardCount"
+                  labelWithMax="pm.cardCountWithLimit"
+                />
+                <ChipWithMax
+                  max={column?.maxEstimates}
+                  value={totalEstimates}
+                  label="pm.pointCount"
+                  labelWithMax="pm.pointCountWithLimit"
+                />
+                <ColumnMenu />
+              </Stack>
             </Stack>
           </Stack>
           <CardList />
@@ -111,7 +90,7 @@ const ColumnMenu = () => {
   if (!column) return null;
 
   return (
-    <MenuButton>
+    <MenuButton ButtonProps={{ label: "pm.actionList" }}>
       <MenuButton.LinkItem
         label="pm.newCard"
         to={{
@@ -153,5 +132,33 @@ const ColumnMenu = () => {
         }}
       />
     </MenuButton>
+  );
+};
+
+const ChipWithMax = ({
+  value,
+  max,
+  labelWithMax,
+  label,
+}: {
+  value: number;
+  label: string;
+  max?: number;
+  labelWithMax?: string;
+}) => {
+  const translate = useTranslate();
+  const hasTooMany = max != null && value > max;
+  return (
+    <Tooltip
+      title={translate(max != null && labelWithMax ? labelWithMax : label, {
+        smart_count: max ?? value,
+        value: value,
+      })}
+    >
+      <Chip
+        label={max != null ? `${value} / ${max}` : value}
+        color={hasTooMany ? "warning" : "default"}
+      />
+    </Tooltip>
   );
 };

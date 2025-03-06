@@ -40,12 +40,13 @@ export const frenchMessages = mergeTranslations(
       cardCount: "1 carte |||| %{smart_count} cartes",
       pointCount: "1 point |||| %{smart_count} points",
       cardCountWithLimit:
-        "%{cards} / 1 carte |||| %{cards} / %{smart_count} cartes",
+        "%{value} / 1 carte |||| %{value} / %{smart_count} cartes",
       pointCountWithLimit:
-        "%{points} / 1 point |||| %{points} / %{smart_count} points",
+        "%{value} / 1 point |||| %{value} / %{smart_count} points",
       locked: "Verrouillé par %{name}",
       sendMessage: "Envoyer",
       editProfile: "Profil",
+      actionList: "Liste des actions",
     },
   },
 );

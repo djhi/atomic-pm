@@ -27,6 +27,7 @@ import { NewMessage } from "./NewMessage";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CardBoardTitle } from "./CardBoardTitle";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
+import { AvatarField } from "./AvatarField";
 
 export const CardEdit = () => {
   const navigate = useNavigate();
@@ -86,10 +87,7 @@ export const CardEdit = () => {
             <CreateRevisionOnSave skipUserDetails>
               <FormWithLockSupport component={Box}>
                 <ReferenceInput source="column_id" reference="columns" />
-                <ReferenceInput
-                  source="assigned_user_id"
-                  reference="profiles"
-                >
+                <ReferenceInput source="assigned_user_id" reference="profiles">
                   <AutocompleteInput optionText="email" />
                 </ReferenceInput>
                 <TextInput source="title" validate={required()} />
@@ -128,17 +126,20 @@ export const CardEdit = () => {
                 disablePadding
                 sx={{ "& li": { px: 0 } }}
                 primaryText={(record) => (
-                  <Stack direction="row" spacing={1} mb={1}>
+                  <Stack direction="row" justifyContent="space-between" mb={1}>
                     <ReferenceField
                       source="user_id"
                       reference="profiles"
                       link={false}
                     >
-                      <TextField
-                        source="email"
-                        variant="body1"
-                        sx={{ fontWeight: "bold" }}
-                      />
+                      <Stack direction="row" spacing={1}>
+                        <AvatarField />
+                        <TextField
+                          source="email"
+                          variant="body1"
+                          sx={{ fontWeight: "bold" }}
+                        />
+                      </Stack>
                     </ReferenceField>
                     <DateField
                       record={record}

@@ -1,8 +1,8 @@
-import { Box, BoxProps, ButtonProps, Menu, MenuProps } from "@mui/material";
+import { Box, BoxProps, Menu, MenuProps } from "@mui/material";
 import { useEvent } from "ra-core";
 import * as React from "react";
 import { MenuButtonDeleteItem } from "./MenuButtonDeleteItem";
-import { MenuButtonIconButton } from "./MenuButtonIconButton";
+import { MenuButtonIconButton, MenuButtonIconButtonProps } from "./MenuButtonIconButton";
 import { MenuButtonLinkItem } from "./MenuButtonLinkItem";
 import { MenuButtonRecordLinkItem } from "./MenuButtonRecordLinkItem";
 import { MenuButtonUpdateItem } from "./MenuButtonUpdateItem";
@@ -43,7 +43,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 export interface MenuButtonProps extends BoxProps {
   children?: React.ReactNode;
   button?: React.ReactNode;
-  ButtonProps?: ButtonProps;
+  ButtonProps?: MenuButtonIconButtonProps;
   MenuProps?: MenuProps;
 }
 

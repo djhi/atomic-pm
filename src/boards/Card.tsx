@@ -7,10 +7,16 @@ import {
   darken,
   Theme,
 } from "@mui/material";
-import { ChipField, TextField, useRecordContext } from "react-admin";
+import {
+  ChipField,
+  ReferenceField,
+  TextField,
+  useRecordContext,
+} from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
+import { AvatarField } from "./AvatarField";
 
 export const Card = () => {
   const card = useRecordContext();
@@ -69,12 +75,17 @@ export const Card = () => {
           </CardContent>
           <CardActions>
             <ChipField source="estimate" size="small" color="info" />
+            <ReferenceField source="assigned_user_id" reference="profiles">
+              <AvatarField />
+            </ReferenceField>
           </CardActions>
         </MuiCard>
       )}
     </Draggable>
   );
 };
+
+
 
 const CardMenu = () => {
   const card = useRecordContext();

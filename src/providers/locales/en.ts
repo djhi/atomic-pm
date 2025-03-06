@@ -19,12 +19,13 @@ export const englishMessages = mergeTranslations(
       cardCount: "1 card |||| %{smart_count} cards",
       pointCount: "1 point |||| %{smart_count} points",
       cardCountWithLimit:
-        "%{cards} / 1 card |||| %{cards} / %{smart_count} cards",
+        "%{value} / 1 card |||| %{value} / %{smart_count} cards",
       pointCountWithLimit:
-        "%{points} / 1 point |||| %{points} / %{smart_count} points",
+        "%{value} / 1 point |||| %{value} / %{smart_count} points",
       locked: "Locked by %{name}",
       sendMessage: "Send",
       editProfile: "Profile",
+      actionList: "Action list",
     },
   },
 );
