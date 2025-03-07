@@ -11,7 +11,6 @@ import { darkTheme, lightTheme } from "./layout/themes";
 import { i18nProvider } from "./providers/i18nProvider";
 import { CardCreate } from "./boards/CardCreate";
 import { CardEdit } from "./boards/CardEdit";
-import { ProfileEdit } from "./profiles/ProfileEdit";
 
 export const App = () => {
   const [dataProvider, setDataProvider] = useState<DataProvider>();
@@ -69,7 +68,6 @@ export const App = () => {
           element={<CardCreate />}
         />
         <Route path="/boards/:boardId/cards/:id/*" element={<CardEdit />} />
-        <Route path="/profile/*" element={<ProfileEdit />} />
       </CustomRoutes>
     </Admin>
   );

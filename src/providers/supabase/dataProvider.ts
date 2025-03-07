@@ -142,5 +142,34 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
         return { data, meta };
       },
     },
+    {
+      resource: "profiles",
+      beforeUpdate: async ({ data, id, meta, previousData }) => {
+        if (data.avatar?.rawFile instanceof File) {
+          data.avatar = await convertFileToBase64(data.avatar?.rawFile);
+        }
+        return { data, id, meta, previousData };
+      },
+      afterRead: async (data) => {
+        return Array.isArray(data)
+          ? data.map((record) => ({
+              ...record,
+              avatar: record.avatar ? { src: record.avatar } : record.avatar,
+            }))
+          : {
+              ...data,
+              avatar: data.avatar ? { src: data.avatar } : data.avatar,
+            };
+      },
+    },
   ],
 );
+
+const convertFileToBase64 = async (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+};

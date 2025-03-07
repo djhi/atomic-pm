@@ -11,6 +11,8 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import PersonIcon from "@mui/icons-material/Person";
 import {
+  ImageField,
+  ImageInput,
   Logout,
   UserMenu as RaUserMenu,
   SaveButton,
@@ -66,6 +68,9 @@ export const UserMenu = () => {
         >
           <TextInput source="first_name" />
           <TextInput source="last_name" />
+          <ImageInput source="avatar">
+            <ImageField source="src" title="title" />
+          </ImageInput>
         </SimpleForm>
       </EditDialog>
     </>

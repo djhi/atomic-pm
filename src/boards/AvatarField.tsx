@@ -11,7 +11,10 @@ export const AvatarField = () => {
     letter += profile.last_name[0].toUpperCase();
   }
   return (
-    <Avatar sx={{ width: 24, height: 24, fontSize: "0.7222222222222222rem" }}>
+    <Avatar
+      src={profile?.avatar?.src}
+      sx={{ width: 24, height: 24, fontSize: "0.7222222222222222rem" }}
+    >
       {letter}
     </Avatar>
   );

@@ -17,6 +17,7 @@ import {
 import { ShowInDialogButton } from "@react-admin/ra-form-layout";
 import GroupIcon from "@mui/icons-material/Group";
 import { Chip, Stack } from "@mui/material";
+import { AvatarField } from "./AvatarField";
 
 export const BoardMembersEdit = () => {
   const board = useRecordContext();
@@ -60,6 +61,7 @@ const ListMemberItem = ({ owner_id }: { owner_id?: number }) => {
           alignItems="center"
           gap={1}
         >
+          <AvatarField />
           <TextField source="email" variant="body1" />
           <FunctionField render={(record) => record?.id === owner_id ? <Chip label="Owner" /> : null} />
         </Stack>
