@@ -74,7 +74,7 @@ export const Card = () => {
             <CardMenu />
           </CardContent>
           <CardActions>
-            <ChipField source="estimate" size="small" color="info" />
+            <ChipField source="estimate" size="small" color="info" emptyText=" " />
             <ReferenceField source="assigned_user_id" reference="profiles">
               <AvatarField />
             </ReferenceField>
