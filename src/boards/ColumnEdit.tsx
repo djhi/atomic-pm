@@ -60,7 +60,7 @@ export const ColumnEdit = () => {
       <RecordLiveUpdate />
       <FormWithLockSupport>
         <TextInput source="name" validate={required()} />
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" gap={1} width="100%">
           <NumberInput source="maxCards" />
           <NumberInput source="maxEstimates" />
         </Stack>
