@@ -1,5 +1,6 @@
 import { Card, CardContent, Grid2, Stack } from "@mui/material";
 import {
+  DeleteButton,
   Empty,
   FunctionField,
   Link,
@@ -8,9 +9,12 @@ import {
   RecordRepresentation,
   ReferenceField,
   required,
+  SaveButton,
   SimpleForm,
   TextField,
   TextInput,
+  Toolbar,
+  ToolbarClasses,
   TopToolbar,
   useDefaultTitle,
   useListContext,
@@ -111,7 +115,16 @@ const BoardMenu = () => {
     <MenuButton ButtonProps={{ label: "pm.actionList" }}>
       <MenuButton.RecordLinkItem label="ra.action.show" link="show" />
       <MenuButton.EditInDialog title={<RecordRepresentation />}>
-        <SimpleForm>
+        <SimpleForm
+          toolbar={
+            <Toolbar sx={{ bgcolor: "transparent" }}>
+              <div className={ToolbarClasses.defaultToolbar}>
+                <SaveButton alwaysEnable />
+                <DeleteButton color="inherit" />
+              </div>
+            </Toolbar>
+          }
+        >
           <TextInput source="name" validate={required()} />
           <TextInput source="description" multiline minRows={4} />
         </SimpleForm>
