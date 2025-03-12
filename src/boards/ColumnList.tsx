@@ -5,7 +5,7 @@ import { Column } from "./Column";
 export const ColumnList = ({ sx, ...props }: StackProps) => {
   const board = useRecordContext();
   if (!board) return null;
-  if (board.columns.length === 0) return <Empty />;
+  if (board.columns.length === 0) return <Empty resource="columns" />;
 
   return (
     <Stack
