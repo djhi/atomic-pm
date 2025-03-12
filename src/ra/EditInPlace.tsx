@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Stack, StackProps } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useEvent, useSaveContext, useTranslate } from "react-admin";
+import { useFormContext } from "react-hook-form";
 
 export const EditInPlace = (props: EditInPlaceProps) => {
   const {
@@ -38,6 +39,13 @@ export const EditInPlace = (props: EditInPlaceProps) => {
     }
   };
   const saveContext = useSaveContext();
+  const { formState } = useFormContext();
+  const { submitCount, isSubmitSuccessful } = formState;
+  React.useEffect(() => {
+    if (isSubmitSuccessful) {
+      setIsEditing(false);
+    }
+  }, [submitCount, isSubmitSuccessful]);
   if (!saveContext || !saveContext.save) {
     throw new Error("EditInPlace components must be used inside a SaveContext");
   }

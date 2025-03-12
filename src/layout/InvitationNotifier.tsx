@@ -54,6 +54,7 @@ const InvitationNotifierListView = () => {
         onClick={handleClick}
         color="inherit"
         variant="text"
+        size="small"
       >
         <Badge color="secondary" badgeContent={total}>
           <MailIcon />
@@ -106,7 +107,7 @@ const InvitationItem = ({
         });
       })
       .then(() => {
-        queryClient.invalidateQueries({ queryKey: ["lists"] });
+        queryClient.invalidateQueries({ queryKey: ["boards"] });
         queryClient.invalidateQueries({ queryKey: ["invitations"] });
         onClose();
       });

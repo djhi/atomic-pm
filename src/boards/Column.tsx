@@ -1,7 +1,8 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { alpha, Chip, Stack, StackProps, Tooltip } from "@mui/material";
+import { alpha, Chip, ChipProps, Stack, StackProps, Tooltip } from "@mui/material";
 import {
   EditBase,
+  Form,
   TextField,
   TextInput,
   useRecordContext,
@@ -62,37 +63,40 @@ export const Column = ({ sx, ...props }: StackProps) => {
               redirect={false}
               mutationMode="optimistic"
             >
-              <EditInPlace
-                input={<TextInput source="name" helperText={false} />}
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
+              <Form>
+                <EditInPlace
+                  input={<TextInput source="name" helperText={false} />}
                 >
-                  <TextField
-                    source="name"
-                    gutterBottom
-                    variant="h6"
-                    component="h2"
-                  />
-                  <Stack direction="row" gap={1} alignItems="center">
-                    <ChipWithMax
-                      max={column?.maxCards}
-                      value={column?.cards?.length || 0}
-                      label="pm.cardCount"
-                      labelWithMax="pm.cardCountWithLimit"
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <TextField
+                      source="name"
+                      gutterBottom
+                      variant="h6"
+                      component="h2"
                     />
-                    <ChipWithMax
-                      max={column?.maxEstimates}
-                      value={totalEstimates}
-                      label="pm.pointCount"
-                      labelWithMax="pm.pointCountWithLimit"
-                    />
-                    <ColumnMenu />
+                    <Stack direction="row" gap={1} alignItems="center">
+                      <ChipWithMax
+                        max={column?.maxCards}
+                        value={column?.cards?.length || 0}
+                        label="pm.cardCount"
+                        labelWithMax="pm.cardCountWithLimit"
+                      />
+                      <ChipWithMax
+                        max={column?.maxEstimates}
+                        value={totalEstimates}
+                        label="pm.pointCount"
+                        labelWithMax="pm.pointCountWithLimit"
+                        color="info"
+                      />
+                      <ColumnMenu />
+                    </Stack>
                   </Stack>
-                </Stack>
-              </EditInPlace>
+                </EditInPlace>
+              </Form>
             </EditBase>
           </Stack>
           <CardList />
@@ -159,7 +163,9 @@ const ChipWithMax = ({
   max,
   labelWithMax,
   label,
+  color = "default",
 }: {
+  color?: ChipProps["color"];
   value: number;
   label: string;
   max?: number;
@@ -176,7 +182,8 @@ const ChipWithMax = ({
     >
       <Chip
         label={max != null ? `${value} / ${max}` : value}
-        color={hasTooMany ? "warning" : "default"}
+        size="small"
+        color={hasTooMany ? "warning" : color}
       />
     </Tooltip>
   );

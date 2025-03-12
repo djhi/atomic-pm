@@ -19,7 +19,6 @@ export const FavoriteDocuments = () => {
       <SingleFieldList linkType={false}>
         <DocumentLink>
           <Chip
-            color="info"
             sx={{ cursor: "inherit" }}
             label={
               <Stack direction="row" alignItems="center" gap={1}>

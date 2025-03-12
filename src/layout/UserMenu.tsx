@@ -1,4 +1,5 @@
 import {
+  Box,
   Divider,
   ListItemIcon,
   ListItemText,
@@ -36,7 +37,16 @@ export const UserMenu = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   return (
-    <>
+    <Box
+      sx={{
+        "& .RaUserMenu-userButton": {
+          fontSize: 0,
+          lineHeight: 0,
+          textDecoration: '',
+          pr: 1
+        },
+      }}
+    >
       <RaUserMenu>
         <EditProfileMenuItem
           onClick={() => {
@@ -73,7 +83,7 @@ export const UserMenu = () => {
           </ImageInput>
         </SimpleForm>
       </EditDialog>
-    </>
+    </Box>
   );
 };
 

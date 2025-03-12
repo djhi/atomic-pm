@@ -1,4 +1,3 @@
-import { RichTextInput } from "ra-input-rich-text";
 import {
   AutocompleteInput,
   Create,
@@ -15,9 +14,9 @@ import {
   useRecordFromLocation,
 } from "react-admin";
 import { useParams } from "react-router";
-import { EstimateInput } from "./EstimateInput";
-import { grey } from "@mui/material/colors";
+import { MarkdownInput } from "@react-admin/ra-markdown";
 import { Box, Stack } from "@mui/material";
+import { EstimateInput } from "./EstimateInput";
 import { CardBoardTitle } from "./CardBoardTitle";
 
 export const CardCreate = () => {
@@ -99,23 +98,9 @@ export const CardCreate = () => {
               <EstimateInput source="estimate" hideLabel />
             </Labeled>
           </Stack>
-          <RichTextInput
+          <MarkdownInput
             source="description"
             fullWidth
-            sx={{
-              [`& .RaRichTextInput-editorContent`]: {
-                "& .ProseMirror": {
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "dark" ? grey[800] : grey[300],
-                  minHeight: "20vh",
-
-                  "&:focus": {
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "dark" ? grey[800] : grey[300],
-                  },
-                },
-              },
-            }}
           />
         </SimpleForm>
       </Stack>

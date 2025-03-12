@@ -52,7 +52,9 @@ export const DocumentList = () => {
       open={!!match}
       onClose={() => navigate(`/boards/${params.boardId}`)}
       anchor="right"
-      PaperProps={{ sx: { width: "30vw" } }}
+      slotProps={{
+        paper: { sx: { width: "30vw" } },
+      }}
     >
       <DocumentsTitle />
       <Stack
@@ -110,10 +112,15 @@ export const DocumentList = () => {
 
 const DocumentListView = () => {
   const { data } = useListContext();
+  // Put favorites first, then sort by title
+  const sortedDocuments = data?.sort(
+    (a, b) =>
+      Number(b.favorite) - Number(a.favorite) || a.title.localeCompare(b.title),
+  );
 
   return (
     <List disablePadding>
-      {data?.map((record) => (
+      {sortedDocuments?.map((record) => (
         <RecordContextProvider value={record} key={record.id}>
           <DocumentListItem />
         </RecordContextProvider>
@@ -166,7 +173,7 @@ const DocumentListItem = () => {
               previousData: record,
             },
             {
-              mutationMode: 'optimistic',
+              mutationMode: "optimistic",
               onSuccess: (data) => {
                 notify(
                   `Document ${data.title} was ${

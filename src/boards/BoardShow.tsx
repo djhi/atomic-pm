@@ -20,7 +20,6 @@ import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
-import { FavoriteDocuments } from "./FavoriteDocuments";
 import { DocumentCreate } from "./DocumentCreate";
 import { DocumentEdit } from "./DocumentEdit";
 import { DocumentList } from "./DocumentList";
@@ -140,7 +139,6 @@ const BoardShowActions = () => {
   return (
     <TopToolbar sx={{ justifyContent: "space-between", mb: 3 }}>
       <BoardTitle />
-      <FavoriteDocuments />
       <Stack direction="row" spacing={1} ml="auto">
         <DocumentsButton />
         <BoardMembersEdit />
