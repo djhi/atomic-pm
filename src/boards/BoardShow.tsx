@@ -20,8 +20,6 @@ import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
-import { DocumentCreate } from "./DocumentCreate";
-import { DocumentEdit } from "./DocumentEdit";
 import { DocumentList } from "./DocumentList";
 import { useBoard } from "./useBoard";
 
@@ -54,8 +52,6 @@ export const BoardShow = () => {
         />
       </Routes>
       <DocumentList />
-      <DocumentCreate />
-      <DocumentEdit />
     </>
   );
 };

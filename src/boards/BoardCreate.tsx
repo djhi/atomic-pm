@@ -1,5 +1,14 @@
 import { CreateInDialogButton } from "@react-admin/ra-form-layout";
-import { required, SimpleForm, TextInput, useGetIdentity } from "react-admin";
+import {
+  DeleteButton,
+  required,
+  SaveButton,
+  SimpleForm,
+  TextInput,
+  Toolbar,
+  ToolbarClasses,
+  useGetIdentity,
+} from "react-admin";
 import { useNavigate } from "react-router";
 
 export const BoardCreate = () => {
@@ -15,7 +24,16 @@ export const BoardCreate = () => {
       record={{ user_id: identity?.id, created_at: new Date().toISOString() }}
       mutationOptions={{ onSuccess: (data) => navigate(`/boards/${data.id}`) }}
     >
-      <SimpleForm>
+      <SimpleForm
+        toolbar={
+          <Toolbar sx={{ bgcolor: "transparent" }}>
+            <div className={ToolbarClasses.defaultToolbar}>
+              <SaveButton alwaysEnable />
+              <DeleteButton color="inherit" />
+            </div>
+          </Toolbar>
+        }
+      >
         <TextInput source="name" validate={required()} />
         <TextInput source="description" multiline minRows={4} />
       </SimpleForm>

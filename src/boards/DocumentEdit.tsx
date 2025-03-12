@@ -1,10 +1,13 @@
-import { Drawer, Stack } from "@mui/material";
-import { RichTextInput } from "ra-input-rich-text";
+import { Box, Stack } from "@mui/material";
 import {
-  EditBase,
+  DeleteButton,
+  Edit,
   required,
+  SaveButton,
   SimpleForm,
   TextInput,
+  Toolbar,
+  ToolbarClasses,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -12,6 +15,8 @@ import {
   useTranslate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
+import { CardBoardTitle } from "./CardBoardTitle";
+import { MarkdownInput } from "@react-admin/ra-markdown";
 
 export const DocumentEdit = () => {
   const navigate = useNavigate();
@@ -21,59 +26,61 @@ export const DocumentEdit = () => {
   const notify = useNotify();
 
   return (
-    <Drawer
-      open={!!match && match.params.id !== "create"}
-      onClose={() => navigate(`/boards/${params.boardId}/documents`)}
-      anchor="right"
-      PaperProps={{
-        sx: {
-          mr: "30vw",
-          flexDirection: "row",
-          "& form": { flex: 1, display: "flex", flexDirection: "column" },
+    <Edit
+      component={Box}
+      id={match?.params.id}
+      resource="documents"
+      mutationOptions={{
+        onSuccess: () => {
+          notify(`resources.documents.notifications.updated`, {
+            type: "info",
+            messageArgs: {
+              smart_count: 1,
+              _: translate("ra.notification.updated", { smart_count: 1 }),
+            },
+            undoable: true,
+          });
+          navigate(`/boards/${params.boardId}/documents`);
         },
       }}
     >
-      {match?.params.id ? (
-        <EditBase
-          id={match?.params.id}
-          resource="documents"
-          mutationOptions={{
-            onSuccess: () => {
-              notify(`resources.documents.notifications.updated`, {
-                type: "info",
-                messageArgs: {
-                  smart_count: 1,
-                  _: translate("ra.notification.updated", { smart_count: 1 }),
-                },
-                undoable: true,
-              });
-              navigate(`/boards/${params.boardId}/documents`);
-            },
-          }}
+      <CardBoardTitle />
+      <DocumentTitle />
+      <SimpleForm
+        component={Box}
+        sx={{ py: 4, flex: 1 }}
+        toolbar={
+          <Toolbar disableGutters sx={{ bgcolor: "transparent" }}>
+            <div className={ToolbarClasses.defaultToolbar}>
+              <SaveButton alwaysEnable />
+              <DeleteButton color="inherit" />
+            </div>
+          </Toolbar>
+        }
+      >
+        <Stack
+          width="100%"
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={1}
         >
-          <DocumentTitle />
-          <SimpleForm sx={{ flex: 1 }}>
-            <Stack
-              width="100%"
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              gap={1}
-            >
-              <TextInput source="title" validate={required()} />
-            </Stack>
-            <RichTextInput source="content" validate={required()} />
-          </SimpleForm>
-        </EditBase>
-      ) : null}
-    </Drawer>
+          <TextInput source="title" validate={required()} />
+        </Stack>
+        <MarkdownInput source="content" validate={required()} />
+      </SimpleForm>
+    </Edit>
   );
 };
 
 const DocumentTitle = () => {
   const record = useRecordContext();
   const params = useParams<"boardId">();
-  const { data: board } = useGetOne("boards", { id: params.boardId }, { enabled: !!params.boardId });
+  const { data: board } = useGetOne(
+    "boards",
+    { id: params.boardId },
+    { enabled: !!params.boardId },
+  );
   const appTitle = useDefaultTitle();
   return (
     <>
