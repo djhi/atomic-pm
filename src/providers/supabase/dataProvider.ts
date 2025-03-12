@@ -86,12 +86,12 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
     getDocumentUrl: async ({
       data,
     }: {
-      data: { bucket: string; filePath: string };
+      data: { bucket: string; filePath: string; expiresIn?: number };
     }) => {
       const oneHour = 60 * 60 * 24;
       const { data: signedUrl, error } = await supabaseClient.storage
         .from(data.bucket)
-        .createSignedUrl(data.filePath, oneHour);
+        .createSignedUrl(data.filePath, data.expiresIn ?? oneHour);
 
       if (error) {
         throw new Error(error.message);

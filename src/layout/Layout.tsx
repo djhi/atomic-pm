@@ -13,10 +13,15 @@ export const Layout = ({ children }: { children: ReactNode }) => (
     sx={{
       [`&`]: {
         bgcolor: "transparent",
+        display: "flex",
+        flexDirection: "column",
       },
       [`& .${ContainerLayoutClasses.content}`]: {
         maxWidth: "unset",
         bgcolor: "transparent",
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
       },
     }}
   >

@@ -98,13 +98,13 @@ Deno.serve(async (req: Request) => {
     .select("*")
     .single();
 
-  // Insert a revision
   const { data: sourceColumn } = await supabaseClient
     .from("columns")
     .select("name")
     .eq("id", previous.column_id)
     .single();
 
+  // Insert a revision
   if (previous.column_id !== column_id) {
     const { data: destinationColumn } = await supabaseClient
       .from("columns")
@@ -116,7 +116,7 @@ Deno.serve(async (req: Request) => {
       date: new Date().toISOString(),
       resource: "cards",
       recordId: card_id,
-      data: JSON.stringify(data),
+      data: previous,
       message: `Moved card from column "${sourceColumn.name}" to "${destinationColumn.name}" at position ${position}`,
       description: `Moved card from column "${sourceColumn.name}" to "${destinationColumn.name}" at position ${position}`,
     });
@@ -127,7 +127,7 @@ Deno.serve(async (req: Request) => {
       date: new Date().toISOString(),
       resource: "cards",
       recordId: card_id,
-      data: JSON.stringify(data),
+      data: previous,
       message: `Moved card to position ${position} `,
       description: `Moved card to position ${position} `,
     });

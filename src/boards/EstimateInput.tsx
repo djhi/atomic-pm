@@ -9,7 +9,10 @@ import { FieldTitle, InputHelperText, InputProps, useInput } from "react-admin";
 
 const Choices = [0, 0.5, 1, 2, 3, 5, 8, 13];
 
-export const EstimateInput = (props: InputProps) => {
+export const EstimateInput = ({
+  hideLabel,
+  ...props
+}: InputProps & { hideLabel?: boolean }) => {
   const { field, fieldState, isRequired } = useInput(props);
   const { error, invalid } = fieldState;
   const renderHelperText = props.helperText !== false || invalid;
@@ -17,25 +20,28 @@ export const EstimateInput = (props: InputProps) => {
   return (
     <FormControl
       sx={{
+        width: "100%",
         minWidth: "50%",
-        maxWidth: { md: "40%" },
+        mt: 0.5,
       }}
     >
-      <FormLabel
-        component="legend"
-        sx={{
-          transform: "translate(0, 5px) scale(0.75)",
-          transformOrigin: (theme) =>
-            `top ${theme.direction === "ltr" ? "left" : "right"}`,
-        }}
-      >
-        <FieldTitle
-          label={props.label}
-          source={props.source}
-          resource={props.resource}
-          isRequired={isRequired}
-        />
-      </FormLabel>
+      {props.label !== false && !hideLabel ? (
+        <FormLabel
+          component="legend"
+          sx={{
+            transform: "translate(0, 5px) scale(0.75)",
+            transformOrigin: (theme) =>
+              `top ${theme.direction === "ltr" ? "left" : "right"}`,
+          }}
+        >
+          <FieldTitle
+            label={props.label}
+            source={props.source}
+            resource={props.resource}
+            isRequired={isRequired}
+          />
+        </FormLabel>
+      ) : null}
       <ToggleButtonGroup
         value={field.value}
         onChange={(_, value) => field.onChange(value)}
@@ -46,6 +52,7 @@ export const EstimateInput = (props: InputProps) => {
           flexDirection: "row",
           "& button": { flexBasis: 0, flexGrow: 1, minWidth: 0 },
         }}
+        size="small"
       >
         {Choices.map((choice) => (
           <ToggleButton key={choice} value={choice}>

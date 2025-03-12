@@ -3,10 +3,14 @@ import {
   AutocompleteInput,
   DateField,
   Edit,
+  EditClasses,
+  InputProps,
+  Labeled,
   ReferenceField,
   ReferenceInput,
   ReferenceManyField,
   required,
+  RichTextField,
   SimpleList,
   TextField,
   TextInput,
@@ -14,23 +18,26 @@ import {
   useGetOne,
   useNotify,
   useRecordContext,
+  useTranslate,
+  WithRecord,
 } from "react-admin";
-import { useNavigate, useParams } from "react-router";
-import { Box, Stack } from "@mui/material";
+import { useParams } from "react-router";
+import { Box, Divider, Link, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useQueryClient } from "@tanstack/react-query";
+import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { LockOnMount } from "./LockOnMount";
-import { FormWithLockSupport } from "./FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
-import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CardBoardTitle } from "./CardBoardTitle";
-import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { AvatarField } from "./AvatarField";
+import { EditInPlace, useEditInPlace } from "../ra/EditInPlace";
+import { FormWithLockSupport } from "./FormWithLockSupport";
+import { BoardItemFormToolbar } from "./BoardItemFormToolbar";
 
 export const CardEdit = () => {
-  const navigate = useNavigate();
   const params = useParams<"boardId" | "id">();
   const queryClient = useQueryClient();
   const notify = useNotify();
@@ -39,7 +46,23 @@ export const CardEdit = () => {
     <Edit
       resource="cards"
       id={params.id}
-      component="div"
+      component={Box}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        [`& .${EditClasses.main}`]: {
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+        },
+        [`& .${EditClasses.card}`]: {
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          width: "100%",
+        },
+      }}
       title={<CardTitle />}
       mutationMode="optimistic"
       mutationOptions={{
@@ -49,7 +72,6 @@ export const CardEdit = () => {
             messageArgs: { smart_count: 1 },
             undoable: true,
           });
-          navigate(`/boards/${params.boardId}`);
           queryClient.setQueryData<any>(
             [
               "boards",
@@ -78,44 +100,124 @@ export const CardEdit = () => {
         },
       }}
     >
-      <Stack direction="column" gap={4}>
+      <Stack direction="column" gap={4} flexGrow={1}>
         <CardBoardTitle />
-        <Stack direction="row" gap={4}>
-          <Stack direction="column" flexGrow={1}>
+        <Stack direction="row" gap={4} flexGrow={1} pb={4}>
+          <Stack
+            direction="column"
+            flexGrow={1}
+            sx={{
+              "& form": {
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+              },
+            }}
+          >
             <LockOnMount />
             <RecordLiveUpdate />
             <CreateRevisionOnSave skipUserDetails>
-              <FormWithLockSupport component={Box}>
-                <ReferenceInput source="column_id" reference="columns" />
-                <ReferenceInput source="assigned_user_id" reference="profiles">
-                  <AutocompleteInput optionText="email" />
-                </ReferenceInput>
-                <TextInput source="title" validate={required()} />
-                <EstimateInput source="estimate" />
-                <RichTextInput
-                  source="description"
-                  fullWidth
-                  sx={{
-                    [`& .RaRichTextInput-editorContent`]: {
-                      "& .ProseMirror": {
-                        backgroundColor: (theme) =>
-                          theme.palette.mode === "dark" ? grey[800] : grey[300],
-                        minHeight: "20vh",
-
-                        "&:focus": {
-                          backgroundColor: (theme) =>
-                            theme.palette.mode === "dark"
-                              ? grey[800]
-                              : grey[300],
-                        },
-                      },
-                    },
-                  }}
-                />
+              <FormWithLockSupport
+                sx={{
+                  p: 0,
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                toolbar={
+                  <BoardItemFormToolbar
+                    sx={{ position: "sticky", bottom: 0, px: 0 }}
+                  />
+                }
+              >
+                <EditInPlace
+                  input={
+                    <TextInput
+                      source="title"
+                      validate={required()}
+                      autoFocus
+                      onFocus={(e) => e.currentTarget.select()}
+                    />
+                  }
+                >
+                  <TextField source="title" variant="h3" component="h2" />
+                </EditInPlace>
+                <Stack
+                  direction="row"
+                  gap={2}
+                  sx={{ mt: 2 }}
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Labeled
+                    source="column_id"
+                    component="label"
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <ReferenceInput source="column_id" reference="columns">
+                      <AutocompleteInput
+                        optionText="name"
+                        TextFieldProps={{
+                          label: null,
+                        }}
+                      />
+                    </ReferenceInput>
+                  </Labeled>
+                  <Labeled
+                    source="assigned_user_id"
+                    component="label"
+                    sx={{ flexGrow: 1 }}
+                  >
+                    <ReferenceInput
+                      source="assigned_user_id"
+                      reference="profiles"
+                    >
+                      <AutocompleteInput
+                        optionText="email"
+                        TextFieldProps={{
+                          label: null,
+                        }}
+                      />
+                    </ReferenceInput>
+                  </Labeled>
+                  <Labeled
+                    source="estimate"
+                    component="label"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flexGrow: 1,
+                    }}
+                  >
+                    <EstimateInput source="estimate" hideLabel />
+                  </Labeled>
+                </Stack>
+                <EditInPlace
+                  sx={{ mt: 4 }}
+                  input={
+                    <CardDescriptionInput
+                      source="description"
+                      validate={required()}
+                    />
+                  }
+                >
+                  <Labeled source="description">
+                    <WithRecord
+                      render={(record) =>
+                        record?.description ? (
+                          <RichTextField source="description" />
+                        ) : (
+                          <Typography variant="body2">Nothing here</Typography>
+                        )
+                      }
+                    />
+                  </Labeled>
+                </EditInPlace>
               </FormWithLockSupport>
             </CreateRevisionOnSave>
           </Stack>
-          <Stack direction="column" gap={1} flexGrow={0}>
+          <Divider orientation="vertical" flexItem />
+          <Stack direction="column" gap={1} flexGrow={0} width={1 / 4}>
             <NewMessage />
             <ReferenceManyField
               reference="card_events"
@@ -126,13 +228,18 @@ export const CardEdit = () => {
                 disablePadding
                 sx={{ "& li": { px: 0 } }}
                 primaryText={(record) => (
-                  <Stack direction="row" justifyContent="space-between" mb={1}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    mb={1}
+                    component="span"
+                  >
                     <ReferenceField
                       source="user_id"
                       reference="profiles"
                       link={false}
                     >
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" spacing={1} component="span">
                         <AvatarField />
                         <TextField
                           source="email"
@@ -151,21 +258,31 @@ export const CardEdit = () => {
                   </Stack>
                 )}
                 secondaryText={(record) => (
-                  <TextField
-                    source="message"
-                    variant="body1"
-                    sx={
-                      record?.type === "revision"
-                        ? {}
-                        : {
-                            display: "block",
-                            width: "100%",
-                            p: 2,
-                            bgcolor: (theme) => theme.palette.action.hover,
-                            borderRadius: (theme) => theme.shape.borderRadius,
-                          }
-                    }
-                  />
+                  <Stack
+                    direction="row"
+                    component="span"
+                    gap={1}
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    {record?.type === "revision" ? (
+                      <Box sx={{ pl: 2 }} component="span">
+                        <TextField source="message" />
+                      </Box>
+                    ) : (
+                      <TextField
+                        source="message"
+                        variant="body1"
+                        sx={{
+                          display: "block",
+                          width: "100%",
+                          p: 2,
+                          bgcolor: (theme) => theme.palette.action.hover,
+                          borderRadius: (theme) => theme.shape.borderRadius,
+                        }}
+                      />
+                    )}
+                  </Stack>
                 )}
               />
               <ListLiveUpdate />
@@ -201,3 +318,42 @@ const CardTitle = () => {
     </>
   );
 };
+
+const CardDescriptionInput = (props: InputProps) => {
+  const editInPlace = useEditInPlace();
+  const translate = useTranslate();
+
+  return (
+    <Stack>
+      <RichTextInput
+        {...props}
+        helperText={false}
+        fullWidth
+        sx={{
+          [`& .RaRichTextInput-editorContent`]: {
+            "& .ProseMirror": {
+              backgroundColor: (theme) =>
+                theme.palette.mode === "dark" ? grey[800] : grey[300],
+              minHeight: "20vh",
+
+              "&:focus": {
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "dark" ? grey[800] : grey[300],
+              },
+            },
+          },
+        }}
+      />
+      <div>
+        <Link
+          component="button"
+          fontSize="small"
+          onClick={() => editInPlace.setIsEditing(false)}
+        >
+          {translate("ra.action.cancel")}
+        </Link>
+      </div>
+    </Stack>
+  );
+};
+

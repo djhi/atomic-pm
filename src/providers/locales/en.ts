@@ -8,6 +8,30 @@ export const englishMessages = mergeTranslations(
   raSupabaseEnglishMessages,
   raRealTimeLanguageEnglish,
   {
+    resources: {
+      cards: {
+        fields: {
+          title: "Titre",
+          estimate: "Estimation",
+          column_id: "Column",
+          description: "Description",
+          assigned_user_id: "Assigned user",
+        },
+      },
+      columns: {
+        fields: {
+          name: "Nom",
+          maxCards: "Maximum de cartes",
+          maxEstimates: "Maximum de points d'estimations",
+        },
+      },
+      boards: {
+        name: "Tableau |||| Tableaux",
+        fields: {
+          name: "Nom",
+        },
+      },
+    },
     pm: {
       documents: "Documents",
       members: "Members",
@@ -23,6 +47,7 @@ export const englishMessages = mergeTranslations(
       pointCountWithLimit:
         "%{value} / 1 point |||| %{value} / %{smart_count} points",
       locked: "Locked by %{name}",
+      sendMessageInstructions: "CTRl+Enter to send",
       sendMessage: "Send",
       editProfile: "Profile",
       actionList: "Action list",

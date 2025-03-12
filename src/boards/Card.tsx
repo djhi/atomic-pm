@@ -6,9 +6,11 @@ import {
   lighten,
   darken,
   Theme,
+  Stack,
 } from "@mui/material";
 import {
   ChipField,
+  FunctionField,
   ReferenceField,
   TextField,
   useRecordContext,
@@ -64,17 +66,31 @@ export const Card = () => {
               position: "relative",
             }}
           >
-            <TextField
-              source="title"
-              gutterBottom
-              variant="h6"
-              component="h2"
-              sx={{ maxWidth: "80%", fontWeight: "normal" }}
-            />
+            <Stack direction="row" alignItems="start" gap={1}>
+              <FunctionField
+                source="id"
+                gutterBottom
+                variant="h6"
+                sx={{ color: "text.secondary", fontWeight: "normal" }}
+                render={(record) => `#${record.id}`}
+              />
+              <TextField
+                source="title"
+                gutterBottom
+                variant="h6"
+                component="h2"
+                sx={{ fontWeight: "normal" }}
+              />
+            </Stack>
             <CardMenu />
           </CardContent>
           <CardActions>
-            <ChipField source="estimate" size="small" color="info" emptyText=" " />
+            <ChipField
+              source="estimate"
+              size="small"
+              color="info"
+              emptyText=" "
+            />
             <ReferenceField source="assigned_user_id" reference="profiles">
               <AvatarField />
             </ReferenceField>
@@ -84,8 +100,6 @@ export const Card = () => {
     </Draggable>
   );
 };
-
-
 
 const CardMenu = () => {
   const card = useRecordContext();

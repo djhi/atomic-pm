@@ -13,6 +13,9 @@ export const frenchMessages = mergeTranslations(
         fields: {
           title: "Titre",
           estimate: "Estimation",
+          column_id: "Colonne",
+          description: "Description",
+          assigned_user_id: "Utilisateur assigné",
         },
       },
       columns: {
@@ -45,6 +48,7 @@ export const frenchMessages = mergeTranslations(
         "%{value} / 1 point |||| %{value} / %{smart_count} points",
       locked: "Verrouillé par %{name}",
       sendMessage: "Envoyer",
+      sendMessageInstructions: "CTRl+Enter pour envoyer",
       editProfile: "Profil",
       actionList: "Liste des actions",
     },
