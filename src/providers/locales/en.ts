@@ -2,16 +2,17 @@ import { mergeTranslations } from "react-admin";
 import { raSupabaseEnglishMessages } from "ra-supabase-language-english";
 import raEnglishMessages from "ra-language-english";
 import { raRealTimeLanguageEnglish } from "@react-admin/ra-realtime";
-
+import { raFormLayoutLanguageEnglish } from "@react-admin/ra-form-layout";
 export const englishMessages = mergeTranslations(
   raEnglishMessages,
   raSupabaseEnglishMessages,
   raRealTimeLanguageEnglish,
+  raFormLayoutLanguageEnglish,
   {
     resources: {
       cards: {
         fields: {
-          title: "Titre",
+          title: "Title",
           estimate: "Estimation",
           column_id: "Column",
           description: "Description",
@@ -20,15 +21,15 @@ export const englishMessages = mergeTranslations(
       },
       columns: {
         fields: {
-          name: "Nom",
-          maxCards: "Maximum de cartes",
-          maxEstimates: "Maximum de points d'estimations",
+          name: "Name",
+          maxCards: "Maximum cards",
+          maxEstimates: "Maximum points",
         },
       },
       boards: {
-        name: "Tableau |||| Tableaux",
+        name: "Board |||| Boards",
         fields: {
-          name: "Nom",
+          name: "Name",
         },
       },
     },

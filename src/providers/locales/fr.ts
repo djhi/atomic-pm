@@ -2,11 +2,13 @@ import { mergeTranslations } from "react-admin";
 import { raSupabaseFrenchMessages } from "ra-supabase-language-french";
 import raFrenchMessages from "ra-language-french";
 import { raRealTimeLanguageFrench } from "@react-admin/ra-realtime";
+import { raFormLayoutLanguageFrench } from "@react-admin/ra-form-layout";
 
 export const frenchMessages = mergeTranslations(
   raFrenchMessages,
   raSupabaseFrenchMessages,
   raRealTimeLanguageFrench,
+  raFormLayoutLanguageFrench,
   {
     resources: {
       cards: {
