@@ -1,20 +1,24 @@
-import { Card, CardActions, CardContent, Grid2 } from "@mui/material";
+import { Card, CardContent, Grid2, Stack } from "@mui/material";
 import {
-  DeleteButton,
-  EditButton,
   Empty,
   FunctionField,
+  Link,
   List,
   RecordContextProvider,
+  RecordRepresentation,
   ReferenceField,
+  required,
+  SimpleForm,
   TextField,
+  TextInput,
   TopToolbar,
   useDefaultTitle,
   useListContext,
+  useRecordContext,
 } from "react-admin";
-import { BoardEdit } from "./BoardEdit";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { BoardCreate } from "./BoardCreate";
+import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const BoardList = () => (
   <>
@@ -68,25 +72,51 @@ const BoardListView = () => {
 };
 
 const BoardListItem = () => {
+  const board = useRecordContext();
+  if (!board) return null;
   return (
-    <Card>
-      <CardContent>
-        <TextField source="name" gutterBottom variant="h5" component="h2" />
-        <TextField
-          source="description"
-          component="div"
-          variant="body2"
-          sx={{ color: "text.secondary" }}
-        />
-        <ReferenceField source="user_id" reference="profiles">
-          <FunctionField render={(user) => `Created by ${user.email}`} />
-        </ReferenceField>
-      </CardContent>
-      <CardActions>
-        <EditButton label="ra.action.show" />
-        <BoardEdit />
-        <DeleteButton />
-      </CardActions>
-    </Card>
+    <Link to={`/boards/${board.id}`} sx={{ textDecoration: "none" }}>
+      <Card
+        sx={{ "&:hover": { bgcolor: (theme) => theme.palette.action.hover } }}
+      >
+        <CardContent>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <TextField source="name" gutterBottom variant="h5" component="h2" />
+            <BoardMenu />
+          </Stack>
+          <TextField
+            source="description"
+            component="div"
+            variant="body2"
+            sx={{ color: "text.secondary" }}
+          />
+          <ReferenceField source="user_id" reference="profiles">
+            <FunctionField render={(user) => `Created by ${user.email}`} />
+          </ReferenceField>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
+
+const BoardMenu = () => {
+  const board = useRecordContext();
+  if (!board) return null;
+
+  return (
+    <MenuButton ButtonProps={{ label: "pm.actionList" }}>
+      <MenuButton.RecordLinkItem label="ra.action.show" link="show" />
+      <MenuButton.EditInDialog title={<RecordRepresentation />}>
+        <SimpleForm>
+          <TextInput source="name" validate={required()} />
+          <TextInput source="description" multiline minRows={4} />
+        </SimpleForm>
+      </MenuButton.EditInDialog>
+      <MenuButton.DeleteItem mutationMode="pessimistic" />
+    </MenuButton>
   );
 };

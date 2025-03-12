@@ -19,6 +19,7 @@ export const MenuButtonIconButton = ({
 		<IconButtonWithTooltip
 			onClick={(event) => {
 				event.stopPropagation();
+				event.preventDefault();
 				openMenu(event.currentTarget);
 			}}
 			label={label}

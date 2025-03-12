@@ -7,6 +7,7 @@ import { MenuButtonLinkItem } from "./MenuButtonLinkItem";
 import { MenuButtonRecordLinkItem } from "./MenuButtonRecordLinkItem";
 import { MenuButtonUpdateItem } from "./MenuButtonUpdateItem";
 import { MenuButtonProvider } from "./MenuButtonProvider";
+import { MenuButtonItemEditInDialog } from "./MenuButtonItemEditInDialog";
 
 export const MenuButton = (props: MenuButtonProps) => {
   const { children, button, ButtonProps, MenuProps, ...rest } = props;
@@ -30,6 +31,7 @@ export const MenuButton = (props: MenuButtonProps) => {
         <Menu
           open={!!anchorEl}
           anchorEl={anchorEl}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           onClose={(event) => handleClose(event)}
           {...MenuProps}
         >
@@ -52,3 +54,4 @@ MenuButton.LinkItem = MenuButtonLinkItem;
 MenuButton.RecordLinkItem = MenuButtonRecordLinkItem;
 MenuButton.UpdateItem = MenuButtonUpdateItem;
 MenuButton.DeleteItem = MenuButtonDeleteItem;
+MenuButton.EditInDialog = MenuButtonItemEditInDialog;
