@@ -1,5 +1,12 @@
 import { Draggable } from "@hello-pangea/dnd";
-import { alpha, Chip, ChipProps, Stack, StackProps, Tooltip } from "@mui/material";
+import {
+  alpha,
+  Chip,
+  ChipProps,
+  Stack,
+  StackProps,
+  Tooltip,
+} from "@mui/material";
 import {
   EditBase,
   Form,
@@ -41,7 +48,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
           })}
           sx={{
             ...sx,
-            opacity: snapshot?.isDragging ? 0.9 : 1,
+            bgcolor: (theme) =>
+              snapshot.isDragging ? theme.palette.background.paper : "inherit",
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
             width: { xs: "100%", sm: "100%", md: "350px" },
             flexShrink: 0,
