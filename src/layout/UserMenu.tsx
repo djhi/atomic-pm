@@ -31,10 +31,12 @@ import {
 } from "react-admin";
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const UserMenu = () => {
   const { identity } = useGetIdentity();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   return (
     <Box
@@ -67,7 +69,10 @@ export const UserMenu = () => {
         fullWidth
         maxWidth="md"
         isOpen={editDialogOpen}
-        close={() => setEditDialogOpen(false)}
+        close={() => {
+          queryClient.invalidateQueries({ queryKey: ["profiles"] });
+          setEditDialogOpen(false)
+        }}
       >
         <SimpleForm
           toolbar={
