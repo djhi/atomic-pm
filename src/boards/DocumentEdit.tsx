@@ -15,7 +15,7 @@ import {
   useTranslate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
-import { CardBoardTitle } from "./CardBoardTitle";
+import { BoardLink } from "./BoardLink";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 
 export const DocumentEdit = () => {
@@ -44,7 +44,7 @@ export const DocumentEdit = () => {
         },
       }}
     >
-      <CardBoardTitle />
+      <BoardLink />
       <DocumentTitle />
       <SimpleForm
         component={Box}

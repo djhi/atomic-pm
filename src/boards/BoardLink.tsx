@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { Link, useGetOne } from "react-admin";
 import { useParams } from "react-router";
 
-export const CardBoardTitle = () => {
+export const BoardLink = () => {
   const params = useParams<"boardId">();
   const { data: board } = useGetOne("boards", { id: params.boardId });
 

@@ -17,7 +17,7 @@ import { useParams } from "react-router";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 import { Box, Stack } from "@mui/material";
 import { EstimateInput } from "./EstimateInput";
-import { CardBoardTitle } from "./CardBoardTitle";
+import { BoardLink } from "./BoardLink";
 
 export const CardCreate = () => {
   const params = useParams<"boardId">();
@@ -53,7 +53,7 @@ export const CardCreate = () => {
       title={<CardTitle />}
     >
       <Stack direction="column" gap={4} flexGrow={1}>
-        <CardBoardTitle />
+        <BoardLink />
         <SimpleForm
           component={Box}
           toolbar={

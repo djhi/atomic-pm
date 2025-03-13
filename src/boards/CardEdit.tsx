@@ -54,7 +54,7 @@ import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlace, useEditInPlace } from "../ra/EditInPlace";
 import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
-import { CardBoardTitle } from "./CardBoardTitle";
+import { BoardLink } from "./BoardLink";
 import { AvatarField } from "./AvatarField";
 
 export const CardEdit = () => {
@@ -121,7 +121,7 @@ export const CardEdit = () => {
       }}
     >
       <Stack direction="column" gap={4} flexGrow={1}>
-        <CardBoardTitle />
+        <BoardLink />
         <Stack direction="row" gap={4} flexGrow={1} pb={4}>
           <Stack
             direction="column"

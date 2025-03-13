@@ -12,7 +12,7 @@ import {
   useTranslate,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
-import { CardBoardTitle } from "./CardBoardTitle";
+import { BoardLink } from "./BoardLink";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 
 export const DocumentCreate = () => {
@@ -38,7 +38,7 @@ export const DocumentCreate = () => {
         },
       }}
     >
-      <CardBoardTitle />
+      <BoardLink />
       <DocumentTitle />
       <SimpleForm
         component={Box}
