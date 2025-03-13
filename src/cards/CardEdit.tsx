@@ -62,7 +62,6 @@ export const CardEdit = () => {
           width: "100%",
         },
       }}
-      title={<CardTitle />}
       mutationMode="optimistic"
       mutationOptions={{
         onSuccess: (data: any) => {
@@ -99,6 +98,7 @@ export const CardEdit = () => {
         },
       }}
     >
+      <CardTitle />
       <Stack direction="column" gap={4} flexGrow={1}>
         <BoardLink />
         <Stack direction="row" gap={4} flexGrow={1} pb={4}>
@@ -309,11 +309,6 @@ const CardTitle = () => {
   const appTitle = useDefaultTitle();
   if (!record) return null;
   return (
-    <>
-      <span>
-        {record?.title} - {column?.name}
-      </span>
-      <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
-    </>
+    <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
   );
 };

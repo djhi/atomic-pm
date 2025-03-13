@@ -50,8 +50,8 @@ export const CardCreate = () => {
         },
       }}
       redirect={`/boards/${params.boardId}`}
-      title={<CardTitle />}
     >
+      <CardTitle />
       <Stack direction="column" gap={4} flexGrow={1}>
         <BoardLink />
         <SimpleForm
@@ -98,10 +98,7 @@ export const CardCreate = () => {
               <EstimateInput source="estimate" hideLabel />
             </Labeled>
           </Stack>
-          <MarkdownInput
-            source="description"
-            fullWidth
-          />
+          <MarkdownInput source="description" fullWidth />
         </SimpleForm>
       </Stack>
     </Create>
@@ -123,9 +120,6 @@ const CardTitle = () => {
   );
   const appTitle = useDefaultTitle();
   return (
-    <>
-      <span>New card - {column?.name}</span>
-      <title>{`New card - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
-    </>
+    <title>{`New card - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
   );
 };
