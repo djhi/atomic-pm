@@ -52,10 +52,10 @@ import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { FormWithLockSupportToolbar } from "../ra/FormWithLockSupportToolbar";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlace, useEditInPlace } from "../ra/EditInPlace";
+import { BoardLink } from "../boards/BoardLink";
+import { AvatarField } from "../ui/AvatarField";
 import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
-import { BoardLink } from "./BoardLink";
-import { AvatarField } from "./AvatarField";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();

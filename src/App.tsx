@@ -9,10 +9,10 @@ import { BoardShow } from "./boards/BoardShow";
 import { useEffect, useState } from "react";
 import { darkTheme, lightTheme } from "./layout/themes";
 import { i18nProvider } from "./providers/i18nProvider";
-import { CardCreate } from "./boards/CardCreate";
-import { CardEdit } from "./boards/CardEdit";
-import { DocumentCreate } from "./boards/DocumentCreate";
-import { DocumentEdit } from "./boards/DocumentEdit";
+import { CardCreate } from "./cards/CardCreate";
+import { CardEdit } from "./cards/CardEdit";
+import { DocumentCreate } from "./documents/DocumentCreate";
+import { DocumentEdit } from "./documents/DocumentEdit";
 
 export const App = () => {
   const [dataProvider, setDataProvider] = useState<DataProvider>();

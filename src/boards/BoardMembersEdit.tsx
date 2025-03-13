@@ -17,7 +17,7 @@ import {
 import { ShowInDialogButton } from "@react-admin/ra-form-layout";
 import GroupIcon from "@mui/icons-material/Group";
 import { Chip, Stack } from "@mui/material";
-import { AvatarField } from "./AvatarField";
+import { AvatarField } from "../ui/AvatarField";
 
 export const BoardMembersEdit = () => {
   const board = useRecordContext();

@@ -18,7 +18,7 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
-import { AvatarField } from "./AvatarField";
+import { AvatarField } from "../ui/AvatarField";
 
 export const Card = () => {
   const card = useRecordContext();

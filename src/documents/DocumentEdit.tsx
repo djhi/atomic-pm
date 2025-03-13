@@ -15,8 +15,9 @@ import {
   useTranslate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
-import { BoardLink } from "./BoardLink";
 import { MarkdownInput } from "@react-admin/ra-markdown";
+import { BoardLink } from "../boards/BoardLink";
+
 
 export const DocumentEdit = () => {
   const navigate = useNavigate();

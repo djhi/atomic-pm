@@ -16,8 +16,8 @@ import {
 import { useParams } from "react-router";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 import { Box, Stack } from "@mui/material";
+import { BoardLink } from "../boards/BoardLink";
 import { EstimateInput } from "./EstimateInput";
-import { BoardLink } from "./BoardLink";
 
 export const CardCreate = () => {
   const params = useParams<"boardId">();
