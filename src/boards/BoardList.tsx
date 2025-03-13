@@ -117,7 +117,7 @@ const BoardMenu = () => {
       <MenuButton.EditInDialog title={<RecordRepresentation />}>
         <SimpleForm
           toolbar={
-            <Toolbar sx={{ bgcolor: "transparent" }}>
+            <Toolbar>
               <div className={ToolbarClasses.defaultToolbar}>
                 <SaveButton alwaysEnable />
                 <DeleteButton color="inherit" />

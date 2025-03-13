@@ -44,8 +44,8 @@ export const UserMenu = () => {
         "& .RaUserMenu-userButton": {
           fontSize: 0,
           lineHeight: 0,
-          textDecoration: '',
-          pr: 1
+          textDecoration: "",
+          pr: 1,
         },
       }}
     >
@@ -71,7 +71,7 @@ export const UserMenu = () => {
         isOpen={editDialogOpen}
         close={() => {
           queryClient.invalidateQueries({ queryKey: ["profiles"] });
-          setEditDialogOpen(false)
+          setEditDialogOpen(false);
         }}
       >
         <SimpleForm
