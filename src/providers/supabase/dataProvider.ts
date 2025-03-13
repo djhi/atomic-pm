@@ -5,7 +5,7 @@ import {
 } from "@react-admin/ra-realtime";
 import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
 import { withLifecycleCallbacks, type DataProvider } from "react-admin";
-import { supabaseClient } from "../supabaseClient";
+import { supabaseClient } from "./supabaseClient";
 
 const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
   addLocksMethodsBasedOnALockResource(
