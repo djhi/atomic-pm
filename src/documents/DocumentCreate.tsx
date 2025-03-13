@@ -6,6 +6,7 @@ import {
   SimpleForm,
   TextInput,
   Toolbar,
+  useCreateContext,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -71,10 +72,11 @@ const DocumentTitle = () => {
     { id: params.boardId },
     { enabled: !!params.boardId },
   );
+  const { defaultTitle } = useCreateContext();
   const appTitle = useDefaultTitle();
   return (
     <>
-      <title>{`New Document - ${board?.name} - ${appTitle}`}</title>
+      <title>{`${defaultTitle} - ${board?.name} - ${appTitle}`}</title>
     </>
   );
 };
