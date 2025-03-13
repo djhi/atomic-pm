@@ -1,7 +1,15 @@
-import { Card, CardContent, Grid2, Stack } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid2,
+  Stack,
+  Typography,
+} from "@mui/material";
 import {
   DeleteButton,
-  Empty,
+  EmptyClasses,
+  EmptyProps,
   FunctionField,
   Link,
   List,
@@ -17,10 +25,15 @@ import {
   ToolbarClasses,
   TopToolbar,
   useDefaultTitle,
+  useGetResourceLabel,
   useListContext,
   useRecordContext,
+  useResourceContext,
+  useResourceDefinition,
+  useTranslate,
 } from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import Inbox from "@mui/icons-material/Inbox";
 import { BoardCreate } from "./BoardCreate";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 
@@ -30,7 +43,7 @@ export const BoardList = () => (
       resource="boards"
       component="div"
       actions={<BoardListActions />}
-      empty={<Empty hasCreate />}
+      empty={<BoardEmpty />}
       title={<BoardListTitle />}
     >
       <BoardListView />
@@ -131,5 +144,67 @@ const BoardMenu = () => {
       </MenuButton.EditInDialog>
       <MenuButton.DeleteItem mutationMode="pessimistic" />
     </MenuButton>
+  );
+};
+
+const BoardEmpty = (props: EmptyProps) => {
+  const { className } = props;
+  const { hasCreate } = useResourceDefinition(props);
+  const resource = useResourceContext(props);
+  const translate = useTranslate();
+  const getResourceLabel = useGetResourceLabel();
+  const resourceName = translate(`resources.${resource}.forcedCaseName`, {
+    smart_count: 0,
+    _: resource ? getResourceLabel(resource, 0) : undefined,
+  });
+
+  const emptyMessage = translate("ra.page.empty", { name: resourceName });
+  const inviteMessage = translate("ra.page.invite");
+
+  return (
+    <Box
+      sx={{
+        flex: 1,
+        [`& .${EmptyClasses.message}`]: {
+          textAlign: "center",
+          opacity: (theme) => (theme.palette.mode === "light" ? 0.5 : 0.8),
+          margin: "0 1em",
+          color: (theme) =>
+            theme.palette.mode === "light"
+              ? "inherit"
+              : theme.palette.text.primary,
+        },
+
+        [`& .${EmptyClasses.icon}`]: {
+          width: "9em",
+          height: "9em",
+        },
+
+        [`& .${EmptyClasses.toolbar}`]: {
+          textAlign: "center",
+          marginTop: "2em",
+        },
+      }}
+      className={className}
+    >
+      <div className={EmptyClasses.message}>
+        <Inbox className={EmptyClasses.icon} />
+        <Typography variant="h4" paragraph>
+          {translate(`resources.${resource}.empty`, {
+            _: emptyMessage,
+          })}
+        </Typography>
+        {hasCreate && (
+          <Typography variant="body1">
+            {translate(`resources.${resource}.invite`, {
+              _: inviteMessage,
+            })}
+          </Typography>
+        )}
+      </div>
+      <div className={EmptyClasses.toolbar}>
+        <BoardCreate />
+      </div>
+    </Box>
   );
 };
