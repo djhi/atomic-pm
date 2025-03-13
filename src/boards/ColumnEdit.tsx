@@ -11,9 +11,9 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { Stack } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { LockOnMount } from "./LockOnMount";
+import { LockOnMount } from "../ra/LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
-import { FormWithLockSupport } from "./FormWithLockSupport";
+import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 
 export const ColumnEdit = () => {
   const navigate = useNavigate();

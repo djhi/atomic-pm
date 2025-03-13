@@ -1,6 +1,6 @@
 import { SimpleForm, SimpleFormProps, useGetIdentity } from "react-admin";
-import { BoardItemFormToolbar } from "./BoardItemFormToolbar";
 import { useGetLockLive } from "@react-admin/ra-realtime";
+import { FormWithLockSupportToolbar } from "./FormWithLockSupportToolbar";
 
 export const FormWithLockSupport = (props: SimpleFormProps) => {
   const { data: lock } = useGetLockLive();
@@ -11,7 +11,7 @@ export const FormWithLockSupport = (props: SimpleFormProps) => {
   return (
     <SimpleForm
       disabled={disabled}
-      toolbar={<BoardItemFormToolbar />}
+      toolbar={<FormWithLockSupportToolbar />}
       {...props}
     />
   );

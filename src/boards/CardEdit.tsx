@@ -47,15 +47,15 @@ import {
   SmartFieldDiff,
 } from "@react-admin/ra-history";
 import get from "lodash/get";
-import { LockOnMount } from "./LockOnMount";
+import { LockOnMount } from "../ra/LockOnMount";
+import { FormWithLockSupport } from "../ra/FormWithLockSupport";
+import { FormWithLockSupportToolbar } from "../ra/FormWithLockSupportToolbar";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
+import { EditInPlace, useEditInPlace } from "../ra/EditInPlace";
 import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
 import { CardBoardTitle } from "./CardBoardTitle";
 import { AvatarField } from "./AvatarField";
-import { EditInPlace, useEditInPlace } from "../ra/EditInPlace";
-import { FormWithLockSupport } from "./FormWithLockSupport";
-import { BoardItemFormToolbar } from "./BoardItemFormToolbar";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
@@ -145,7 +145,7 @@ export const CardEdit = () => {
                   flexDirection: "column",
                 }}
                 toolbar={
-                  <BoardItemFormToolbar
+                  <FormWithLockSupportToolbar
                     sx={{ position: "sticky", bottom: 0, px: 0 }}
                   />
                 }

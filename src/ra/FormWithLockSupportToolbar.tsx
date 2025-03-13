@@ -8,7 +8,7 @@ import {
   useGetIdentity,
 } from "react-admin";
 
-export const BoardItemFormToolbar = ({ sx, ...props }: ToolbarProps) => {
+export const FormWithLockSupportToolbar = ({ sx, ...props }: ToolbarProps) => {
   const { identity } = useGetIdentity();
   const editContext = useEditContext();
   const { data: lock } = useGetLockLive(undefined, undefined, {
