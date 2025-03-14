@@ -5,12 +5,12 @@ import { withLifecycleCallbacks } from "react-admin";
 import { getUserFromStorage } from "./utils";
 import { queryClient } from "../queryClient";
 
-const fakerestDataProvider = createSimpleRestProvider(
+const simpleRestDataProvider = createSimpleRestProvider(
   import.meta.env.VITE_SIMPLE_REST_URL,
 );
 
 const baseDataProvider = addRevisionMethodsBasedOnSingleResource(
-  addLocksMethodsBasedOnALockResource(fakerestDataProvider),
+  addLocksMethodsBasedOnALockResource(simpleRestDataProvider),
 );
 
 export const dataProvider = withLifecycleCallbacks(

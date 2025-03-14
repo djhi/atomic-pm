@@ -153,7 +153,11 @@ export const CardEdit = () => {
                     component="label"
                     sx={{ flexGrow: 1 }}
                   >
-                    <ReferenceInput source="column_id" reference="columns">
+                    <ReferenceInput
+                      source="column_id"
+                      reference="columns"
+                      filter={{ board_id: params.boardId }}
+                    >
                       <AutocompleteInput
                         optionText="name"
                         TextFieldProps={{
@@ -169,7 +173,8 @@ export const CardEdit = () => {
                   >
                     <ReferenceInput
                       source="assigned_user_id"
-                      reference="profiles"
+                      reference="board_members_with_profiles"
+                      filter={{ board_id: params.boardId }}
                     >
                       <AutocompleteInput
                         optionText="email"
