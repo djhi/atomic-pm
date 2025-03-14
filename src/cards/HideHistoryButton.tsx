@@ -17,8 +17,9 @@ export const HideHistoryButton = () => {
 
   return (
     <FormControlLabel
-      control={<Switch checked={isSelected} onChange={handleClick} />}
+      control={<Switch checked={isSelected} onChange={handleClick} size="small" />}
       label={"Show history"}
+      sx={{ pl: 1 }}
     />
   );
 };

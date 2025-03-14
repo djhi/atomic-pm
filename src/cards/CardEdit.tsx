@@ -233,6 +233,7 @@ export const CardEdit = () => {
               <SimpleList
                 disablePadding
                 sx={{ "& li": { px: 0 } }}
+                empty={<Typography variant="body2">No messages yet</Typography>}
                 primaryText={(record) => (
                   <Stack
                     direction="row"

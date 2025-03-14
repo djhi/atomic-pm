@@ -8,9 +8,11 @@ export const BoardLink = () => {
 
   return (
     <Stack direction="row" gap={1}>
-      <Typography variant="h6" color="text.secondary">Board:</Typography>
+      <Typography variant="body2" color="text.secondary">
+        Board:
+      </Typography>
       <Link to={`/boards/${params.boardId}`}>
-        <Typography variant="h6">{board?.name}</Typography>
+        <Typography variant="body2">{board?.name}</Typography>
       </Link>
     </Stack>
   );
