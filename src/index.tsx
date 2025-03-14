@@ -28,8 +28,7 @@ if (import.meta.env.VITE_PROVIDER === "fakerest") {
             path: "*",
             element: <App />,
           },
-        ],
-        { basename: import.meta.env.VITE_BASENAME },
+        ]
       );
       initializeApp(router);
     });
