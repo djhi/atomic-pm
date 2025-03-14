@@ -1,23 +1,37 @@
 # atomic-pm
 
+Atomic PM is react-admin demo application that showcases:
+- Custom layouts
+- Supabase integration
+- React-admin Enterprise Edition 
+
+There are two versions:
+- One that uses FakeRest, suitable for public demos
+- One that uses Supabase
+
 ## Installation
 
 Install the application dependencies by running:
 
 ```sh
-npm install
-# or
-yarn install
+bun install
 ```
+
+If you want to use the local version of Supabase, run:
+```sh
+bunx supabase start
+```
+
+If you plan to use a hosted instance of Supabase, you'll have to update the `.env` file to provide your instance URL and API keys.
 
 ## Development
 
 Start the application in development mode by running:
 
 ```sh
-npm run dev
-# or
-yarn dev
+bun run dev
+# or with Supabase
+bun run dev-supabase
 ```
 
 ## Production
@@ -25,23 +39,9 @@ yarn dev
 Build the application in production mode by running:
 
 ```sh
-npm run build
-# or
-yarn build
+bun run build
 ```
 
-## DataProvider
-
-The included data provider use [ra-data-simple-rest](https://github.com/marmelab/react-admin/tree/master/packages/ra-data-simple-rest). It fits REST APIs using simple GET parameters for filters and sorting. This is the dialect used for instance in [FakeRest](https://github.com/marmelab/FakeRest).
-
-You'll find an `.env` file at the project root that includes a `VITE_JSON_SERVER_URL` variable. Set it to the URL of your backend.
-
-## Authentication
-
-The included auth provider should only be used for development and test purposes.
-You'll find a `users.json` file in the `src` directory that includes the users you can use.
-
-You can sign in to the application with the following usernames and password:
-- janedoe / password
-- johndoe / password
-
+If you plan to build for a remote Supabase instance:
+- Copy your `.env` file to `.env.production` and adjust its variables (set `VITE_SUPABASE_URL`, `VITE_SUPAPASE_ANON_KEY`, `VITE_ENABLE_MSW=false` and `VITE_PROVIDER=supabase`)
+- Run `bun run build`
