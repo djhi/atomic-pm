@@ -31,7 +31,7 @@ jobs:
         env:
           VITE_SIMPLE_REST_URL: https://fake-atomic-pm.com
           VITE_PROVIDER: fakerest
-          VITE_BASE_NAME: /atomic-pm
+          VITE_BASENAME: /atomic-pm
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
