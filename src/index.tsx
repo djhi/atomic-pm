@@ -5,12 +5,15 @@ import { createBrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { setupFakeServer } from "./providers/fakerest/setupFakeServer";
 
-const router = createBrowserRouter([
-  {
-    path: "*",
-    element: <App />,
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "*",
+      element: <App />,
+    },
+  ],
+  { basename: import.meta.env.VITE_BASENAME },
+);
 
 const initializeApp = () => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -18,7 +21,7 @@ const initializeApp = () => {
       <RouterProvider router={router} />
     </React.StrictMode>,
   );
-}
+};
 if (import.meta.env.VITE_PROVIDER === "fakerest") {
   setupFakeServer()
     .start({
@@ -34,4 +37,3 @@ if (import.meta.env.VITE_PROVIDER === "fakerest") {
 } else {
   initializeApp();
 }
-

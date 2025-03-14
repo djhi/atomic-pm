@@ -16,10 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      - name: Setup react-admin registry
+        uses: react-admin/ra-enterprise-action@v1.0.0
+        env:
+          RA_EE_CI_TOKEN: ${{secrets.RA_EE_CI_TOKEN}}
       - name: Install dependencies
         run: bun install
       - name: Build
         run: bun run build
+        env:
+          VITE_SIMPLE_REST_URL: https://fake-atomic-pm.com
+          VITE_PROVIDER: fakerest
+          VITE_BASE_NAME: /atomic-pm
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
