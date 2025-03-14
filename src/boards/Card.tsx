@@ -91,7 +91,10 @@ export const Card = () => {
               color="info"
               emptyText=" "
             />
-            <ReferenceField source="assigned_user_id" reference="profiles">
+            <ReferenceField
+              source="assigned_user_id"
+              reference="board_members_with_profiles"
+            >
               <AvatarField />
             </ReferenceField>
           </CardActions>
