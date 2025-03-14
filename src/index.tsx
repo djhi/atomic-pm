@@ -1,21 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router";
-import { createBrowserRouter } from "react-router-dom";
+import { RouterProvider, RouterProviderProps } from "react-router";
+import { createBrowserRouter, createHashRouter } from "react-router-dom";
 import { App } from "./App";
 import { setupFakeServer } from "./providers/fakerest/setupFakeServer";
 
-const router = createBrowserRouter(
-  [
-    {
-      path: "*",
-      element: <App />,
-    },
-  ],
-  { basename: import.meta.env.VITE_BASENAME },
-);
-
-const initializeApp = () => {
+const initializeApp = (router: RouterProviderProps['router']) => {
   ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
       <RouterProvider router={router} />
@@ -32,8 +22,26 @@ if (import.meta.env.VITE_PROVIDER === "fakerest") {
       onUnhandledRequest: "bypass", // Instruct MSW to ignore requests we don't handle
     })
     .then(() => {
-      initializeApp();
+      const router = createHashRouter(
+        [
+          {
+            path: "*",
+            element: <App />,
+          },
+        ],
+        { basename: import.meta.env.VITE_BASENAME },
+      );
+      initializeApp(router);
     });
 } else {
-  initializeApp();
+  const router = createBrowserRouter(
+    [
+      {
+        path: "*",
+        element: <App />,
+      },
+    ],
+    { basename: import.meta.env.VITE_BASENAME },
+  );
+  initializeApp(router);
 }
