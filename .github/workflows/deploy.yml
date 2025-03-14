@@ -17,7 +17,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - name: Setup react-admin registry
-        uses: react-admin/ra-enterprise-action@v1.0.0
+        run: |
+            echo "
+            //registry.marmelab.com/:_authToken=${{ secrets.RA_EE_CI_TOKEN }}
+            @react-admin:registry=https://registry.marmelab.com
+            " >> .npmrc
         env:
           RA_EE_CI_TOKEN: ${{secrets.RA_EE_CI_TOKEN}}
       - name: Install dependencies
