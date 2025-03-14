@@ -6,7 +6,7 @@ import { generateData } from "./dataGenerator/generateData";
 export const setupFakeServer = () => {
   const data = generateData();
   const mswAdapter = new MswAdapter({
-    baseUrl: "http://localhost:3000",
+    baseUrl: import.meta.env.VITE_SIMPLE_REST_URL as string,
     data,
   });
   if (typeof window !== "undefined") {
@@ -17,7 +17,10 @@ export const setupFakeServer = () => {
   const handler = mswAdapter.getHandler();
   const worker = setupWorker(
     // Make sure you use a RegExp to target all calls to the API
-    http.all(/http:\/\/localhost:3000/, handler),
+    http.all(
+      new RegExp(import.meta.env.VITE_SIMPLE_REST_URL as string),
+      handler,
+    ),
   );
   return worker;
 };
