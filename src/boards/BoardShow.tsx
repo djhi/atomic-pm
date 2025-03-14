@@ -121,7 +121,7 @@ const BoardTitle = () => {
   if (!record) return null;
   return (
     <>
-      <Typography variant="h5" component="h2">
+      <Typography variant="h6" component="h2">
         {record?.name}
       </Typography>
       <title>{`${record?.name} - ${appTitle}`}</title>
