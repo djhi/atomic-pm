@@ -22,6 +22,9 @@ const initializeApp = () => {
 if (import.meta.env.VITE_PROVIDER === "fakerest") {
   setupFakeServer()
     .start({
+      serviceWorker: {
+        url: "./mockServiceWorker.js",
+      },
       quiet: true, // Instruct MSW to not log requests in the console
       onUnhandledRequest: "bypass", // Instruct MSW to ignore requests we don't handle
     })
