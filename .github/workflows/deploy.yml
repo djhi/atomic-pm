@@ -32,6 +32,7 @@ jobs:
           VITE_SIMPLE_REST_URL: https://fake-atomic-pm.com
           VITE_PROVIDER: fakerest
           VITE_BASENAME: /atomic-pm
+          VITE_BASE: /atomic-pm/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
@@ -63,6 +64,7 @@ jobs:
           VITE_PROVIDER: supabase
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           VITE_SUPAPASE_ANON_KEY: ${{ secrets.SUPAPASE_ANON_KEY }}
+          VITE_BASE: /
       - name: Add redirect file for SPA support
         run: echo "/*    /index.html    200" > ./dist/_redirects
       - name: Deploy

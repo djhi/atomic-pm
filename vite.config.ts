@@ -42,5 +42,5 @@ export default defineConfig(({ mode }) => ({
     sourcemap: mode === "developement",
   },
   resolve: { alias },
-  base: "./",
+  base: process.env.VITE_BASE ?? "./",
 }));
