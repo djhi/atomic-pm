@@ -66,7 +66,10 @@ jobs:
           VITE_SUPAPASE_ANON_KEY: ${{ secrets.SUPAPASE_ANON_KEY }}
           VITE_BASE: /
       - name: Add redirect file for SPA support
-        run: echo "/*    /index.html    200" > ./dist/_redirects
+        run:
+          echo "/favicon.ico    /favicon.ico    200" > ./dist/_redirects
+          echo "/manifest.json    /manifest.json    200" >> ./dist/_redirects
+          echo "/*    /index.html    200" >> ./dist/_redirects
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
