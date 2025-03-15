@@ -7,7 +7,6 @@ import {
   ReferenceField,
   ReferenceInput,
   ReferenceManyField,
-  required,
   SimpleList,
   TextField,
   useDefaultTitle,
@@ -17,7 +16,7 @@ import {
   WithRecord,
 } from "react-admin";
 import { useParams } from "react-router";
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { LockOnMount } from "../ra/LockOnMount";
@@ -31,9 +30,9 @@ import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
-import { CardDescriptionInput } from "./CardDescriptionInput";
 import { EditInPlace } from "../ra/EditInPlace";
 import { MarkdownField } from "@react-admin/ra-markdown";
+import { RichTextMarkdownInput } from "../ra/RichTextMarkdownInput";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
@@ -95,6 +94,7 @@ export const CardEdit = () => {
                   flexGrow: 1,
                   display: "flex",
                   flexDirection: "column",
+                  "& > .MuiStack-root": { flexGrow: 1 },
                 }}
                 toolbar={
                   <FormWithLockSupportToolbar
@@ -105,12 +105,14 @@ export const CardEdit = () => {
                 <EditInPlaceInput
                   source="title"
                   renderField={(ref) => (
-                    <TextField
-                      ref={ref}
-                      source="title"
-                      variant="h3"
-                      component="h2"
-                    />
+                    <Tooltip title="Double click to edit" placement="top">
+                      <TextField
+                        ref={ref}
+                        source="title"
+                        variant="h3"
+                        component="h2"
+                      />
+                    </Tooltip>
                   )}
                 />
                 <Stack
@@ -169,25 +171,39 @@ export const CardEdit = () => {
                   </Labeled>
                 </Stack>
                 <EditInPlace
-                  sx={{ mt: 4 }}
+                  sx={{ mt: 4, flexGrow: 1 }}
                   input={
-                    <CardDescriptionInput
+                    <RichTextMarkdownInput
                       source="description"
-                      validate={required()}
+                      fullWidth
+                      label={false}
                     />
                   }
                 >
-                  <Labeled source="description">
-                    <WithRecord
-                      render={(record) =>
-                        record?.description ? (
-                          <MarkdownField source="description" />
-                        ) : (
-                          <Typography variant="body2">Nothing here</Typography>
-                        )
-                      }
-                    />
-                  </Labeled>
+                  <Tooltip title="Double click to edit">
+                    <Stack>
+                      <WithRecord
+                        render={(record) =>
+                          record?.description ? (
+                            <MarkdownField
+                              source="description"
+                              label={false}
+                              sx={{
+                                flexGrow: 1,
+                                "& .toastui-editor-contents": {
+                                  typography: "body1",
+                                },
+                              }}
+                            />
+                          ) : (
+                            <Typography variant="body1">
+                              Nothing here
+                            </Typography>
+                          )
+                        }
+                      />
+                    </Stack>
+                  </Tooltip>
                 </EditInPlace>
               </FormWithLockSupport>
             </CreateRevisionOnSave>

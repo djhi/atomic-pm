@@ -94,6 +94,7 @@ export const EditInPlace = (props: EditInPlaceProps) => {
                 handleEdit();
               }
             }}
+            sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
           >
             {children}
           </Box>
