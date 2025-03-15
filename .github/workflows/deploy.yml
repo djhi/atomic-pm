@@ -70,3 +70,4 @@ jobs:
           deploy_key: ${{ secrets.SUPABASE_REPOSITORY_DEPLOY_KEY }}
           external_repository: djhi/atomic-pm-supabase
           publish_dir: ./dist
+          publish_branch: main
