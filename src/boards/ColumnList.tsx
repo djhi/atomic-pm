@@ -10,8 +10,9 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
   return (
     <Stack
       direction="row"
-      minHeight="80vh"
+      minHeight="100%"
       gap={4}
+      flexGrow={1}
       sx={{
         overflowX: "auto",
         maxWidth: "98vw",

@@ -22,6 +22,7 @@ import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { DocumentList } from "./DocumentList";
 import { useBoard } from "./useBoard";
+import { Box } from "@mui/system";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
@@ -31,9 +32,25 @@ export const BoardShow = () => {
       <Show
         id={params.boardId}
         resource="boards"
-        component="div"
+        component={Box}
         actions={<BoardShowActions />}
-        sx={{ [`& .${ShowClasses.card}`]: { mt: 1, bgcolor: "transparent" } }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          [`& .${ShowClasses.main}`]: {
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          },
+          [`& .${ShowClasses.card}`]: {
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            mt: 1,
+            bgcolor: "transparent",
+          },
+        }}
         queryOptions={{
           meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
         }}
@@ -100,14 +117,14 @@ const BoardShowLayout = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="board" type="column" direction="horizontal">
           {(droppableProvided, snapshot) => (
-            <div ref={droppableProvided.innerRef}>
+            <Stack ref={droppableProvided.innerRef} flexGrow={1}>
               <ColumnList
                 {...droppableProvided.droppableProps}
                 className={snapshot.isDraggingOver ? " isDraggingOver" : ""}
                 sx={{ "&.isDraggingOver": { bgcolor: "action.hover" } }}
               />
               {droppableProvided.placeholder}
-            </div>
+            </Stack>
           )}
         </Droppable>
       </DragDropContext>
