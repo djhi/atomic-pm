@@ -35,7 +35,7 @@ const alias = [
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  define: { 'process.env.NODE_ENV': mode },
+  define: { 'process.env.NODE_ENV': `"${mode}"` },
   server: {
     host: true,
   },
