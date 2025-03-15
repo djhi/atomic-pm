@@ -62,7 +62,9 @@ jobs:
         env:
           VITE_PROVIDER: supabase
           VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          VITE_SUPAPASE_ANON_KEY: ${{ secrets.SUPAPASE_ANON_KEY }}  
+          VITE_SUPAPASE_ANON_KEY: ${{ secrets.SUPAPASE_ANON_KEY }}
+      - name: Add redirect file for SPA support
+        run: echo "/*    /index.html    200" > ./dist/_redirects
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
