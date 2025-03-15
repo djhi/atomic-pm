@@ -38,3 +38,35 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+  deploy-supabase:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Setup react-admin registry
+        run: |
+            echo "
+            //registry.marmelab.com/:_authToken=${{ secrets.RA_EE_CI_TOKEN }}
+            @react-admin:registry=https://registry.marmelab.com
+            " >> .npmrc
+        env:
+          RA_EE_CI_TOKEN: ${{secrets.RA_EE_CI_TOKEN}}
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+        env:
+          VITE_PROVIDER: supabase
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPAPASE_ANON_KEY: ${{ secrets.SUPAPASE_ANON_KEY }}  
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          deploy_key: ${{ secrets.SUPABASE_REPOSITORY_DEPLOY_KEY }}
+          external_repository: djhi/atomic-pm-supabase
+          publish_dir: ./dist
