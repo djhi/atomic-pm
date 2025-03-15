@@ -11,7 +11,6 @@ import {
   EditBase,
   Form,
   TextField,
-  TextInput,
   useRecordContext,
   useTranslate,
 } from "react-admin";
@@ -20,7 +19,8 @@ import clsx from "clsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { CardList } from "./CardList";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
-import { EditInPlace } from "../ra/EditInPlace";
+import { EditInPlaceInput } from "../ra/EditInPlaceInput";
+import { Box } from "@mui/system";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
@@ -67,43 +67,48 @@ export const Column = ({ sx, ...props }: StackProps) => {
             <EditBase
               id={column?.id}
               resource="columns"
-              record={column}
               redirect={false}
               mutationMode="optimistic"
             >
               <Form>
-                <EditInPlace
-                  input={<TextInput source="name" helperText={false} />}
-                >
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <TextField
-                      source="name"
-                      gutterBottom
-                      variant="h6"
-                      component="h2"
-                    />
-                    <Stack direction="row" gap={1} alignItems="center">
-                      <ChipWithMax
-                        max={column?.maxCards}
-                        value={column?.cards?.length || 0}
-                        label="pm.cardCount"
-                        labelWithMax="pm.cardCountWithLimit"
+                <EditInPlaceInput
+                  source="name"
+                  renderField={(ref) => (
+                    <Box position="relative">
+                      <TextField
+                        source="name"
+                        gutterBottom
+                        variant="h6"
+                        component="h2"
+                        sx={{ flexGrow: 1 }}
+                        ref={ref}
                       />
-                      <ChipWithMax
-                        max={column?.maxEstimates}
-                        value={totalEstimates}
-                        label="pm.pointCount"
-                        labelWithMax="pm.pointCountWithLimit"
-                        color="info"
-                      />
-                      <ColumnMenu />
-                    </Stack>
-                  </Stack>
-                </EditInPlace>
+                      <Stack
+                        direction="row"
+                        gap={1}
+                        alignItems="center"
+                        position="absolute"
+                        right={0}
+                        top={-5}
+                      >
+                        <ChipWithMax
+                          max={column?.maxCards}
+                          value={column?.cards?.length || 0}
+                          label="pm.cardCount"
+                          labelWithMax="pm.cardCountWithLimit"
+                        />
+                        <ChipWithMax
+                          max={column?.maxEstimates}
+                          value={totalEstimates}
+                          label="pm.pointCount"
+                          labelWithMax="pm.pointCountWithLimit"
+                          color="info"
+                        />
+                        <ColumnMenu />
+                      </Stack>
+                    </Box>
+                  )}
+                />
               </Form>
             </EditBase>
           </Stack>

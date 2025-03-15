@@ -1,4 +1,3 @@
-import { MarkdownField } from "@react-admin/ra-markdown";
 import {
   AutocompleteInput,
   DateField,
@@ -11,7 +10,6 @@ import {
   required,
   SimpleList,
   TextField,
-  TextInput,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -20,14 +18,13 @@ import {
 } from "react-admin";
 import { useParams } from "react-router";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { FormWithLockSupportToolbar } from "../ra/FormWithLockSupportToolbar";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
-import { EditInPlace } from "../ra/EditInPlace";
+import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 import { BoardLink } from "../boards/BoardLink";
 import { AvatarField } from "../ui/AvatarField";
 import { EstimateInput } from "./EstimateInput";
@@ -35,10 +32,11 @@ import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
 import { CardDescriptionInput } from "./CardDescriptionInput";
+import { EditInPlace } from "../ra/EditInPlace";
+import { MarkdownField } from "@react-admin/ra-markdown";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
-  const queryClient = useQueryClient();
   const notify = useNotify();
 
   return (
@@ -64,37 +62,12 @@ export const CardEdit = () => {
       }}
       mutationMode="optimistic"
       mutationOptions={{
-        onSuccess: (data: any) => {
+        onSuccess: () => {
           notify("ra.notification.updated", {
             type: "info",
             messageArgs: { smart_count: 1 },
             undoable: true,
           });
-          queryClient.setQueryData<any>(
-            [
-              "boards",
-              "getOne",
-              {
-                id: String(params.boardId),
-                meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-              },
-            ],
-            (record: any) => {
-              return {
-                ...record,
-                columns: record.columns.map((column: any) =>
-                  column.id === data.column_id
-                    ? {
-                        ...column,
-                        cards: column.cards.map((card: any) =>
-                          card.id === data.id ? { ...card, ...data } : card,
-                        ),
-                      }
-                    : column,
-                ),
-              };
-            },
-          );
         },
       }}
     >
@@ -129,18 +102,17 @@ export const CardEdit = () => {
                   />
                 }
               >
-                <EditInPlace
-                  input={
-                    <TextInput
+                <EditInPlaceInput
+                  source="title"
+                  renderField={(ref) => (
+                    <TextField
+                      ref={ref}
                       source="title"
-                      validate={required()}
-                      autoFocus
-                      onFocus={(e) => e.currentTarget.select()}
+                      variant="h3"
+                      component="h2"
                     />
-                  }
-                >
-                  <TextField source="title" variant="h3" component="h2" />
-                </EditInPlace>
+                  )}
+                />
                 <Stack
                   direction="row"
                   gap={2}
