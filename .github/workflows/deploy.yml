@@ -67,7 +67,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
         with:
-          deploy_key: ${{ secrets.SUPABASE_REPOSITORY_DEPLOY_KEY }}
-          external_repository: djhi/atomic-pm-supabase
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: main
+          publish_branch: statichost
