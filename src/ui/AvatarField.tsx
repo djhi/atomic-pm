@@ -1,7 +1,7 @@
-import { Avatar } from "@mui/material";
+import { Avatar, AvatarProps } from "@mui/material";
 import { useRecordContext } from "react-admin";
 
-export const AvatarField = () => {
+export const AvatarField = ({ sx, ...props }: AvatarProps) => {
   const profile = useRecordContext();
   let letter = profile?.email[0].toUpperCase();
   if (profile?.first_name) {
@@ -13,7 +13,8 @@ export const AvatarField = () => {
   return (
     <Avatar
       src={profile?.avatar?.src}
-      sx={{ width: 24, height: 24, fontSize: "0.7222222222222222rem" }}
+      sx={{ width: 24, height: 24, fontSize: "0.7222222222222222rem", ...sx }}
+      {...props}
     >
       {letter}
     </Avatar>

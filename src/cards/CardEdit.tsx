@@ -1,22 +1,44 @@
 import {
-  AutocompleteInput,
+  ChipField,
+  ChoicesContextProvider,
+  ChoicesContextValue,
+  ChoicesProps,
   DateField,
   Edit,
   EditClasses,
-  Labeled,
-  ReferenceField,
+  InputProps,
   ReferenceInput,
   ReferenceManyField,
   SimpleList,
   TextField,
+  useChoicesContext,
   useDefaultTitle,
   useGetOne,
+  useInput,
+  useList,
   useNotify,
   useRecordContext,
+  useSuggestions,
+  useTranslate,
   WithRecord,
 } from "react-admin";
 import { useParams } from "react-router";
-import { Box, Divider, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  Stack,
+  TextField as MuiTextField,
+  Tooltip,
+  Typography,
+  Chip,
+} from "@mui/material";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { LockOnMount } from "../ra/LockOnMount";
@@ -26,13 +48,15 @@ import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 import { BoardLink } from "../boards/BoardLink";
 import { AvatarField } from "../ui/AvatarField";
-import { EstimateInput } from "./EstimateInput";
 import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
 import { EditInPlace } from "../ra/EditInPlace";
 import { MarkdownField } from "@react-admin/ra-markdown";
 import { RichTextMarkdownInput } from "../ra/RichTextMarkdownInput";
+import { PopoverInput, usePopoverInput } from "../ra/PopoverInput";
+import { ReferenceField } from "../ra/ReferenceField";
+import { useMemo } from "react";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
@@ -89,6 +113,7 @@ export const CardEdit = () => {
             <RecordLiveUpdate />
             <CreateRevisionOnSave skipUserDetails>
               <FormWithLockSupport
+                id="card-edit-form"
                 sx={{
                   p: 0,
                   flexGrow: 1,
@@ -119,56 +144,67 @@ export const CardEdit = () => {
                   direction="row"
                   gap={2}
                   sx={{ mt: 2 }}
-                  justifyContent="space-between"
+                  alignItems="center"
                   width="100%"
                 >
-                  <Labeled
+                  <PopoverInput
                     source="column_id"
-                    component="label"
-                    sx={{ flexGrow: 1 }}
+                    input={
+                      <ReferenceInput
+                        source="column_id"
+                        reference="columns"
+                        filter={{ board_id: params.boardId }}
+                        sort={{ field: "position", order: "ASC" }}
+                      >
+                        <ListSelectorInput optionText="name" />
+                      </ReferenceInput>
+                    }
                   >
-                    <ReferenceInput
+                    <ReferenceField
                       source="column_id"
                       reference="columns"
-                      filter={{ board_id: params.boardId }}
+                      link={false}
+                      emptyText={
+                        <Chip label="No column" icon={<StopCircleIcon />} />
+                      }
                     >
-                      <AutocompleteInput
-                        optionText="name"
-                        TextFieldProps={{
-                          label: null,
-                        }}
-                      />
-                    </ReferenceInput>
-                  </Labeled>
-                  <Labeled
+                      <ChipField source="name" icon={<StopCircleIcon />} />
+                    </ReferenceField>
+                  </PopoverInput>
+                  <PopoverInput
                     source="assigned_user_id"
-                    component="label"
-                    sx={{ flexGrow: 1 }}
+                    input={
+                      <ReferenceInput
+                        source="assigned_user_id"
+                        reference="board_members_with_profiles"
+                        filter={{ board_id: params.boardId }}
+                        sort={{ field: "email", order: "ASC" }}
+                      >
+                        <ListSelectorInput optionText="email" />
+                      </ReferenceInput>
+                    }
                   >
-                    <ReferenceInput
+                    <ReferenceField
                       source="assigned_user_id"
                       reference="board_members_with_profiles"
-                      filter={{ board_id: params.boardId }}
+                      link={false}
+                      emptyText={
+                        <Chip label="Unassigned" icon={<AccountCircleIcon />} />
+                      }
                     >
-                      <AutocompleteInput
-                        optionText="email"
-                        TextFieldProps={{
-                          label: null,
-                        }}
-                      />
-                    </ReferenceInput>
-                  </Labeled>
-                  <Labeled
+                      <ChipField source="email" icon={<AvatarField />} />
+                    </ReferenceField>
+                  </PopoverInput>
+                  <PopoverInput
                     source="estimate"
-                    component="label"
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      flexGrow: 1,
-                    }}
+                    input={
+                      <EstimatesChoicesInput source="estimate">
+                        <ListSelectorInput />
+                      </EstimatesChoicesInput>
+                    }
                   >
-                    <EstimateInput source="estimate" hideLabel />
-                  </Labeled>
+                    <ChipField source="estimate" icon={<AddCircleIcon />} />
+                  </PopoverInput>
                 </Stack>
                 <EditInPlace
                   sx={{ mt: 4, flexGrow: 1 }}
@@ -306,3 +342,82 @@ const CardTitle = () => {
     <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
   );
 };
+
+const ListSelectorInput = (props: Partial<InputProps> & ChoicesProps) => {
+  const choicesContext = useChoicesContext(props);
+  const { field } = useInput(choicesContext);
+  const { getChoiceText, getChoiceValue } = useSuggestions(props);
+  const popoverContext = usePopoverInput();
+  const translate = useTranslate();
+  const { allChoices, selectedChoices, setFilters, total } = choicesContext;
+  return (
+    <Stack direction="column" gap={1}>
+      <List sx={{ flexGrow: 1 }}>
+        <ListItem>
+          {allChoices != null && allChoices.length < (total ?? 0) ? (
+            <MuiTextField
+              placeholder={translate("ra.action.search")}
+              onChange={(event) => setFilters({ q: event.target.value })}
+            />
+          ) : null}
+        </ListItem>
+        {allChoices?.map((record) => (
+          <ListItemButton
+            selected={selectedChoices?.find(
+              (choice) => choice.id === getChoiceValue(record),
+            )}
+            key={record.id}
+            onClick={() => field.onChange(getChoiceValue(record))}
+          >
+            {getChoiceText(record)}
+          </ListItemButton>
+        ))}
+      </List>
+      <Button
+        form="card-edit-form"
+        variant="outlined"
+        type="submit"
+        sx={{ border: "none" }}
+        onClick={popoverContext.close}
+      >
+        {translate("ra.action.save")}
+      </Button>
+    </Stack>
+  );
+};
+
+const EstimatesChoicesInput = ({
+  children,
+  ...props
+}: InputProps & { children: React.ReactNode }) => {
+  const { field } = useInput(props);
+  const list = useList({
+    data: Estimates,
+  });
+  const choices = useMemo(
+    () => ({
+      ...list,
+      allChoices: list.data ?? [],
+      availableChoices: list.data ?? [],
+      selectedChoices: list.data?.filter((choice) => choice.id === field.value) ?? [],
+      source: props.source,
+      isFromReference: false,
+      total: list.total ?? 0,
+    }) as ChoicesContextValue,
+    [list],
+  );
+  return (
+    <ChoicesContextProvider value={choices}>{children}</ChoicesContextProvider>
+  );
+};
+
+const Estimates = [
+  { id: 0, name: "0" },
+  { id: 0.5, name: "0.5" },
+  { id: 1, name: "1" },
+  { id: 2, name: "2" },
+  { id: 3, name: "3" },
+  { id: 5, name: "5" },
+  { id: 8, name: "8" },
+  { id: 13, name: "13" },
+];
