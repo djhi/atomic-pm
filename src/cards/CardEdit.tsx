@@ -15,7 +15,16 @@ import {
   WithRecord,
 } from "react-admin";
 import { useParams } from "react-router";
-import { Box, Divider, Stack, Tooltip, Typography, Chip, Toolbar, Button } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Stack,
+  Tooltip,
+  Typography,
+  Chip,
+  Toolbar,
+  Button,
+} from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -182,15 +191,17 @@ export const CardEdit = () => {
                         fullWidth
                         label={false}
                         sx={{
-                          '& .ProseMirror': {
+                          "& .ProseMirror": {
                             margin: -1,
-                            padding: 1
-                          }
+                            padding: 1,
+                          },
                         }}
                       />
                       <Toolbar disableGutters>
                         <Stack direction="row" spacing={1}>
-                          <Button size="small" type="submit">{translate('ra.action.save')}</Button>
+                          <Button size="small" type="submit">
+                            {translate("ra.action.save")}
+                          </Button>
                           <EditInPlace.CancelButton size="small" />
                         </Stack>
                       </Toolbar>
@@ -203,6 +214,7 @@ export const CardEdit = () => {
                         render={(record) =>
                           record?.description ? (
                             <MarkdownField
+                              key={record.description}
                               source="description"
                               label={false}
                               sx={{
