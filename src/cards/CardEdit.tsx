@@ -1,37 +1,23 @@
 import {
   ChipField,
-  ChoicesContextProvider,
-  ChoicesContextValue,
-  ChoicesProps,
   DateField,
   Edit,
   EditClasses,
-  InputProps,
   ReferenceInput,
   ReferenceManyField,
   SimpleList,
   TextField,
-  useChoicesContext,
   useDefaultTitle,
   useGetOne,
-  useInput,
-  useList,
   useNotify,
   useRecordContext,
-  useSuggestions,
-  useTranslate,
   WithRecord,
 } from "react-admin";
 import { useParams } from "react-router";
 import {
   Box,
-  Button,
   Divider,
-  List,
-  ListItem,
-  ListItemButton,
   Stack,
-  TextField as MuiTextField,
   Tooltip,
   Typography,
   Chip,
@@ -41,22 +27,23 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
+import { MarkdownField } from "@react-admin/ra-markdown";
 import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { FormWithLockSupportToolbar } from "../ra/FormWithLockSupportToolbar";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
-import { BoardLink } from "../boards/BoardLink";
+import { EditInPlace } from "../ra/EditInPlace";
+import { RichTextMarkdownInput } from "../ra/RichTextMarkdownInput";
+import { PopoverInput } from "../ra/PopoverInput";
+import { ReferenceField } from "../ra/ReferenceField";
+import { ListSelectorInput } from "../ra/ListSelectorInput";
 import { AvatarField } from "../ui/AvatarField";
+import { BoardLink } from "../boards/BoardLink";
 import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
-import { EditInPlace } from "../ra/EditInPlace";
-import { MarkdownField } from "@react-admin/ra-markdown";
-import { RichTextMarkdownInput } from "../ra/RichTextMarkdownInput";
-import { PopoverInput, usePopoverInput } from "../ra/PopoverInput";
-import { ReferenceField } from "../ra/ReferenceField";
-import { useMemo } from "react";
+import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
@@ -343,81 +330,3 @@ const CardTitle = () => {
   );
 };
 
-const ListSelectorInput = (props: Partial<InputProps> & ChoicesProps) => {
-  const choicesContext = useChoicesContext(props);
-  const { field } = useInput(choicesContext);
-  const { getChoiceText, getChoiceValue } = useSuggestions(props);
-  const popoverContext = usePopoverInput();
-  const translate = useTranslate();
-  const { allChoices, selectedChoices, setFilters, total } = choicesContext;
-  return (
-    <Stack direction="column" gap={1}>
-      <List sx={{ flexGrow: 1 }}>
-        <ListItem>
-          {allChoices != null && allChoices.length < (total ?? 0) ? (
-            <MuiTextField
-              placeholder={translate("ra.action.search")}
-              onChange={(event) => setFilters({ q: event.target.value })}
-            />
-          ) : null}
-        </ListItem>
-        {allChoices?.map((record) => (
-          <ListItemButton
-            selected={selectedChoices?.find(
-              (choice) => choice.id === getChoiceValue(record),
-            )}
-            key={record.id}
-            onClick={() => field.onChange(getChoiceValue(record))}
-          >
-            {getChoiceText(record)}
-          </ListItemButton>
-        ))}
-      </List>
-      <Button
-        form="card-edit-form"
-        variant="outlined"
-        type="submit"
-        sx={{ border: "none" }}
-        onClick={popoverContext.close}
-      >
-        {translate("ra.action.save")}
-      </Button>
-    </Stack>
-  );
-};
-
-const EstimatesChoicesInput = ({
-  children,
-  ...props
-}: InputProps & { children: React.ReactNode }) => {
-  const { field } = useInput(props);
-  const list = useList({
-    data: Estimates,
-  });
-  const choices = useMemo(
-    () => ({
-      ...list,
-      allChoices: list.data ?? [],
-      availableChoices: list.data ?? [],
-      selectedChoices: list.data?.filter((choice) => choice.id === field.value) ?? [],
-      source: props.source,
-      isFromReference: false,
-      total: list.total ?? 0,
-    }) as ChoicesContextValue,
-    [list],
-  );
-  return (
-    <ChoicesContextProvider value={choices}>{children}</ChoicesContextProvider>
-  );
-};
-
-const Estimates = [
-  { id: 0, name: "0" },
-  { id: 0.5, name: "0.5" },
-  { id: 1, name: "1" },
-  { id: 2, name: "2" },
-  { id: 3, name: "3" },
-  { id: 5, name: "5" },
-  { id: 8, name: "8" },
-  { id: 13, name: "13" },
-];
