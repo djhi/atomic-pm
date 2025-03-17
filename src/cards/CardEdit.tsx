@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import {
   ChipField,
   DateField,
@@ -9,19 +10,12 @@ import {
   TextField,
   useDefaultTitle,
   useGetOne,
-  useNotify,
   useRecordContext,
+  useTranslate,
   WithRecord,
 } from "react-admin";
 import { useParams } from "react-router";
-import {
-  Box,
-  Divider,
-  Stack,
-  Tooltip,
-  Typography,
-  Chip,
-} from "@mui/material";
+import { Box, Divider, Stack, Tooltip, Typography, Chip, Toolbar, Button } from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -30,7 +24,6 @@ import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { MarkdownField } from "@react-admin/ra-markdown";
 import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
-import { FormWithLockSupportToolbar } from "../ra/FormWithLockSupportToolbar";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 import { EditInPlace } from "../ra/EditInPlace";
@@ -47,7 +40,7 @@ import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
-  const notify = useNotify();
+  const translate = useTranslate();
 
   return (
     <Edit
@@ -70,16 +63,7 @@ export const CardEdit = () => {
           width: "100%",
         },
       }}
-      mutationMode="optimistic"
-      mutationOptions={{
-        onSuccess: () => {
-          notify("ra.notification.updated", {
-            type: "info",
-            messageArgs: { smart_count: 1 },
-            undoable: true,
-          });
-        },
-      }}
+      redirect={false}
     >
       <CardTitle />
       <Stack direction="column" gap={4} flexGrow={1}>
@@ -108,11 +92,7 @@ export const CardEdit = () => {
                   flexDirection: "column",
                   "& > .MuiStack-root": { flexGrow: 1 },
                 }}
-                toolbar={
-                  <FormWithLockSupportToolbar
-                    sx={{ position: "sticky", bottom: 0, px: 0 }}
-                  />
-                }
+                toolbar={<Fragment />}
               >
                 <EditInPlaceInput
                   source="title"
@@ -196,11 +176,19 @@ export const CardEdit = () => {
                 <EditInPlace
                   sx={{ mt: 4, flexGrow: 1 }}
                   input={
-                    <RichTextMarkdownInput
-                      source="description"
-                      fullWidth
-                      label={false}
-                    />
+                    <>
+                      <RichTextMarkdownInput
+                        source="description"
+                        fullWidth
+                        label={false}
+                      />
+                      <Toolbar disableGutters>
+                        <Stack direction="row" spacing={1}>
+                          <Button size="small" type="submit">{translate('ra.action.save')}</Button>
+                          <EditInPlace.CancelButton size="small" />
+                        </Stack>
+                      </Toolbar>
+                    </>
                   }
                 >
                   <Tooltip title="Double click to edit">
@@ -329,4 +317,3 @@ const CardTitle = () => {
     <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
   );
 };
-

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Stack, StackProps } from "@mui/material";
+import { Box, Button, ButtonProps, Stack, StackProps } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import { useEvent, useSaveContext, useTranslate } from "react-admin";
 import { useFormContext } from "react-hook-form";
@@ -130,3 +130,20 @@ export const useEditInPlace = () => {
   }
   return context;
 };
+
+const CancelEditInPlaceButton = (props: Partial<ButtonProps>) => {
+  const { children = "ra.action.cancel", ...rest } = props;
+  const { setIsEditing } = useEditInPlace();
+  const translate = useTranslate();
+
+  return (
+    <Button
+      onClick={() => setIsEditing(false)}
+      {...rest}
+    >
+      {typeof children === 'string' ? translate(children) : children}
+    </Button>
+  );
+}
+
+EditInPlace.CancelButton = CancelEditInPlaceButton;
