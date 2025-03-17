@@ -38,7 +38,12 @@ export const RichTextMarkdownInput = (props: RichTextMarkdownInputProps) => {
     label,
     readOnly = false,
     source,
-    sx,
+    sx = {
+      "& .ProseMirror": {
+        margin: -1,
+        padding: 1,
+      },
+    },
     toolbar,
   } = props;
 
@@ -75,6 +80,8 @@ export const RichTextMarkdownInput = (props: RichTextMarkdownInputProps) => {
 
     const { from, to } = editor.state.selection;
 
+    const currentContent = editor.storage.markdown.getMarkdown();
+    if (currentContent === field.value) return;
     editor.commands.setContent(field.value, false, {
       preserveWhitespace: true,
     });

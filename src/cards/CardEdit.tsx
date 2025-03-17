@@ -190,12 +190,6 @@ export const CardEdit = () => {
                         source="description"
                         fullWidth
                         label={false}
-                        sx={{
-                          "& .ProseMirror": {
-                            margin: -1,
-                            padding: 1,
-                          },
-                        }}
                       />
                       <Toolbar disableGutters>
                         <Stack direction="row" spacing={1}>
