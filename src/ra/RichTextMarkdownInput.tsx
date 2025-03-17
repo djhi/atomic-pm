@@ -26,7 +26,6 @@ import {
 } from "ra-ui-materialui";
 import { RichTextInputToolbar, TiptapEditorProvider } from "ra-input-rich-text";
 import { Markdown } from "tiptap-markdown";
-import { fontFamily } from "@mui/system";
 
 export const RichTextMarkdownInput = (props: RichTextMarkdownInputProps) => {
   const {
