@@ -1,4 +1,6 @@
 import {
+  Avatar,
+  Badge,
   Box,
   Divider,
   ListItemIcon,
@@ -11,6 +13,8 @@ import CheckIcon from "@mui/icons-material/Check";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import PersonIcon from "@mui/icons-material/Person";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import {
   ImageField,
   ImageInput,
@@ -21,8 +25,10 @@ import {
   TextInput,
   Toolbar,
   useGetIdentity,
+  useGetList,
   useLocale,
   useLocales,
+  UserMenuClasses,
   useSetLocale,
   useTheme,
   useThemesContext,
@@ -32,11 +38,20 @@ import {
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { InvitationMenuItem } from "./InvitationMenuItem";
 
 export const UserMenu = () => {
   const { identity } = useGetIdentity();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const queryClient = useQueryClient();
+  const { total } = useGetList(
+    "invitations",
+    {
+      filter: { email: identity?.fullName },
+      pagination: { page: 1, perPage: 1 },
+    },
+    { enabled: !!identity },
+  );
 
   return (
     <Box
@@ -49,12 +64,27 @@ export const UserMenu = () => {
         },
       }}
     >
-      <RaUserMenu>
+      <RaUserMenu
+        icon={
+          <Badge badgeContent={total} color="primary">
+            {identity?.avatar ? (
+              <Avatar
+                className={UserMenuClasses.avatar}
+                src={identity.avatar}
+                alt={identity.fullName}
+              />
+            ) : (
+              <AccountCircleIcon />
+            )}
+          </Badge>
+        }
+      >
         <EditProfileMenuItem
           onClick={() => {
             setEditDialogOpen(true);
           }}
         />
+        <InvitationMenuItem />
         <Divider />
         <ThemeMenu />
         <Divider />
@@ -65,7 +95,7 @@ export const UserMenu = () => {
       <EditDialog
         resource="profiles"
         id={identity?.id}
-        title={null}
+        title="pm.editProfile"
         fullWidth
         maxWidth="md"
         isOpen={editDialogOpen}

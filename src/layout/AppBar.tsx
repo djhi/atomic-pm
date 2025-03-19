@@ -7,7 +7,6 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import { LoadingIndicator, useBasename } from "react-admin";
 import { BoardMenu } from "./BoardMenu";
-import { InvitationNotifier } from "./InvitationNotifier";
 import { UserMenu } from "./UserMenu";
 
 export const AppBar = (props: HeaderProps) => {
@@ -31,7 +30,6 @@ export const AppBar = (props: HeaderProps) => {
             {title}
           </Link>
           <BoardMenu />
-          <InvitationNotifier />
         </Box>
         <Box className={HeaderClasses.actions}>
           <LoadingIndicator />
