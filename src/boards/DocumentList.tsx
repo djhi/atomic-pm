@@ -97,6 +97,7 @@ export const DocumentList = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              cursor: "pointer",
             }}
           >
             <input {...getInputProps()} />
