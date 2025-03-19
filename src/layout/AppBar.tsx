@@ -15,7 +15,7 @@ export const AppBar = (props: HeaderProps) => {
   const baseName = useBasename();
 
   return (
-    <Root position="static" color="secondary" className={HeaderClasses.root}>
+    <Root position="static" color="transparent" className={HeaderClasses.root}>
       <Toolbar variant="dense" className={HeaderClasses.toolbar}>
         <Box className={HeaderClasses.title}>
           <Link
