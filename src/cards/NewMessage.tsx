@@ -1,12 +1,19 @@
-import { Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Stack,
+  TextareaAutosize,
+  TextareaAutosizeProps,
+  Typography,
+} from "@mui/material";
 import { Fragment, useRef, useState } from "react";
 import {
   CreateBase,
   Form,
+  InputProps,
   required,
   SaveButton,
-  TextInput,
   useGetIdentity,
+  useInput,
   useRecordContext,
   useTranslate,
 } from "react-admin";
@@ -36,24 +43,16 @@ export const NewMessage = () => {
       }}
     >
       <Form>
-        <TextInput
-          multiline
-          rows={4}
+        <TextAreaInput
           source="message"
-          fullWidth
-          helperText={false}
           validate={required()}
-          slotProps={{
-            input: {
-              onKeyDown: (event) => {
-                if (event.key === 'Enter' && event.ctrlKey) {
-                  if (!event.repeat) {
-                    saveButtonRef.current?.click()
-                  }
-                  event.preventDefault(); // Prevents the addition of a new line in the text field
-                }
-              },
-            },
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && event.ctrlKey) {
+              if (!event.repeat) {
+                saveButtonRef.current?.click();
+              }
+              event.preventDefault(); // Prevents the addition of a new line in the text field
+            }
           }}
         />
         <Stack
@@ -75,5 +74,19 @@ export const NewMessage = () => {
         </Stack>
       </Form>
     </CreateBase>
+  );
+};
+
+const TextAreaInput = (props: InputProps & TextareaAutosizeProps) => {
+  const { source, ...rest } = props;
+  const { field } = useInput(props);
+  return (
+    <Box
+      component={TextareaAutosize}
+      minRows={4}
+      sx={{ bgcolor: 'inherit', mb: 1, display: 'block', width: '100%' }}
+      {...field}
+      {...rest}
+    />
   );
 };

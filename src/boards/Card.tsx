@@ -64,6 +64,7 @@ export const Card = () => {
           <CardContent
             sx={{
               position: "relative",
+              pb: 0,
             }}
           >
             <Stack direction="row" alignItems="start" gap={1}>
@@ -113,6 +114,7 @@ const CardMenu = () => {
   return (
     <MenuButton
       ButtonProps={{
+        label: "pm.actionList",
         className: "card-menu-button",
         sx: {
           position: "absolute",

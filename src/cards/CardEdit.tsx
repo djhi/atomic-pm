@@ -4,6 +4,7 @@ import {
   DateField,
   Edit,
   EditClasses,
+  FunctionField,
   ReferenceInput,
   ReferenceManyField,
   SimpleList,
@@ -248,6 +249,7 @@ export const CardEdit = () => {
                 primaryText={(record) => (
                   <Stack
                     direction="row"
+                    alignItems="center"
                     justifyContent="space-between"
                     mb={1}
                     component="span"
@@ -257,11 +259,23 @@ export const CardEdit = () => {
                       reference="profiles"
                       link={false}
                     >
-                      <Stack direction="row" spacing={1} component="span">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        component="span"
+                        alignItems="center"
+                      >
                         <AvatarField />
-                        <TextField
-                          source="email"
-                          variant="body1"
+                        <FunctionField
+                          render={(record) => {
+                            if (record.first_name && record.last_name) {
+                              return `${record.first_name} ${record.last_name}`;
+                            }
+                            if (record.first_name) {
+                              return record.first_name;
+                            }
+                            return record.email;
+                          }}
                           sx={{ fontWeight: "bold" }}
                         />
                       </Stack>
@@ -288,6 +302,7 @@ export const CardEdit = () => {
                     ) : (
                       <TextField
                         source="message"
+                        component="pre"
                         variant="body1"
                         sx={{
                           display: "block",

@@ -60,10 +60,14 @@ export const Column = ({ sx, ...props }: StackProps) => {
             },
           }}
           {...provided?.draggableProps}
-          {...provided?.dragHandleProps}
           ref={provided?.innerRef}
         >
-          <Stack direction="column" gap={0.5} mb={1}>
+          <Stack
+            direction="column"
+            gap={0.5}
+            mb={1}
+            {...provided?.dragHandleProps}
+          >
             <EditBase
               id={column?.id}
               resource="columns"
