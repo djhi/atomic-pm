@@ -2,8 +2,11 @@ import {
   Box,
   Card,
   CardContent,
+  darken,
   Grid2,
+  lighten,
   Stack,
+  Theme,
   Typography,
 } from "@mui/material";
 import {
@@ -11,8 +14,9 @@ import {
   EmptyClasses,
   EmptyProps,
   FunctionField,
+  Identifier,
+  InfiniteList,
   Link,
-  List,
   RecordContextProvider,
   RecordRepresentation,
   ReferenceField,
@@ -25,11 +29,13 @@ import {
   ToolbarClasses,
   TopToolbar,
   useDefaultTitle,
+  useEvent,
   useGetResourceLabel,
   useListContext,
   useRecordContext,
   useResourceContext,
   useResourceDefinition,
+  useStore,
   useTranslate,
 } from "react-admin";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
@@ -39,7 +45,7 @@ import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const BoardList = () => (
   <>
-    <List
+    <InfiniteList
       resource="boards"
       component="div"
       actions={<BoardListActions />}
@@ -48,7 +54,7 @@ export const BoardList = () => (
     >
       <BoardListView />
       <ListLiveUpdate />
-    </List>
+    </InfiniteList>
   </>
 );
 
@@ -71,13 +77,32 @@ const BoardListActions = () => (
 
 const BoardListView = () => {
   const { data, error, isPending } = useListContext();
+  const [visitDates] = useLastVisitDates();
 
   if (isPending) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  // Sort boards by last visit date most recent first
+  // Sort the others by creation date
+  const sortedData = data.sort((a, b) => {
+    if (visitDates[b.id] && visitDates[a.id]) {
+      return (
+        new Date(visitDates[b.id]).getTime() -
+        new Date(visitDates[a.id]).getTime()
+      );
+    }
+    if (visitDates[b.id]) {
+      return 1;
+    }
+    if (visitDates[a.id]) {
+      return -1;
+    }
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
+
   return (
     <Grid2 container spacing={2}>
-      {data.map((record) => (
+      {sortedData.map((record) => (
         <RecordContextProvider key={record.id} value={record}>
           <Grid2 size={{ xs: 12, md: 6, lg: 4 }}>
             <BoardListItem />
@@ -90,11 +115,33 @@ const BoardListView = () => {
 
 const BoardListItem = () => {
   const board = useRecordContext();
+  const [, setVisitDates] = useLastVisitDates();
+
+  const recordLastVisit = useEvent((boardId: Identifier) => {
+    // Postpone the update to avoid re-rendering the list
+    setTimeout(() => {
+      setVisitDates((visitDates: Record<string, Date>) => ({
+        ...visitDates,
+        [boardId]: new Date().toISOString(),
+      }));
+    }, 50);
+  });
+
   if (!board) return null;
   return (
-    <Link to={`/boards/${board.id}`} sx={{ textDecoration: "none" }}>
+    <Link
+      to={`/boards/${board.id}`}
+      sx={{ textDecoration: "none" }}
+      onClick={() => recordLastVisit(board.id)}
+    >
       <Card
-        sx={{ "&:hover": { bgcolor: (theme) => theme.palette.action.hover } }}
+        sx={{
+          bgcolor: (theme: Theme) =>
+            theme.palette.mode === "dark"
+              ? lighten(theme.palette.background.default, 0.05)
+              : darken(theme.palette.background.default, 0.1),
+          "&:hover": { bgcolor: (theme) => theme.palette.action.hover },
+        }}
       >
         <CardContent>
           <Stack
@@ -208,3 +255,6 @@ const BoardEmpty = (props: EmptyProps) => {
     </Box>
   );
 };
+
+const useLastVisitDates = () =>
+  useStore<Record<string, Date>>("boards.visit_dates", {});
