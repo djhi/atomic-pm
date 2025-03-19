@@ -20,7 +20,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CardList } from "./CardList";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
-import { Box } from "@mui/system";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
@@ -48,6 +47,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
           })}
           sx={{
             ...sx,
+            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
             bgcolor: (theme) =>
               snapshot.isDragging ? theme.palette.background.paper : "inherit",
             transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
@@ -74,7 +74,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
                 <EditInPlaceInput
                   source="name"
                   renderField={(ref) => (
-                    <Box position="relative">
+                    <Stack direction="row" alignItems="start" gap={1}>
                       <TextField
                         source="name"
                         gutterBottom
@@ -83,14 +83,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
                         sx={{ flexGrow: 1 }}
                         ref={ref}
                       />
-                      <Stack
-                        direction="row"
-                        gap={1}
-                        alignItems="center"
-                        position="absolute"
-                        right={0}
-                        top={-5}
-                      >
+                      <Stack direction="row" gap={1} alignItems="center">
                         <ChipWithMax
                           max={column?.maxCards}
                           value={column?.cards?.length || 0}
@@ -106,7 +99,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
                         />
                         <ColumnMenu />
                       </Stack>
-                    </Box>
+                    </Stack>
                   )}
                 />
               </Form>
@@ -123,6 +116,7 @@ const ColumnMenu = () => {
   const column = useRecordContext();
   const queryClient = useQueryClient();
   const params = useParams<"boardId">();
+  const translate = useTranslate();
   if (!column) return null;
 
   return (
@@ -146,6 +140,7 @@ const ColumnMenu = () => {
         resource="columns"
         record={column!}
         mutationMode="pessimistic"
+        confirmTitle={translate("ra.message.delete_title", { id: column.name })}
         mutationOptions={{
           onSuccess: () => {
             queryClient.setQueryData(

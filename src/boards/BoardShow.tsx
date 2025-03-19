@@ -150,7 +150,7 @@ const BoardShowActions = () => {
   const board = useRecordContext();
 
   return (
-    <TopToolbar sx={{ justifyContent: "space-between", mb: 3 }}>
+    <TopToolbar sx={{ justifyContent: "space-between", mb: 0 }}>
       <BoardTitle />
       <Stack direction="row" spacing={1} ml="auto">
         <DocumentsButton />

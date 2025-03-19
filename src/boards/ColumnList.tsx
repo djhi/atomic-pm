@@ -17,7 +17,7 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
         overflowX: "auto",
         maxWidth: "98vw",
         flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" },
-        pb: 2,
+        p: 2,
         ...sx,
       }}
       {...props}

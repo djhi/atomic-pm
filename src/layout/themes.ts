@@ -11,13 +11,20 @@ const components = {
       },
     },
   },
+  MuiDialogActions: {
+    styleOverrides: {
+      root: {
+        padding: "20px 24px",
+      },
+    },
+  },
   RaToolbar: {
     styleOverrides: {
       root: {
         backgroundColor: "transparent",
       },
     },
-  }
+  },
 };
 export const darkTheme = {
   ...bwDarkTheme,
