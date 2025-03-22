@@ -24,7 +24,7 @@ import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
   const totalEstimates = column?.cards?.reduce(
-    (acc: number, card: any) => acc + card.estimate,
+    (acc: number, card: any) => acc + (card.estimate ?? 0),
     0,
   );
   const hasTooManyCards =
