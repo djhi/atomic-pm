@@ -106,8 +106,11 @@ export const UserMenu = () => {
       >
         <SimpleForm
           toolbar={
-            <Toolbar>
-              <SaveButton />
+            <Toolbar
+              disableGutters
+              sx={{ px: 2, bgcolor: "transparent", justifyContent: "end" }}
+            >
+              <SaveButton variant="outlined" color="inherit" alwaysEnable />
             </Toolbar>
           }
         >

@@ -28,7 +28,6 @@ export const FormWithLockSupportToolbar = ({ sx, ...props }: ToolbarProps) => {
         spacing={1}
         justifyContent="space-between"
       >
-        <SaveButton disabled={disabled} />
         {editContext ? (
           <DeleteButton
             color="primary"
@@ -37,6 +36,7 @@ export const FormWithLockSupportToolbar = ({ sx, ...props }: ToolbarProps) => {
             redirect={false}
           />
         ) : null}
+        <SaveButton variant="outlined" color="inherit" disabled={disabled} />
       </Stack>
     </Toolbar>
   );

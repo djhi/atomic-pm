@@ -1,12 +1,10 @@
 import { CreateInDialogButton } from "@react-admin/ra-form-layout";
 import {
-  DeleteButton,
   required,
   SaveButton,
   SimpleForm,
   TextInput,
   Toolbar,
-  ToolbarClasses,
   useGetIdentity,
 } from "react-admin";
 import { useNavigate } from "react-router";
@@ -26,11 +24,14 @@ export const BoardCreate = () => {
     >
       <SimpleForm
         toolbar={
-          <Toolbar>
-            <div className={ToolbarClasses.defaultToolbar}>
-              <SaveButton alwaysEnable />
-              <DeleteButton color="inherit" />
-            </div>
+          <Toolbar
+            sx={{
+              "&.RaToolbar-desktopToolbar": { px: 2 },
+              bgcolor: "transparent",
+              justifyContent: "end",
+            }}
+          >
+            <SaveButton variant="outlined" color="inherit" alwaysEnable />
           </Toolbar>
         }
       >

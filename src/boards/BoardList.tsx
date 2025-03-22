@@ -177,10 +177,16 @@ const BoardMenu = () => {
       <MenuButton.EditInDialog title={<RecordRepresentation />}>
         <SimpleForm
           toolbar={
-            <Toolbar>
+            <Toolbar
+              sx={{
+                "&.RaToolbar-desktopToolbar": { px: 2 },
+                bgcolor: "transparent",
+                justifyContent: "end",
+              }}
+            >
               <div className={ToolbarClasses.defaultToolbar}>
-                <SaveButton alwaysEnable />
                 <DeleteButton color="inherit" />
+                <SaveButton variant="outlined" color="inherit" alwaysEnable />
               </div>
             </Toolbar>
           }
