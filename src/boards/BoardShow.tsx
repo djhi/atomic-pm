@@ -14,7 +14,7 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
@@ -22,7 +22,6 @@ import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { DocumentList } from "./DocumentList";
 import { useBoard } from "./useBoard";
-import { Box } from "@mui/system";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
