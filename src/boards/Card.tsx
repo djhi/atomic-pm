@@ -69,11 +69,11 @@ export const Card = () => {
           >
             <Stack direction="row" alignItems="start" gap={1}>
               <FunctionField
-                source="id"
+                source="number"
                 gutterBottom
                 variant="h6"
                 sx={{ color: "text.secondary", fontWeight: "normal" }}
-                render={(record) => `#${record.id}`}
+                render={(record) => `#${record.number}`}
               />
               <TextField
                 source="title"
