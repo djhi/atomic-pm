@@ -59,7 +59,9 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
   const handleEdit = () => {
     if (!fieldRef.current) return;
     const field = fieldRef.current;
-    field.innerText = "@@temporary";
+    if (initiallyEditing) {
+      field.innerText = "@@temporary";
+    }
     fieldBoundingBox.current = field.getBoundingClientRect();
     const computedStyle = window.getComputedStyle(field);
     fieldStyles.current = getCssText(computedStyle);

@@ -104,19 +104,28 @@ export const CardEdit = () => {
                 }}
                 toolbar={<Fragment />}
               >
-                <EditInPlaceInput
-                  source="title"
-                  renderField={(ref) => (
-                    <Tooltip title="Double click to edit" placement="top">
-                      <TextField
-                        ref={ref}
-                        source="title"
-                        variant="h3"
-                        component="h2"
-                      />
-                    </Tooltip>
-                  )}
-                />
+                <Stack direction="row" gap={1}>
+                  <FunctionField
+                    source="number"
+                    gutterBottom
+                    variant="h3"
+                    sx={{ color: "text.secondary", fontWeight: "normal" }}
+                    render={(record) => `#${record.number}`}
+                  />
+                  <EditInPlaceInput
+                    source="title"
+                    renderField={(ref) => (
+                      <Tooltip title="Double click to edit" placement="top">
+                        <TextField
+                          ref={ref}
+                          source="title"
+                          variant="h3"
+                          component="h2"
+                        />
+                      </Tooltip>
+                    )}
+                  />
+                </Stack>
                 <Stack
                   direction="row"
                   gap={2}
