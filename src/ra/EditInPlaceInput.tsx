@@ -9,7 +9,12 @@ import {
 } from "react-admin";
 
 export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
-  const { editionTrigger = "doubleClick", renderField } = props;
+  const {
+    editionTrigger = "doubleClick",
+    initiallyEditing = false,
+    inputProps,
+    renderField,
+  } = props;
   const [isEditing, setIsEditing] = React.useState(false);
   const translate = useTranslate();
   const submitButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -21,11 +26,19 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
   const fieldBoundingBox = React.useRef<DOMRect | null>(null);
 
   const handleCancel = () => {
+    if (initiallyEditing) return;
     setIsEditing(false);
   };
 
   const saveContext = useSaveContext();
   const { submitCount, isSubmitSuccessful } = formState;
+  React.useEffect(() => {
+    if (initiallyEditing) {
+      setTimeout(() => {
+        handleEdit();
+      }, 100);
+    }
+  }, [initiallyEditing]);
   React.useEffect(() => {
     if (isSubmitSuccessful) {
       setIsEditing(false);
@@ -46,6 +59,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
   const handleEdit = () => {
     if (!fieldRef.current) return;
     const field = fieldRef.current;
+    field.innerText = "@@temporary";
     fieldBoundingBox.current = field.getBoundingClientRect();
     const computedStyle = window.getComputedStyle(field);
     fieldStyles.current = getCssText(computedStyle);
@@ -80,7 +94,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
       input.style.top = `${fieldBoundingBox.current.top - 2}px`;
       input.style.left = `${fieldBoundingBox.current.left}px`;
       input.style.backgroundColor = theme.palette.action.focus;
-      inputRef.current.select();
+      input.select();
 
       window.addEventListener("click", handleSubmit);
     }
@@ -107,7 +121,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
         }}
         onKeyDown={handleFormKeyDown}
       >
-        <input {...field} ref={finalInputRef} />
+        <input {...field} ref={finalInputRef} {...inputProps} />
         <button
           ref={submitButtonRef}
           type="submit"
@@ -151,6 +165,11 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
 export interface EditInPlaceInputProps extends InputProps {
   renderField: (ref: React.Ref<HTMLElement>) => React.ReactNode;
   editionTrigger?: "click" | "doubleClick" | "flex";
+  initiallyEditing?: boolean;
+  inputProps?: React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  >;
 }
 
 /**

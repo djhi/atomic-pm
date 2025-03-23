@@ -9,6 +9,11 @@ export const englishMessages = mergeTranslations(
   raRealTimeLanguageEnglish,
   raFormLayoutLanguageEnglish,
   {
+    ra: {
+      action: {
+        toggle_theme: "Light/dark mode",
+      },
+    },
     resources: {
       cards: {
         fields: {

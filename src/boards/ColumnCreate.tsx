@@ -34,7 +34,7 @@ export const ColumnCreate = () => {
           </Toolbar>
         }
       >
-        <TextInput source="name" validate={required()} />
+        <TextInput source="name" validate={required()} autoFocus />
         <Stack direction="row" gap={1} width="100%">
           <NumberInput source="maxCards" />
           <NumberInput source="maxEstimates" />

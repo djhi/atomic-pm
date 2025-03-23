@@ -35,7 +35,11 @@ export const BoardCreate = () => {
           </Toolbar>
         }
       >
-        <TextInput source="name" validate={required()} />
+        <TextInput
+          source="name"
+          validate={required()}
+          autoFocus
+        />
         <TextInput source="description" multiline minRows={4} />
       </SimpleForm>
     </CreateInDialogButton>

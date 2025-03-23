@@ -23,6 +23,7 @@ import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
+  const translate = useTranslate();
   const totalEstimates = column?.cards?.reduce(
     (acc: number, card: any) => acc + (card.estimate ?? 0),
     0,
@@ -77,6 +78,10 @@ export const Column = ({ sx, ...props }: StackProps) => {
               <Form>
                 <EditInPlaceInput
                   source="name"
+                  initiallyEditing={column?.name == ""}
+                  inputProps={{
+                    placeholder: translate("pm.newColumn"),
+                  }}
                   renderField={(ref) => (
                     <Stack direction="row" alignItems="start" gap={1}>
                       <TextField

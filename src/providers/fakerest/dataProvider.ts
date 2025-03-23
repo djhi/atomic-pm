@@ -197,6 +197,18 @@ export const dataProvider = addRevisionMethodsBasedOnSingleResource(
             },
           });
         },
+        afterCreate: async (response) => {
+          const board = response.data;
+          // Add a default column
+          // @ts-expect-error _database is set by ra-data-fakerest
+          const columns = window._database.collections.columns.addOne({
+            name: "",
+            board_id: board.id,
+            position: 0,
+          });
+
+          return response;
+        },
       },
       {
         resource: "documents",
@@ -239,15 +251,15 @@ export const dataProvider = addRevisionMethodsBasedOnSingleResource(
       {
         resource: "revisions",
         beforeGetList: async (params) => {
-          if (params?.filter['date@lt']) {
-            const { 'date@lt': date, ...filter } = params.filter;
+          if (params?.filter["date@lt"]) {
+            const { "date@lt": date, ...filter } = params.filter;
             return {
               ...params,
               filter: {
                 ...filter,
-                ['date_lt']: date,
-              }
-            }
+                ["date_lt"]: date,
+              },
+            };
           }
           return params;
         },
