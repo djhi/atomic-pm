@@ -185,7 +185,7 @@ const DescriptionDiff = () => {
           horizontal: "left",
         }}
       >
-        <Typography sx={{ p: 2 }}>
+        <Typography component="pre" sx={{ p: 2 }}>
           <SmartFieldDiff
             source="description"
             sx={{
