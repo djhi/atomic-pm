@@ -43,6 +43,7 @@ export const defaultCards = [
     description: "Allow users to add files to board documents",
     position: 0,
     estimate: 1,
+    number: 5,
   },
   {
     id: 4,
@@ -51,6 +52,7 @@ export const defaultCards = [
     description: "Allow users to add files to cards",
     position: 0,
     estimate: 1,
+    number: 4,
   },
   {
     id: 3,
@@ -59,6 +61,7 @@ export const defaultCards = [
     description: "Allow users to add documents to boards",
     position: 0,
     estimate: 1,
+    number: 3,
   },
   {
     id: 2,
@@ -67,6 +70,7 @@ export const defaultCards = [
     description: "Implement drag and drop feature for cards and columns",
     position: 0,
     estimate: 1,
+    number: 2,
   },
   {
     id: 1,
@@ -75,6 +79,7 @@ export const defaultCards = [
     description: "Implement basic boards with columns and cards",
     position: 1,
     estimate: 5,
+    number: 1,
   },
 ];
 
