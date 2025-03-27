@@ -52,6 +52,8 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
 
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
       handleCancel();
     }
   };
