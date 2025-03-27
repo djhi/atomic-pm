@@ -202,7 +202,7 @@ const CardEditView = () => {
                         </ReferenceField>
                       </PopoverInput>
                       <PopoverInput
-                        source="assigned_user_id"
+                        source="assigned_user_ids"
                         input={
                           <ReferenceArrayInput
                             source="assigned_user_ids"
@@ -210,7 +210,7 @@ const CardEditView = () => {
                             filter={{ board_id: params.boardId }}
                             sort={{ field: "email", order: "ASC" }}
                           >
-                            <ListSelectorInput optionText="email" />
+                            <ListSelectorInput optionText="email" multiple />
                           </ReferenceArrayInput>
                         }
                       >
