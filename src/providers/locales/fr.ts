@@ -61,6 +61,9 @@ export const frenchMessages = mergeTranslations(
       no_columns: "Aucune colonne",
       no_estimate: "Aucune estimation",
       unnasigned: "Non assigné",
+      no_description: "Aucune description",
+      show_history: "Afficher l'historique",
+      no_history: "Aucun historique",
     },
   },
 );

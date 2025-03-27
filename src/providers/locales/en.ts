@@ -64,6 +64,9 @@ export const englishMessages = mergeTranslations(
       no_column: "No column",
       unnasigned: "Unnasigned",
       no_estimate: "No estimate",
+      no_description: "No description",
+      show_history: "Show history",
+      no_history: "No history",
     },
   },
 );

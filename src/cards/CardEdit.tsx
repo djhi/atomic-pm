@@ -258,7 +258,7 @@ export const CardEdit = () => {
                             />
                           ) : (
                             <Typography variant="body1">
-                              Nothing here
+                              {translate("pm.no_description")}
                             </Typography>
                           )
                         }
@@ -282,7 +282,11 @@ export const CardEdit = () => {
               <SimpleList
                 disablePadding
                 sx={{ "& li": { px: 0 } }}
-                empty={<Typography variant="body2">No messages yet</Typography>}
+                empty={
+                  <Typography variant="body2">
+                    {translate("pm.no_history")}
+                  </Typography>
+                }
                 primaryText={(record) => (
                   <Stack
                     direction="row"
