@@ -72,6 +72,7 @@ export const englishMessages = mergeTranslations(
       no_history: "No history",
       full_screen: "Full screen",
       exit_full_screen: "Exit full screen",
+      newDocument: "New document",
     },
   },
 );

@@ -23,6 +23,8 @@ import { DocumentsButton } from "./DocumentsButton";
 import { DocumentList } from "./DocumentList";
 import { useBoard } from "./useBoard";
 import { CardEdit } from "../cards/CardEdit";
+import { DocumentCreate } from "../documents/DocumentCreate";
+import { DocumentEdit } from "../documents/DocumentEdit";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
@@ -70,6 +72,17 @@ export const BoardShow = () => {
       </Routes>
       <Routes>
         <Route path="cards/*" element={<CardEdit />} />
+      </Routes>
+      <Routes>
+        <Route
+          path="documents/*"
+          element={
+            <>
+              <DocumentCreate />
+              <DocumentEdit />
+            </>
+          }
+        />
       </Routes>
       <DocumentList />
     </>

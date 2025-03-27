@@ -1,7 +1,8 @@
-import { Box, Stack } from "@mui/material";
+import { IconButton, Stack, Tooltip } from "@mui/material";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import {
   DeleteButton,
-  Edit,
   required,
   SaveButton,
   SimpleForm,
@@ -16,8 +17,8 @@ import {
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
 import { MarkdownInput } from "@react-admin/ra-markdown";
-import { BoardLink } from "../boards/BoardLink";
-
+import { EditDialog } from "@react-admin/ra-form-layout";
+import { useState } from "react";
 
 export const DocumentEdit = () => {
   const navigate = useNavigate();
@@ -25,12 +26,19 @@ export const DocumentEdit = () => {
   const params = useParams<"boardId">();
   const match = useMatch("/boards/:boardId/documents/:id");
   const notify = useNotify();
+  const [fullScreen, setFullScreen] = useState(false);
 
   return (
-    <Edit
-      component={Box}
+    <EditDialog
       id={match?.params.id}
       resource="documents"
+      close={() => navigate(`/boards/${params.boardId}/documents`)}
+      fullWidth
+      maxWidth="lg"
+      title={
+        <DocumentTitle fullScreen={fullScreen} setFullScreen={setFullScreen} />
+      }
+      fullScreen={fullScreen}
       mutationOptions={{
         onSuccess: () => {
           notify(`resources.documents.notifications.updated`, {
@@ -45,16 +53,22 @@ export const DocumentEdit = () => {
         },
       }}
     >
-      <BoardLink />
-      <DocumentTitle />
       <SimpleForm
-        component={Box}
-        sx={{ py: 4, flex: 1 }}
         toolbar={
-          <Toolbar disableGutters sx={{ bgcolor: "transparent" }}>
+          <Toolbar
+            sx={{
+              "&.RaToolbar-desktopToolbar": { px: 2 },
+              bgcolor: "transparent",
+              justifyContent: "end",
+            }}
+          >
             <div className={ToolbarClasses.defaultToolbar}>
-              <SaveButton alwaysEnable />
               <DeleteButton color="inherit" />
+              <SaveButton
+                alwaysEnable
+                variant="outlined"
+                color="inherit"
+              />
             </div>
           </Toolbar>
         }
@@ -70,13 +84,20 @@ export const DocumentEdit = () => {
         </Stack>
         <MarkdownInput source="content" validate={required()} />
       </SimpleForm>
-    </Edit>
+    </EditDialog>
   );
 };
 
-const DocumentTitle = () => {
+const DocumentTitle = ({
+  fullScreen,
+  setFullScreen,
+}: {
+  fullScreen: boolean;
+  setFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const record = useRecordContext();
   const params = useParams<"boardId">();
+  const translate = useTranslate();
   const { data: board } = useGetOne(
     "boards",
     { id: params.boardId },
@@ -85,6 +106,32 @@ const DocumentTitle = () => {
   const appTitle = useDefaultTitle();
   return (
     <>
+      {record?.title}
+      <Tooltip
+        // Prevent ghost tooltip
+        key={String(fullScreen)}
+        title={translate(fullScreen ? "pm.exit_full_screen" : "pm.full_screen")}
+        placement="top"
+      >
+        <IconButton
+          aria-label={translate(
+            fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
+          )}
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            setFullScreen((prev) => !prev);
+          }}
+          sx={{
+            position: "absolute",
+            right: (theme) => theme.spacing(4),
+            top: (theme) => theme.spacing(1),
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+        </IconButton>
+      </Tooltip>
       <title>{`${record?.title} - ${board?.name} - ${appTitle}`}</title>
     </>
   );

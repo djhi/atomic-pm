@@ -9,8 +9,6 @@ import { BoardShow } from "./boards/BoardShow";
 import { useEffect, useState } from "react";
 import { darkTheme, lightTheme } from "./layout/themes";
 import { i18nProvider } from "./providers/i18nProvider";
-import { DocumentCreate } from "./documents/DocumentCreate";
-import { DocumentEdit } from "./documents/DocumentEdit";
 
 export const App = () => {
   const [dataProvider, setDataProvider] = useState<DataProvider>();
@@ -63,11 +61,6 @@ export const App = () => {
           path="/boards/:boardId/*"
           element={<BoardShow />}
         />
-        <Route
-          path="/boards/:boardId/documents/create/*"
-          element={<DocumentCreate />}
-        />
-        <Route path="/boards/:boardId/documents/:id/*" element={<DocumentEdit />} />
       </CustomRoutes>
     </Admin>
   );
