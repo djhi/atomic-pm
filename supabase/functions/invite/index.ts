@@ -65,31 +65,59 @@ Deno.serve(async (req: Request) => {
     });
   }
 
-  // Create or retrieve the invitation
-  const { data: invitation, error } = await supabaseClient
-    .from("invitations")
-    .upsert(
-      {
-        board_id,
-        board_name: boardData.name,
-        invited_by: userData.user.email,
-        email,
-      },
-      { onConflict: "email, board_id" },
-    )
-    .select("*")
-    .single();
+  // Check if the user already exists
+  const { data: existingUser } = await supabaseClient
+    .from("profiles")
+    .select("id")
+    .eq("email", email)
+    .maybeSingle();
 
-  if (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { "Content-Type": "application/json", ...corsHeaders },
-      status: 500,
-    });
+  let shouldInviteToSupabase = !existingUser;
+  let shouldInviteToBoard = true;
+  if (existingUser) {
+    // Check if the user is already a member of the board
+    const { data: existingMember } = await supabaseClient
+      .from("board_members")
+      .select("id")
+      .eq("user_id", existingUser.id)
+      .eq("board_id", board_id)
+      .maybeSingle();
+
+    shouldInviteToBoard = !existingMember;
   }
 
-  await supabaseAdmin.auth.admin.inviteUserByEmail(email);
+  let invitation;
+  if (shouldInviteToBoard) {
+    // Create or retrieve the invitation
+    const { data, error } = await supabaseClient
+      .from("invitations")
+      .upsert(
+        {
+          board_id,
+          board_name: boardData.name,
+          invited_by: userData.user.email,
+          email,
+        },
+        { onConflict: "email, board_id" },
+      )
+      .select("*")
+      .single();
 
-  return new Response(JSON.stringify({ data: invitation }), {
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+        status: 500,
+      });
+    }
+
+    invitation = data;
+  }
+
+  if (shouldInviteToSupabase) {
+    await supabaseAdmin.auth.admin.inviteUserByEmail(email);
+  }
+
+  return new Response(JSON.stringify({ data: invitation ?? {} }), {
     headers: { "Content-Type": "application/json", ...corsHeaders },
     status: 200,
   });
