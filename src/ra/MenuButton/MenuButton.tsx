@@ -2,7 +2,10 @@ import { Box, BoxProps, Menu, MenuProps } from "@mui/material";
 import { useEvent } from "ra-core";
 import * as React from "react";
 import { MenuButtonDeleteItem } from "./MenuButtonDeleteItem";
-import { MenuButtonIconButton, MenuButtonIconButtonProps } from "./MenuButtonIconButton";
+import {
+  MenuButtonIconButton,
+  MenuButtonIconButtonProps,
+} from "./MenuButtonIconButton";
 import { MenuButtonLinkItem } from "./MenuButtonLinkItem";
 import { MenuButtonRecordLinkItem } from "./MenuButtonRecordLinkItem";
 import { MenuButtonUpdateItem } from "./MenuButtonUpdateItem";
@@ -25,7 +28,11 @@ export const MenuButton = (props: MenuButtonProps) => {
   return (
     <Box {...rest}>
       <MenuButtonProvider
-        value={{ closeMenu: handleClose, openMenu: handleClick }}
+        value={{
+          isOpen: !!anchorEl,
+          closeMenu: handleClose,
+          openMenu: handleClick,
+        }}
       >
         {button ?? <MenuButtonIconButton {...ButtonProps} />}
         <Menu

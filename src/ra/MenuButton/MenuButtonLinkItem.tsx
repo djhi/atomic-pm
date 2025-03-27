@@ -5,17 +5,23 @@ import { Link, type LinkProps } from "react-router-dom";
 import { useMenuButton } from "./useMenuButton";
 
 export const MenuButtonLinkItem = React.forwardRef<
-	HTMLAnchorElement,
-	MenuItemProps &
-		LinkProps & {
-			label: string;
-		}
+  HTMLAnchorElement,
+  MenuItemProps<typeof Link> &
+    LinkProps & {
+      label: string;
+      ref?: React.Ref<HTMLAnchorElement>;
+    }
 >(({ label, ...props }, ref) => {
-	const translate = useTranslate();
-	const { closeMenu } = useMenuButton();
-	return (
-		<MenuItem ref={ref} component={Link} onClick={closeMenu} {...props}>
-			{translate(label, { _: label })}
-		</MenuItem>
-	);
+  const translate = useTranslate();
+  const { closeMenu } = useMenuButton();
+  return (
+    <MenuItem
+      ref={ref}
+      component={Link}
+      onClick={closeMenu}
+      {...props}
+    >
+      {translate(label, { _: label })}
+    </MenuItem>
+  );
 });

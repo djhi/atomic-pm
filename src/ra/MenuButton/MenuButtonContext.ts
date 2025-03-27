@@ -4,6 +4,7 @@ export const MenuButtonContext =
 	React.createContext<MenuButtonContextValue | null>(null);
 
 export type MenuButtonContextValue = {
-	closeMenu: () => void;
-	openMenu: (anchorEl: HTMLElement) => void;
+  isOpen: boolean;
+  closeMenu: () => void;
+  openMenu: (anchorEl: HTMLElement) => void;
 };

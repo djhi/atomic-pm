@@ -1,9 +1,25 @@
-import { Menu, MenuItem } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { type MouseEvent, useState } from "react";
-import { Button, ListBase, RaRecord, useListContext } from "react-admin";
-import { Link, useMatch } from "react-router";
+import * as React from "react";
+import {
+  Button,
+  ListBase,
+  RaRecord,
+  required,
+  SaveButton,
+  SimpleForm,
+  TextInput,
+  Toolbar,
+  useEvent,
+  useGetIdentity,
+  useListContext,
+  useTranslate,
+} from "react-admin";
+import { useMatch, useNavigate } from "react-router";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
+import { CreateDialog } from "@react-admin/ra-form-layout";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { MenuButton } from "../ra/MenuButton/MenuButton";
+import { useMenuButton } from "../ra/MenuButton/useMenuButton";
+import { MenuItem } from "@mui/material";
 
 export const BoardMenu = () => (
   <ListBase resource="boards">
@@ -14,15 +30,13 @@ export const BoardMenu = () => (
 
 const BoardMenuView = () => {
   const { data, error, isPending } = useListContext();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { identity } = useGetIdentity();
+  const translate = useTranslate();
+  const [createBoard, setCreateBoard] = React.useState(false);
+  const navigate = useNavigate();
+  const handleCreateBoardClick = useEvent(() => {
+    setCreateBoard(true);
+  });
 
   if (isPending) {
     return null;
@@ -33,45 +47,80 @@ const BoardMenuView = () => {
 
   return (
     <>
-      <Button
-        id="boards-button"
-        aria-controls={open ? "boards-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-        size="small"
-        variant="text"
-        color="inherit"
-        endIcon={<KeyboardArrowDownIcon />}
-        label="pm.boards"
-      />
-      <Menu
-        id="boards-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        slotProps={{
-          list: { "aria-labelledby": "boards-button" },
-        }}
-      >
+      <MenuButton button={<BoardMenuButton />} id="boards-menu">
         {data.map((record) => (
           <BoardMenuItem key={record.id} record={record} />
         ))}
-      </Menu>
+        <MenuItem onClick={() => handleCreateBoardClick()}>
+          {translate("pm.newBoard")}
+        </MenuItem>
+      </MenuButton>
+
+      <CreateDialog
+        isOpen={createBoard}
+        close={() => setCreateBoard(false)}
+        resource="boards"
+        maxWidth="md"
+        fullWidth
+        record={{ user_id: identity?.id, created_at: new Date().toISOString() }}
+        mutationOptions={{
+          onSuccess: (data) => navigate(`/boards/${data.id}`),
+        }}
+      >
+        <SimpleForm
+          toolbar={
+            <Toolbar
+              sx={{
+                "&.RaToolbar-desktopToolbar": { px: 2 },
+                bgcolor: "transparent",
+                justifyContent: "end",
+              }}
+            >
+              <SaveButton variant="outlined" color="inherit" alwaysEnable />
+            </Toolbar>
+          }
+        >
+          <TextInput source="name" validate={required()} autoFocus />
+          <TextInput source="description" multiline minRows={4} />
+        </SimpleForm>
+      </CreateDialog>
     </>
   );
 };
 
-const BoardMenuItem = ({ record }: { record: RaRecord }) => {
-  const match = useMatch(`/boards/${record.id}/*`);
+const BoardMenuButton = () => {
+  const { isOpen, openMenu } = useMenuButton();
+
   return (
-    <MenuItem
-      key={record.id}
-      component={Link}
-      to={`/boards/${record.id}`}
-      selected={!!match}
-    >
-      {record.name}
-    </MenuItem>
+    <Button
+      id="boards-button"
+      aria-controls={isOpen ? "boards-menu" : undefined}
+      aria-haspopup="true"
+      aria-expanded={isOpen ? "true" : undefined}
+      onClick={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        openMenu(event.currentTarget);
+      }}
+      size="small"
+      variant="text"
+      color="inherit"
+      endIcon={<KeyboardArrowDownIcon />}
+      label="pm.boards"
+    />
   );
 };
+
+const BoardMenuItem = React.forwardRef<HTMLAnchorElement, { record: RaRecord }>(
+  ({ record }, ref) => {
+    const match = useMatch(`/boards/${record.id}/*`);
+    return (
+      <MenuButton.LinkItem
+        to={`/boards/${record.id}`}
+        selected={!!match}
+        label={record.name}
+        ref={ref}
+      />
+    );
+  },
+);
