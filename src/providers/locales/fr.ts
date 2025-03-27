@@ -10,6 +10,11 @@ export const frenchMessages = mergeTranslations(
   raRealTimeLanguageFrench,
   raFormLayoutLanguageFrench,
   {
+    ra: {
+      message: {
+        delete_title: "Supprimer %{name} %{id}",
+      },
+    },
     resources: {
       cards: {
         fields: {
@@ -19,6 +24,9 @@ export const frenchMessages = mergeTranslations(
           description: "Description",
           assigned_user_id: "Utilisateur assigné",
         },
+      },
+      card_attachments: {
+        name: "Pièce jointe |||| Pièces jointes",
       },
       columns: {
         fields: {

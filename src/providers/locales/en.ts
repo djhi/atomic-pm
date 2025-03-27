@@ -13,6 +13,9 @@ export const englishMessages = mergeTranslations(
       action: {
         toggle_theme: "Light/dark mode",
       },
+      message: {
+        delete_title: "Delete %{name} %{id}",
+      },
     },
     resources: {
       cards: {

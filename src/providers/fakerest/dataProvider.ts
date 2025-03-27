@@ -251,6 +251,25 @@ export const dataProvider = addRevisionMethodsBasedOnSingleResource(
         },
       },
       {
+        resource: "card_attachments",
+        beforeCreate: async ({ data, meta }) => {
+          if (data.content instanceof File) {
+            const base64Document = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = () => {
+                resolve(reader.result as string);
+              };
+              reader.readAsDataURL(data.content);
+            });
+            localStorage.setItem(data.content.name, base64Document);
+
+            data.type = data.content.type;
+            data.content = data.content.name;
+          }
+          return { data, meta };
+        },
+      },
+      {
         resource: "comments",
         afterCreate: async ({ data, meta }) => {
           const user = getUserFromStorage();

@@ -1,6 +1,6 @@
 import { useRecordContext } from "react-admin";
 import { Link, useParams } from "react-router";
-import { useSignedUrl } from "./useSignedUrl";
+import { useSignedUrl } from "../ra/useSignedUrl";
 import { extension } from "mime-types";
 
 export const DocumentLink = (

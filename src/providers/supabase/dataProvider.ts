@@ -158,6 +158,49 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
         }
         return { data, meta };
       },
+      beforeDelete: async (params) => {
+        const { id, previousData } = params;
+        console.log("beforeDelete", { id, previousData });
+        return params;
+      },
+    },
+    {
+      resource: "card_attachments",
+      beforeCreate: async ({ data, meta }) => {
+        if (data.file instanceof File) {
+          const { data: file, error } = await supabaseClient.storage
+            .from("documents")
+            .upload(
+              `${data.board_id}/card_${data.card_id}/${data.file.name}`,
+              data.file,
+              {
+                upsert: true,
+              },
+            );
+
+          if (error) {
+            throw new Error(error.message);
+          }
+          return {
+            data: {
+              card_id: data.card_id,
+              path: file.path,
+            },
+            meta,
+          };
+        }
+
+        throw new Error("Invalid file");
+      },
+      beforeDelete: async (params) => {
+        const { error } = await supabaseClient.storage
+          .from("documents")
+          .remove([params.previousData.path]);
+        if (error) {
+          throw new Error(error.message);
+        }
+        return params;
+      },
     },
     {
       resource: "profiles",
