@@ -11,7 +11,8 @@ import {
 import {
   ChipField,
   FunctionField,
-  ReferenceField,
+  ReferenceArrayField,
+  SingleFieldList,
   TextField,
   useRecordContext,
   useTranslate,
@@ -93,12 +94,14 @@ export const Card = () => {
               color="info"
               emptyText=" "
             />
-            <ReferenceField
-              source="assigned_user_id"
+            <ReferenceArrayField
+              source="assigned_user_ids"
               reference="board_members_with_profiles"
             >
-              <AvatarField />
-            </ReferenceField>
+              <SingleFieldList>
+                <AvatarField />
+              </SingleFieldList>
+            </ReferenceArrayField>
           </CardActions>
         </MuiCard>
       )}
