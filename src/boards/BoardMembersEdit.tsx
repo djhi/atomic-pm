@@ -87,7 +87,7 @@ const InviteUserForm = () => {
         await dataProvider.invite({
           data: { ...data, board_id: board?.id },
         });
-        notify("pm>invitation_sent");
+        notify("pm.invitation_sent");
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
