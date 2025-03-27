@@ -11,13 +11,14 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
     <Stack
       direction="row"
       minHeight="100%"
-      gap={4}
+      gap={2}
       flexGrow={1}
       sx={{
         overflowX: "auto",
         maxWidth: "98vw",
         flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" },
         p: 2,
+        mx: -2,
         ...sx,
       }}
       {...props}
@@ -25,7 +26,7 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
       {board.columns?.map((record: any) => (
         <RecordContextProvider key={record.id} value={record}>
           <Column
-            sx={{ width: { xs: "100%", sm: "100%", md: "400px" }, padding: 2 }}
+            sx={{ width: { xs: "100%", sm: "100%", md: "400px" } }}
           />
         </RecordContextProvider>
       ))}
