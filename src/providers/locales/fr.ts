@@ -53,6 +53,11 @@ export const frenchMessages = mergeTranslations(
       sendMessageInstructions: "CTRl+Enter pour envoyer",
       editProfile: "Profil",
       actionList: "Liste des actions",
+      document_drop_instructions:
+        "Déposez un fichier ici, ou cliquez pour sélectionner un fichier",
+      invitation_sent: "Invitation envoyée",
+      invitation_email: "Inviter par email",
+      board_owner: "Propriétaire",
     },
   },
 );

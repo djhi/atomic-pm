@@ -57,6 +57,10 @@ export const englishMessages = mergeTranslations(
       sendMessage: "Send",
       editProfile: "Profile",
       actionList: "Action list",
+      document_drop_instructions: "Drop a file here, or click to select a file",
+      invitation_sent: "Invitation sent",
+      invitation_email: "Invite by email",
+      board_owner: "Owner",
     },
   },
 );

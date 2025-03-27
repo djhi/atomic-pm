@@ -22,6 +22,7 @@ import {
   useListContext,
   useNotify,
   useRecordContext,
+  useTranslate,
   useUpdate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
@@ -34,6 +35,7 @@ export const DocumentList = () => {
   const params = useParams<"boardId">();
   const match = useMatch("/boards/:boardId/documents/*");
   const [create] = useCreate("documents");
+  const translate = useTranslate();
 
   const handleDropFile = (documents: File[]) => {
     const title = prompt("Enter the document title");
@@ -102,7 +104,7 @@ export const DocumentList = () => {
           >
             <input {...getInputProps()} />
             <Typography variant="h6" color="textSecondary" align="center">
-              Drop a file here, or click to select a file
+              {translate('pm.document_drop_instructions')}
             </Typography>
           </Box>
         )}

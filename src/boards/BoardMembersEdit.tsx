@@ -13,6 +13,7 @@ import {
   useGetIdentity,
   useNotify,
   useRecordContext,
+  useTranslate,
 } from "react-admin";
 import { ShowInDialogButton } from "@react-admin/ra-form-layout";
 import GroupIcon from "@mui/icons-material/Group";
@@ -33,7 +34,7 @@ export const BoardMembersEdit = () => {
       maxWidth="md"
       fullWidth
       icon={<GroupIcon />}
-      label="Members"
+      label="pm.members"
     >
       <SimpleShowLayout>
         <InviteUserForm />
@@ -52,18 +53,19 @@ export const BoardMembersEdit = () => {
 
 const ListMemberItem = ({ owner_id }: { owner_id?: number }) => {
   const listMemberRecord = useRecordContext();
+  const translate = useTranslate();
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <ReferenceField reference="profiles" source="user_id" link={false}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap={1}
-        >
+        <Stack direction="row" alignItems="center" gap={1}>
           <AvatarField />
           <TextField source="email" variant="body1" />
-          <FunctionField render={(record) => record?.id === owner_id ? <Chip label="Owner" /> : null} />
+          <FunctionField
+            render={(record) =>
+              record?.id === owner_id ? <Chip label={translate('pm.board_owner')} /> : null
+            }
+          />
         </Stack>
       </ReferenceField>
       <DeleteButton
@@ -85,15 +87,17 @@ const InviteUserForm = () => {
         await dataProvider.invite({
           data: { ...data, board_id: board?.id },
         });
-        notify("Invitation sent");
+        notify("pm>invitation_sent");
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <TextInput
           source="email"
-          label="Invite by email"
-          InputProps={{
-            endAdornment: <SaveButton variant="text" label="Invite" />,
+          label="pm.invitation_email"
+          slotProps={{
+            input: {
+              endAdornment: <SaveButton variant="text" label="Invite" />,
+            },
           }}
         />
       </Stack>
