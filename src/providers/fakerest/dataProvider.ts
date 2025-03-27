@@ -1,7 +1,7 @@
 import { addRevisionMethodsBasedOnSingleResource } from "@react-admin/ra-history";
 import { addLocksMethodsBasedOnALockResource } from "@react-admin/ra-realtime";
 import createSimpleRestProvider from "ra-data-simple-rest";
-import { withLifecycleCallbacks } from "react-admin";
+import { RaRecord, withLifecycleCallbacks } from "react-admin";
 import { getUserFromStorage } from "./utils";
 import { queryClient } from "../queryClient";
 
@@ -163,6 +163,27 @@ export const dataProvider = addRevisionMethodsBasedOnSingleResource(
         const signedUrl = URL.createObjectURL(blob);
 
         return { data: signedUrl };
+      },
+      getCardFromBoardAndNumber: async ({
+        data,
+      }: {
+        data: { board_id: number; number: number };
+      }) => {
+        // @ts-expect-error _database is set by ra-data-fakerest
+        const columns = window._database.collections.columns.getAll({
+          filter: {
+            board_id: data.board_id,
+          },
+          embed: ["cards"],
+        });
+
+        const cards = columns.flatMap((column: RaRecord) =>
+          column.cards.map((card: RaRecord) => card),
+        );
+
+        const card = cards.find((card: RaRecord) => card.number == data.number);
+
+        return { data: card };
       },
     },
     [

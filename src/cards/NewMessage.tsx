@@ -78,13 +78,13 @@ export const NewMessage = () => {
 };
 
 const TextAreaInput = (props: InputProps & TextareaAutosizeProps) => {
-  const { source, ...rest } = props;
+  const { source, validate, ...rest } = props;
   const { field } = useInput(props);
   return (
     <Box
       component={TextareaAutosize}
       minRows={4}
-      sx={{ bgcolor: 'inherit', mb: 1, display: 'block', width: '100%' }}
+      sx={{ bgcolor: 'inherit', mb: 1, display: 'block', width: '100%', p: 1 }}
       {...field}
       {...rest}
     />

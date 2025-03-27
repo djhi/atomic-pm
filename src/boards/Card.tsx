@@ -14,6 +14,7 @@ import {
   ReferenceField,
   TextField,
   useRecordContext,
+  useTranslate,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -58,7 +59,7 @@ export const Card = () => {
           {...provided?.dragHandleProps}
           ref={provided?.innerRef}
           onClick={() => {
-            navigate(`/boards/${params.boardId}/cards/${card?.id}`);
+            navigate(`/boards/${params.boardId}/cards/${card?.number}`);
           }}
         >
           <CardContent
@@ -109,6 +110,7 @@ const CardMenu = () => {
   const card = useRecordContext();
   const queryClient = useQueryClient();
   const params = useParams<"boardId">();
+  const translate = useTranslate();
   if (!card) return null;
 
   return (
@@ -127,12 +129,13 @@ const CardMenu = () => {
     >
       <MenuButton.LinkItem
         label="ra.action.edit"
-        to={`/boards/${params.boardId}/cards/${card?.id}`}
+        to={`/boards/${params.boardId}/cards/${card?.number}`}
       />
       <MenuButton.DeleteItem
         resource="cards"
-        record={card!}
+        id={`${params.boardId}-${card.id}`}
         mutationMode="pessimistic"
+        confirmTitle={translate("ra.message.delete_title", { id: card.title })}
         mutationOptions={{
           onSuccess: () => {
             queryClient.setQueryData(

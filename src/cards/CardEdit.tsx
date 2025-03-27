@@ -47,15 +47,20 @@ import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
 import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
+import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
 
 export const CardEdit = () => {
   const params = useParams<"boardId" | "id">();
+  const { data: card } = useCardFromBoardAndNumber();
   const translate = useTranslate();
+
+  if (!card) return null;
 
   return (
     <Edit
       resource="cards"
-      id={params.id}
+      id={card.id}
+      record={card}
       component={Box}
       sx={{
         display: "flex",

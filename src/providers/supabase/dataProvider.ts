@@ -99,6 +99,23 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
 
       return { data: signedUrl.signedUrl };
     },
+    getCardFromBoardAndNumber: async ({
+      data,
+    }: {
+      data: { board_id: number; number: number };
+    }) => {
+      const { data: card, error } = await supabaseClient
+        .from("cards")
+        .select("*, columns(*)")
+        .eq("columns.board_id", data.board_id)
+        .eq("number", data.number)
+        .maybeSingle();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      return { data: card };
+    },
   },
   [
     {
