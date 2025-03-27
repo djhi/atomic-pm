@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import {
   ChipField,
   Confirm,
@@ -61,13 +61,16 @@ import { CardRevisionDetails } from "./CardRevisionDetails";
 import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
 import { useSignedUrl } from "../ra/useSignedUrl";
+import { useUpdateBoard } from "../useUpdateBoard";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
   const { data: card } = useCardFromBoardAndNumber();
+  const { updateCard } = useUpdateBoard();
   const [fullScreen, setFullScreen] = useState(false);
   const navigate = useNavigate();
   const translate = useTranslate();
+  const closeIsFromMutationSuccess = useRef(false);
   if (!card) return null;
 
   return (
@@ -75,9 +78,28 @@ export const CardEdit = () => {
       resource="cards"
       id={card.id}
       record={card}
-      close={() => navigate(`/boards/${params.boardId}`)}
+      close={() => {
+        // We don't want to close the dialog on mutation success
+        if (closeIsFromMutationSuccess.current) {
+          closeIsFromMutationSuccess.current = false;
+          return;
+        }
+        navigate(`/boards/${params.boardId}`);
+      }}
       fullWidth
       fullScreen={fullScreen}
+      mutationOptions={{
+        onSuccess: (
+          data: RaRecord
+        ) => {
+          updateCard({
+            board_id: params.boardId!,
+            record: data,
+            update: () => data,
+          });
+          closeIsFromMutationSuccess.current = true;
+        },
+      }}
       maxWidth="lg"
       title={
         <Tooltip

@@ -16,10 +16,10 @@ import {
 } from "react-admin";
 import { useParams } from "react-router";
 import clsx from "clsx";
-import { useQueryClient } from "@tanstack/react-query";
 import { CardList } from "./CardList";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
+import { useUpdateBoard } from "../useUpdateBoard";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
@@ -123,8 +123,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
 
 const ColumnMenu = () => {
   const column = useRecordContext();
-  const queryClient = useQueryClient();
   const params = useParams<"boardId">();
+  const { updateBoard } = useUpdateBoard();
   const translate = useTranslate();
   if (!column) return null;
 
@@ -152,22 +152,15 @@ const ColumnMenu = () => {
         confirmTitle={translate("ra.message.delete_title", { id: column.name })}
         mutationOptions={{
           onSuccess: () => {
-            queryClient.setQueryData(
-              [
-                "boards",
-                "getOne",
-                {
-                  id: params.boardId,
-                  meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-                },
-              ],
-              (board: any) => ({
-                ...board,
-                columns: board.columns.filter(
+            updateBoard({
+              board_id: params.boardId!,
+              update: (record: any) => ({
+                ...record,
+                columns: record.columns.filter(
                   (oldColumn: any) => oldColumn.id !== column.id,
                 ),
               }),
-            );
+            });
           },
         }}
       />

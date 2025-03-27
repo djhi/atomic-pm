@@ -12,7 +12,7 @@ import {
   useTranslateLabel,
 } from "react-admin";
 import { Card } from "./Card";
-import { useQueryClient } from "@tanstack/react-query";
+import { useUpdateBoard } from "../useUpdateBoard";
 
 export const CardList = () => {
   const column = useRecordContext();
@@ -54,8 +54,8 @@ const NewCard = ({ column }: { column: RaRecord }) => {
   const [newCard, setNewCard] = React.useState(false);
   const [key, setKey] = React.useState(0);
   const translateLabel = useTranslateLabel();
-  const queryClient = useQueryClient();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const { updateColumn } = useUpdateBoard();
 
   React.useEffect(() => {
     if (!newCard) return;
@@ -91,29 +91,15 @@ const NewCard = ({ column }: { column: RaRecord }) => {
         }}
         mutationOptions={{
           onSuccess: (data) => {
-            queryClient.setQueryData(
-              [
-                "boards",
-                "getOne",
-                {
-                  id: String(column.board_id),
-                  meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-                },
-              ],
-              (board: any) => {
-                const newBoard = {
-                  ...board,
-                  columns: board.columns.map((column: RaRecord) => {
-                    if (column.id === data.column_id) {
-                      return { ...column, cards: [...column.cards, data] };
-                    }
-                    return column;
-                  }),
-                };
-                setKey((prevKey) => prevKey + 1);
-                return newBoard;
-              },
-            );
+            updateColumn({
+              board_id: column.board_id,
+              record: { id: data.column_id },
+              update: (record) => ({
+                ...record,
+                cards: [...record.cards, data],
+              }),
+            });
+            setKey((prevKey) => prevKey + 1);
           },
         }}
       >

@@ -18,9 +18,9 @@ import {
   useTranslate,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { AvatarField } from "../ui/AvatarField";
+import { useUpdateBoard } from "../useUpdateBoard";
 
 export const Card = () => {
   const card = useRecordContext();
@@ -111,8 +111,9 @@ export const Card = () => {
 
 const CardMenu = () => {
   const card = useRecordContext();
-  const queryClient = useQueryClient();
   const params = useParams<"boardId">();
+  const { updateColumn } = useUpdateBoard();
+
   const translate = useTranslate();
   if (!card) return null;
 
@@ -141,35 +142,22 @@ const CardMenu = () => {
         confirmTitle={translate("ra.message.delete_title", { id: card.title })}
         mutationOptions={{
           onSuccess: () => {
-            queryClient.setQueryData(
-              [
-                "boards",
-                "getOne",
-                {
-                  id: params.boardId,
-                  meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-                },
-              ],
-              (board: any) => ({
-                ...board,
-                columns: board.columns.map((column: any) =>
-                  column.id === card.column_id
-                    ? {
-                        ...column,
-                        cards: column.cards
-                          .filter((oldCard: any) => card.id !== oldCard.id)
-                          .map((oldCard: any) => ({
-                            ...oldCard,
-                            position:
-                              oldCard.position > card.position
-                                ? oldCard.position - 1
-                                : oldCard.position,
-                          })),
-                      }
-                    : column,
-                ),
+            updateColumn({
+              board_id: params.boardId!,
+              record: { id: card.column_id },
+              update: (record) => ({
+                ...record,
+                cards: record.cards
+                  .filter((oldCard: any) => card.id !== oldCard.id)
+                  .map((oldCard: any) => ({
+                    ...oldCard,
+                    position:
+                      oldCard.position > card.position
+                        ? oldCard.position - 1
+                        : oldCard.position,
+                  })),
               }),
-            );
+            });
           },
         }}
       />

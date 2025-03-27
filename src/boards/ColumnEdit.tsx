@@ -10,16 +10,16 @@ import {
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { Stack } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
 import { LockOnMount } from "../ra/LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
+import { useUpdateBoard } from "../useUpdateBoard";
 
 export const ColumnEdit = () => {
   const navigate = useNavigate();
   const notify = useNotify();
   const params = useParams<"boardId">();
-  const queryClient = useQueryClient();
+  const { updateColumn } = useUpdateBoard();
 
   return (
     <EditDialog
@@ -35,24 +35,14 @@ export const ColumnEdit = () => {
             messageArgs: { smart_count: 1 },
             undoable: true,
           });
-          queryClient.setQueryData<any>(
-            [
-              "boards",
-              "getOne",
-              {
-                id: String(data.board_id),
-                meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-              },
-            ],
-            (record: any) => {
-              return {
-                ...record,
-                columns: record.columns.map((column: any) =>
-                  column.id === data.id ? { ...column, ...data } : column,
-                ),
-              };
-            },
-          );
+          updateColumn({
+            board_id: data.board_id,
+            record: data,
+            update: (record) => ({
+              ...record,
+              ...data,
+            }),
+          });
         },
       }}
     >
