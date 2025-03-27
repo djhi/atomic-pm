@@ -61,6 +61,9 @@ export const englishMessages = mergeTranslations(
       invitation_sent: "Invitation sent",
       invitation_email: "Invite by email",
       board_owner: "Owner",
+      no_column: "No column",
+      unnasigned: "Unnasigned",
+      no_estimate: "No estimate",
     },
   },
 );

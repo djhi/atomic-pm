@@ -156,7 +156,10 @@ export const CardEdit = () => {
                       reference="columns"
                       link={false}
                       emptyText={
-                        <Chip label="No column" icon={<StopCircleIcon />} />
+                        <Chip
+                          label={translate("pm.no_column")}
+                          icon={<StopCircleIcon />}
+                        />
                       }
                     >
                       <ChipField source="name" icon={<StopCircleIcon />} />
@@ -180,7 +183,10 @@ export const CardEdit = () => {
                       reference="board_members_with_profiles"
                       link={false}
                       emptyText={
-                        <Chip label="Unassigned" icon={<AccountCircleIcon />} />
+                        <Chip
+                          label={translate("pm.unnasigned")}
+                          icon={<AccountCircleIcon />}
+                        />
                       }
                     >
                       <ChipField source="email" icon={<AvatarField />} />
@@ -194,7 +200,24 @@ export const CardEdit = () => {
                       </EstimatesChoicesInput>
                     }
                   >
-                    <ChipField source="estimate" icon={<AddCircleIcon />} />
+                    <FunctionField
+                      render={(record) => {
+                        if (record.estimate) {
+                          return (
+                            <ChipField
+                              source="estimate"
+                              icon={<AddCircleIcon />}
+                            />
+                          );
+                        }
+                        return (
+                          <Chip
+                            label={translate("pm.no_estimate")}
+                            icon={<AddCircleIcon />}
+                          />
+                        );
+                      }}
+                    />
                   </PopoverInput>
                 </Stack>
                 <EditInPlace

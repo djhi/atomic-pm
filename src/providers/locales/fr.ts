@@ -58,6 +58,9 @@ export const frenchMessages = mergeTranslations(
       invitation_sent: "Invitation envoyée",
       invitation_email: "Inviter par email",
       board_owner: "Propriétaire",
+      no_columns: "Aucune colonne",
+      no_estimate: "Aucune estimation",
+      unnasigned: "Non assigné",
     },
   },
 );
