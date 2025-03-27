@@ -16,9 +16,10 @@ import {
 } from "@mui/material";
 import { usePopoverInput } from "./PopoverInput";
 
-export const ListSelectorInput = (
-  props: Partial<InputProps> & ChoicesProps,
-) => {
+export const ListSelectorInput = ({
+  multiple,
+  ...props
+}: Partial<InputProps> & ChoicesProps & { multiple?: boolean }) => {
   const choicesContext = useChoicesContext(props);
   const { field } = useInput(choicesContext);
   const { getChoiceText, getChoiceValue } = useSuggestions(props);
@@ -43,14 +44,18 @@ export const ListSelectorInput = (
             )}
             key={record.id}
             onClick={() => {
-              if (field.value.includes(getChoiceValue(record))) {
-                field.onChange(
-                  field.value.filter(
-                    (value: string) => value !== getChoiceValue(record),
-                  ),
-                );
+              if (multiple) {
+                if (field.value.includes(getChoiceValue(record))) {
+                  field.onChange(
+                    field.value.filter(
+                      (value: string) => value !== getChoiceValue(record),
+                    ),
+                  );
+                } else {
+                  field.onChange([...field.value, getChoiceValue(record)]);
+                }
               } else {
-                field.onChange([...field.value, getChoiceValue(record)]);
+                field.onChange(getChoiceValue(record));
               }
             }}
           >
