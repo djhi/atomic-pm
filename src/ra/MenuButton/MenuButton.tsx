@@ -13,7 +13,7 @@ import { MenuButtonProvider } from "./MenuButtonProvider";
 import { MenuButtonItemEditInDialog } from "./MenuButtonItemEditInDialog";
 
 export const MenuButton = (props: MenuButtonProps) => {
-  const { children, button, ButtonProps, MenuProps, ...rest } = props;
+  const { children, button, ButtonProps, endSlot, MenuProps, ...rest } = props;
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const handleClick = useEvent((target: HTMLElement) => setAnchorEl(target));
   // biome-ignore lint/complexity/noBannedTypes: Same as MUI
@@ -44,6 +44,7 @@ export const MenuButton = (props: MenuButtonProps) => {
         >
           {children}
         </Menu>
+        {endSlot}
       </MenuButtonProvider>
     </Box>
   );
@@ -52,6 +53,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 export interface MenuButtonProps extends BoxProps {
   children?: React.ReactNode;
   button?: React.ReactNode;
+  endSlot?: React.ReactNode;
   ButtonProps?: MenuButtonIconButtonProps;
   MenuProps?: MenuProps;
 }

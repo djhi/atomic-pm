@@ -13,13 +13,13 @@ import {
   useListContext,
   useTranslate,
 } from "react-admin";
-import { useMatch, useNavigate } from "react-router";
+import { useMatch, useNavigate, useParams } from "react-router";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateDialog } from "@react-admin/ra-form-layout";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { useMenuButton } from "../ra/MenuButton/useMenuButton";
-import { MenuItem } from "@mui/material";
+import { MenuItem, MenuItemProps } from "@mui/material";
 
 export const BoardMenu = () => (
   <ListBase resource="boards">
@@ -31,8 +31,8 @@ export const BoardMenu = () => (
 const BoardMenuView = () => {
   const { data, error, isPending } = useListContext();
   const { identity } = useGetIdentity();
-  const translate = useTranslate();
   const [createBoard, setCreateBoard] = React.useState(false);
+  const params = useParams<"boardId">();
   const navigate = useNavigate();
   const handleCreateBoardClick = useEvent(() => {
     setCreateBoard(true);
@@ -47,13 +47,15 @@ const BoardMenuView = () => {
 
   return (
     <>
-      <MenuButton button={<BoardMenuButton />} id="boards-menu">
+      <MenuButton
+        key={params.boardId}
+        button={<BoardMenuButton />}
+        id="boards-menu"
+      >
         {data.map((record) => (
           <BoardMenuItem key={record.id} record={record} />
         ))}
-        <MenuItem onClick={() => handleCreateBoardClick()}>
-          {translate("pm.newBoard")}
-        </MenuItem>
+        <CreateBoardMenuItem onClick={handleCreateBoardClick} />
       </MenuButton>
 
       <CreateDialog
@@ -87,6 +89,25 @@ const BoardMenuView = () => {
     </>
   );
 };
+
+const CreateBoardMenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
+  ({ onClick, ...props }, ref) => {
+    const { closeMenu } = useMenuButton();
+    const translate = useTranslate();
+    return (
+      <MenuItem
+        {...props}
+        ref={ref}
+        onClick={(event) => {
+          closeMenu();
+          onClick && onClick(event);
+        }}
+      >
+        {translate("pm.newBoard")}
+      </MenuItem>
+    );
+  },
+);
 
 const BoardMenuButton = () => {
   const { isOpen, openMenu } = useMenuButton();
