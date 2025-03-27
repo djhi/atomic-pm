@@ -1,4 +1,11 @@
-import { ChoicesProps, InputProps, useChoicesContext, useInput, useSuggestions, useTranslate } from "ra-core";
+import {
+  ChoicesProps,
+  InputProps,
+  useChoicesContext,
+  useInput,
+  useSuggestions,
+  useTranslate,
+} from "ra-core";
 import {
   Button,
   List,
@@ -9,7 +16,9 @@ import {
 } from "@mui/material";
 import { usePopoverInput } from "./PopoverInput";
 
-export const ListSelectorInput = (props: Partial<InputProps> & ChoicesProps) => {
+export const ListSelectorInput = (
+  props: Partial<InputProps> & ChoicesProps,
+) => {
   const choicesContext = useChoicesContext(props);
   const { field } = useInput(choicesContext);
   const { getChoiceText, getChoiceValue } = useSuggestions(props);
@@ -33,7 +42,17 @@ export const ListSelectorInput = (props: Partial<InputProps> & ChoicesProps) => 
               (choice) => choice.id === getChoiceValue(record),
             )}
             key={record.id}
-            onClick={() => field.onChange(getChoiceValue(record))}
+            onClick={() => {
+              if (field.value.includes(getChoiceValue(record))) {
+                field.onChange(
+                  field.value.filter(
+                    (value: string) => value !== getChoiceValue(record),
+                  ),
+                );
+              } else {
+                field.onChange([...field.value, getChoiceValue(record)]);
+              }
+            }}
           >
             {getChoiceText(record)}
           </ListItemButton>

@@ -7,9 +7,12 @@ import {
   EditClasses,
   FunctionField,
   RaRecord,
+  ReferenceArrayField,
+  ReferenceArrayInput,
   ReferenceInput,
   ReferenceManyField,
   SimpleList,
+  SingleFieldList,
   TextField,
   useCreate,
   useDefaultTitle,
@@ -198,29 +201,32 @@ const CardEditView = () => {
                       <PopoverInput
                         source="assigned_user_id"
                         input={
-                          <ReferenceInput
-                            source="assigned_user_id"
+                          <ReferenceArrayInput
+                            source="assigned_user_ids"
                             reference="board_members_with_profiles"
                             filter={{ board_id: params.boardId }}
                             sort={{ field: "email", order: "ASC" }}
                           >
                             <ListSelectorInput optionText="email" />
-                          </ReferenceInput>
+                          </ReferenceArrayInput>
                         }
                       >
-                        <ReferenceField
-                          source="assigned_user_id"
+                        <ReferenceArrayField
+                          source="assigned_user_ids"
                           reference="board_members_with_profiles"
-                          link={false}
-                          emptyText={
-                            <Chip
-                              label={translate("pm.unnasigned")}
-                              icon={<AccountCircleIcon />}
-                            />
-                          }
                         >
-                          <ChipField source="email" icon={<AvatarField />} />
-                        </ReferenceField>
+                          <SingleFieldList
+                            linkType={false}
+                            empty={
+                              <Chip
+                                label={translate("pm.unnasigned")}
+                                icon={<AccountCircleIcon />}
+                              />
+                            }
+                          >
+                            <ChipField source="email" icon={<AvatarField />} />
+                          </SingleFieldList>
+                        </ReferenceArrayField>
                       </PopoverInput>
                       <PopoverInput
                         source="estimate"

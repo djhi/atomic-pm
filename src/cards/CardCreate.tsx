@@ -1,8 +1,10 @@
 import {
+  AutocompleteArrayInput,
   AutocompleteInput,
   Create,
   CreateClasses,
   Labeled,
+  ReferenceArrayInput,
   ReferenceInput,
   required,
   SaveButton,
@@ -89,18 +91,18 @@ export const CardCreate = () => {
               component="label"
               sx={{ flexGrow: 1 }}
             >
-              <ReferenceInput
-                source="assigned_user_id"
+              <ReferenceArrayInput
+                source="assigned_user_ids"
                 reference="board_members_with_profiles"
                 filter={{ board_id: params.boardId }}
               >
-                <AutocompleteInput
+                <AutocompleteArrayInput
                   optionText="email"
                   TextFieldProps={{
                     label: null,
                   }}
                 />
-              </ReferenceInput>
+              </ReferenceArrayInput>
             </Labeled>
             <Labeled source="estimate" component="label" sx={{ flexGrow: 1 }}>
               <EstimateInput source="estimate" hideLabel />
