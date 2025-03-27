@@ -98,13 +98,16 @@ export const CardEdit = () => {
 const CardEditView = () => {
   const params = useParams<"boardId" | "id">();
   const translate = useTranslate();
+  const record = useRecordContext();
   const [create] = useCreate("card_attachments");
   const handleDropFile = useEvent((files: File[]) => {
+    if (!record) return;
+
     for (const file of files) {
       create("card_attachments", {
         data: {
           board_id: params.boardId,
-          card_id: params.id,
+          card_id: record.id,
           file,
         },
       });
