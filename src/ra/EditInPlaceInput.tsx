@@ -64,7 +64,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
     }
     fieldBoundingBox.current = field.getBoundingClientRect();
     const computedStyle = window.getComputedStyle(field);
-    fieldStyles.current = getCssText(computedStyle);
+    fieldStyles.current = getCssText(computedStyle, { width: '100%' });
     setIsEditing(true);
   };
 
@@ -178,14 +178,14 @@ export interface EditInPlaceInputProps extends InputProps {
  * Convert the output of window.getComputedStyle() to a CSS string
  * @returns {string}
  */
-const getCssText = (cssStyleDeclaration: CSSStyleDeclaration) => {
+const getCssText = (cssStyleDeclaration: CSSStyleDeclaration, override: Record<string, unknown> = {}) => {
   const nbProperties = cssStyleDeclaration.length;
   let css = "";
   for (let i = 0; i < nbProperties; i++) {
     const propertyName = cssStyleDeclaration.item(i);
     const propertyValue = cssStyleDeclaration.getPropertyValue(propertyName);
     if (propertyValue !== "") {
-      css += `${propertyName}:${propertyValue}; `;
+      css += `${propertyName}:${override[propertyName] ?? propertyValue}; `;
     }
   }
   return css;

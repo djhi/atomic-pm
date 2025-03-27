@@ -1,18 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDataProvider } from "react-admin";
-import { useParams } from "react-router";
+import { useMatch } from "react-router";
 
 export const useCardFromBoardAndNumber = () => {
-  const params = useParams<"boardId" | "id">();
+  const match = useMatch("/boards/:boardId/cards/:id");
   const dataProvider = useDataProvider();
 
   return useQuery({
-    queryKey: ["cards", "getCardFromBoardAndNumber", params.boardId, params.id],
+    queryKey: [
+      "cards",
+      "getCardFromBoardAndNumber",
+      match?.params.boardId,
+      match?.params.id,
+    ],
     queryFn: async ({ client }) => {
       const { data } = await dataProvider.getCardFromBoardAndNumber({
         data: {
-          number: params.id,
-          board_id: params.boardId,
+          number: match?.params.id,
+          board_id: match?.params.boardId,
         },
       });
 
@@ -23,5 +28,6 @@ export const useCardFromBoardAndNumber = () => {
 
       return data;
     },
+    enabled: !!match,
   });
 };

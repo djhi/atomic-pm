@@ -1,10 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import {
   ChipField,
   Confirm,
   DateField,
-  Edit,
-  EditClasses,
   FunctionField,
   RaRecord,
   ReferenceArrayField,
@@ -24,9 +22,8 @@ import {
   useTranslate,
   WithRecord,
 } from "react-admin";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import {
-  Box,
   Divider,
   Stack,
   Tooltip,
@@ -35,14 +32,19 @@ import {
   Toolbar,
   Button as MuiButton,
   IconButton,
+  CardContent,
 } from "@mui/material";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FileIcon from "@mui/icons-material/InsertDriveFile";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { MarkdownField } from "@react-admin/ra-markdown";
+import { EditDialog } from "@react-admin/ra-form-layout";
+import Dropzone from "react-dropzone";
 import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
@@ -53,45 +55,73 @@ import { PopoverInput } from "../ra/PopoverInput";
 import { ReferenceField } from "../ra/ReferenceField";
 import { ListSelectorInput } from "../ra/ListSelectorInput";
 import { AvatarField } from "../ui/AvatarField";
-import { BoardLink } from "../boards/BoardLink";
 import { NewMessage } from "./NewMessage";
 import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
 import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
-import Dropzone from "react-dropzone";
 import { useSignedUrl } from "../ra/useSignedUrl";
 
 export const CardEdit = () => {
+  const params = useParams<"boardId">();
   const { data: card } = useCardFromBoardAndNumber();
+  const [fullScreen, setFullScreen] = useState(false);
+  const navigate = useNavigate();
+  const translate = useTranslate();
   if (!card) return null;
 
   return (
-    <Edit
+    <EditDialog
       resource="cards"
       id={card.id}
       record={card}
-      component={Box}
+      close={() => navigate(`/boards/${params.boardId}`)}
+      fullWidth
+      fullScreen={fullScreen}
+      maxWidth="lg"
+      title={
+        <Tooltip
+          // Prevent ghost tooltip
+          key={String(fullScreen)}
+          title={translate(
+            fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
+          )}
+          placement="top"
+        >
+          <IconButton
+            aria-label={translate(
+              fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
+            )}
+            onClick={() => setFullScreen(!fullScreen)}
+            sx={{
+              position: "absolute",
+              right: (theme) => theme.spacing(4),
+              top: (theme) => theme.spacing(1),
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+          </IconButton>
+        </Tooltip>
+      }
       sx={{
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        [`& .${EditClasses.main}`]: {
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
+        "& .MuiDialog-paper": {
+          minHeight: "80vh",
         },
-        [`& .${EditClasses.card}`]: {
+        "& .MuiCardContent-root": {
+          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
-          flexGrow: 1,
-          width: "100%",
         },
       }}
-      redirect={false}
     >
-      <CardEditView />
-    </Edit>
+      <CardContent>
+        <CardEditView />
+      </CardContent>
+    </EditDialog>
   );
 };
 
@@ -120,12 +150,12 @@ const CardEditView = () => {
           <CardTitle />
           <input {...getInputProps()} />
           <Stack direction="column" gap={4} flexGrow={1} {...getRootProps()}>
-            <BoardLink />
             <Stack direction="row" gap={4} flexGrow={1} pb={4}>
               <Stack
                 direction="column"
                 flexGrow={1}
                 sx={{
+                  mt: -4,
                   "& form": {
                     flexGrow: 1,
                     display: "flex",
@@ -147,7 +177,7 @@ const CardEditView = () => {
                     }}
                     toolbar={<Fragment />}
                   >
-                    <Stack direction="row" gap={1}>
+                    <Stack direction="row" gap={1} width="100%">
                       <FunctionField
                         source="number"
                         variant="h3"

@@ -70,6 +70,8 @@ export const englishMessages = mergeTranslations(
       no_description: "No description",
       show_history: "Show history",
       no_history: "No history",
+      full_screen: "Full screen",
+      exit_full_screen: "Exit full screen",
     },
   },
 );

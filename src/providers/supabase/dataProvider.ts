@@ -106,7 +106,7 @@ export const dataProvider: DataProvider = withLifecycleCallbacks(
     }) => {
       const { data: card, error } = await supabaseClient
         .from("cards")
-        .select("*, columns(*)")
+        .select("*, columns!inner(*)")
         .eq("columns.board_id", data.board_id)
         .eq("number", data.number)
         .maybeSingle();

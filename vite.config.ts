@@ -3,8 +3,14 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 
 const alias = [
-  { find: "react-admin", replacement: path.resolve(__dirname, "./node_modules/react-admin/src") },
-  { find: "ra-core", replacement: path.resolve(__dirname, "./node_modules/ra-core/src") },
+  {
+    find: "react-admin",
+    replacement: path.resolve(__dirname, "./node_modules/react-admin/src"),
+  },
+  {
+    find: "ra-core",
+    replacement: path.resolve(__dirname, "./node_modules/ra-core/src"),
+  },
   {
     find: "ra-ui-materialui",
     replacement: path.resolve(__dirname, "./node_modules/ra-ui-materialui/src"),
@@ -15,19 +21,35 @@ const alias = [
   },
   {
     find: "ra-language-english",
-    replacement: path.resolve(__dirname, "./node_modules/ra-language-english/src"),
+    replacement: path.resolve(
+      __dirname,
+      "./node_modules/ra-language-english/src",
+    ),
   },
   {
     find: "ra-data-json-server",
-    replacement: path.resolve(__dirname, "./node_modules/ra-data-json-server/src"),
+    replacement: path.resolve(
+      __dirname,
+      "./node_modules/ra-data-json-server/src",
+    ),
   },
   {
     find: "ra-data-simple-rest",
-    replacement: path.resolve(__dirname, "./node_modules/ra-data-simple-rest/src"),
+    replacement: path.resolve(
+      __dirname,
+      "./node_modules/ra-data-simple-rest/src",
+    ),
   },
   {
     find: "ra-data-fakerest",
     replacement: path.resolve(__dirname, "./node_modules/ra-data-fakerest/src"),
+  },
+  {
+    find: "@react-admin/ra-history",
+    replacement: path.resolve(
+      __dirname,
+      "./node_modules/@react-admin/ra-history/src",
+    ),
   },
   // add any other react-admin packages you have
 ];

@@ -22,6 +22,7 @@ import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { DocumentList } from "./DocumentList";
 import { useBoard } from "./useBoard";
+import { CardEdit } from "../cards/CardEdit";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
@@ -66,6 +67,9 @@ export const BoardShow = () => {
             </>
           }
         />
+      </Routes>
+      <Routes>
+        <Route path="cards/*" element={<CardEdit />} />
       </Routes>
       <DocumentList />
     </>
