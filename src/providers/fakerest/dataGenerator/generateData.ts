@@ -34,5 +34,6 @@ export const generateData = () => {
     invitations: [],
     card_events,
     documents,
+    card_attachments: [],
   };
 };
