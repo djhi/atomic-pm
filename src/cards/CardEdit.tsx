@@ -34,7 +34,7 @@ import {
   IconButton,
   CardContent,
 } from "@mui/material";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
+import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FileIcon from "@mui/icons-material/InsertDriveFile";
@@ -62,6 +62,7 @@ import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
 import { useSignedUrl } from "../ra/useSignedUrl";
 import { useUpdateBoard } from "../useUpdateBoard";
+import { MenuButton } from "../ra/MenuButton/MenuButton";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
@@ -89,9 +90,7 @@ export const CardEdit = () => {
       fullWidth
       fullScreen={fullScreen}
       mutationOptions={{
-        onSuccess: (
-          data: RaRecord
-        ) => {
+        onSuccess: (data: RaRecord) => {
           updateCard({
             board_id: params.boardId!,
             record: data,
@@ -151,7 +150,10 @@ const CardEditView = () => {
   const params = useParams<"boardId" | "id">();
   const translate = useTranslate();
   const record = useRecordContext();
+  const navigate = useNavigate();
   const [create] = useCreate("card_attachments");
+  const { updateColumn } = useUpdateBoard();
+
   const handleDropFile = useEvent((files: File[]) => {
     if (!record) return;
 
@@ -219,6 +221,36 @@ const CardEditView = () => {
                           </Tooltip>
                         )}
                       />
+                      <MenuButton>
+                        <MenuButton.DeleteItem
+                          mutationMode="pessimistic"
+                          mutationOptions={{
+                            onSuccess: (_data, { previousData }) => {
+                              if (!previousData) return;
+                              updateColumn({
+                                board_id: params.boardId!,
+                                record: { id: previousData.column_id },
+                                update: (record) => ({
+                                  ...record,
+                                  cards: record.cards
+                                    .filter(
+                                      (oldCard: any) =>
+                                        previousData.id !== oldCard.id,
+                                    )
+                                    .map((oldCard: any) => ({
+                                      ...oldCard,
+                                      position:
+                                        oldCard.position > previousData.position
+                                          ? oldCard.position - 1
+                                          : oldCard.position,
+                                    })),
+                                }),
+                              });
+                              navigate(`/boards/${params.boardId}`);
+                            },
+                          }}
+                        />
+                      </MenuButton>
                     </Stack>
                     <Stack
                       direction="row"
@@ -246,11 +278,11 @@ const CardEditView = () => {
                           emptyText={
                             <Chip
                               label={translate("pm.no_column")}
-                              icon={<StopCircleIcon />}
+                              icon={<ViewColumnIcon />}
                             />
                           }
                         >
-                          <ChipField source="name" icon={<StopCircleIcon />} />
+                          <ChipField source="name" icon={<ViewColumnIcon />} />
                         </ReferenceField>
                       </PopoverInput>
                       <PopoverInput

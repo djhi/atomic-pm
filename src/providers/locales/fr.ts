@@ -11,6 +11,9 @@ export const frenchMessages = mergeTranslations(
   raFormLayoutLanguageFrench,
   {
     ra: {
+      action: {
+        more: "Liste des actions",
+      },
       message: {
         delete_title: "Supprimer %{name} %{id}",
       },

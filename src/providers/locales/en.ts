@@ -12,6 +12,7 @@ export const englishMessages = mergeTranslations(
     ra: {
       action: {
         toggle_theme: "Light/dark mode",
+        more: "Actions list",
       },
       message: {
         delete_title: "Delete %{name} %{id}",
