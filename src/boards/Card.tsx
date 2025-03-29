@@ -7,7 +7,6 @@ import {
   darken,
   Theme,
   Stack,
-  AvatarGroup,
 } from "@mui/material";
 import {
   ChipField,
@@ -20,8 +19,8 @@ import {
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
-import { AvatarField } from "../ui/AvatarField";
 import { useUpdateBoard } from "../useUpdateBoard";
+import { AvatarList } from "../ui/AvatarList";
 
 export const Card = () => {
   const card = useRecordContext();
@@ -88,7 +87,7 @@ export const Card = () => {
             </Stack>
             <CardMenu />
           </CardContent>
-          <CardActions sx={{ gap: 1 }}>
+          <CardActions>
             <ChipField
               source="estimate"
               size="small"
@@ -99,9 +98,7 @@ export const Card = () => {
               source="assigned_user_ids"
               reference="board_members_with_profiles"
             >
-              <SingleFieldList component={AvatarGroup} linkType={false}>
-                <AvatarField />
-              </SingleFieldList>
+              <AvatarList />
             </ReferenceArrayField>
             <ReferenceArrayField
               source="tags_ids"
