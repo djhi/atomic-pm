@@ -3,6 +3,7 @@ import {
   ChipField,
   Confirm,
   DateField,
+  Form,
   FunctionField,
   RaRecord,
   ReferenceArrayField,
@@ -40,12 +41,13 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import FileIcon from "@mui/icons-material/InsertDriveFile";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import TagIcon from "@mui/icons-material/Sell";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { MarkdownField } from "@react-admin/ra-markdown";
 import { EditDialog } from "@react-admin/ra-form-layout";
 import Dropzone from "react-dropzone";
-import { LockOnMount } from "../ra/LockOnMount";
+// import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
@@ -63,6 +65,8 @@ import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
 import { useSignedUrl } from "../ra/useSignedUrl";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
+import { TagsSelector } from "./TagsSelector";
+import { UseMoveToEndOfColumnMiddleware } from "./useMoveToEndOfColumnMiddleware";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
@@ -89,6 +93,7 @@ export const CardEdit = () => {
       }}
       fullWidth
       fullScreen={fullScreen}
+      mutationMode="pessimistic"
       mutationOptions={{
         onSuccess: (data: RaRecord) => {
           updateCard({
@@ -152,7 +157,7 @@ const CardEditView = () => {
   const record = useRecordContext();
   const navigate = useNavigate();
   const [create] = useCreate("card_attachments");
-  const { updateColumn } = useUpdateBoard();
+  const { updateColumn, updateCard } = useUpdateBoard();
 
   const handleDropFile = useEvent((files: File[]) => {
     if (!record) return;
@@ -187,20 +192,10 @@ const CardEditView = () => {
                   },
                 }}
               >
-                <LockOnMount />
+                {/* disabled until locks can be removed on tab close <LockOnMount /> */}
                 <RecordLiveUpdate />
                 <CreateRevisionOnSave skipUserDetails>
-                  <FormWithLockSupport
-                    id="card-edit-form"
-                    sx={{
-                      p: 0,
-                      flexGrow: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      "& > .MuiStack-root": { flexGrow: 1, gap: 2 },
-                    }}
-                    toolbar={<Fragment />}
-                  >
+                  <Stack direction="column" gap={1}>
                     <Stack direction="row" gap={1} width="100%">
                       <FunctionField
                         source="number"
@@ -208,19 +203,24 @@ const CardEditView = () => {
                         sx={{ color: "text.secondary", fontWeight: "normal" }}
                         render={(record) => `#${record.number}`}
                       />
-                      <EditInPlaceInput
-                        source="title"
-                        renderField={(ref) => (
-                          <Tooltip title="Double click to edit" placement="top">
-                            <TextField
-                              ref={ref}
-                              source="title"
-                              variant="h3"
-                              component="h2"
-                            />
-                          </Tooltip>
-                        )}
-                      />
+                      <Form>
+                        <EditInPlaceInput
+                          source="title"
+                          renderField={(ref) => (
+                            <Tooltip
+                              title="Double click to edit"
+                              placement="top"
+                            >
+                              <TextField
+                                ref={ref}
+                                source="title"
+                                variant="h3"
+                                component="h2"
+                              />
+                            </Tooltip>
+                          )}
+                        />
+                      </Form>
                       <MenuButton>
                         <MenuButton.DeleteItem
                           mutationMode="pessimistic"
@@ -261,14 +261,17 @@ const CardEditView = () => {
                       <PopoverInput
                         source="column_id"
                         input={
-                          <ReferenceInput
-                            source="column_id"
-                            reference="columns"
-                            filter={{ board_id: params.boardId }}
-                            sort={{ field: "position", order: "ASC" }}
-                          >
-                            <ListSelectorInput optionText="name" />
-                          </ReferenceInput>
+                          <Form>
+                            <ReferenceInput
+                              source="column_id"
+                              reference="columns"
+                              filter={{ board_id: params.boardId }}
+                              sort={{ field: "position", order: "ASC" }}
+                            >
+                              <ListSelectorInput optionText="name" />
+                            </ReferenceInput>
+                            <UseMoveToEndOfColumnMiddleware />
+                          </Form>
                         }
                       >
                         <ReferenceField
@@ -288,14 +291,28 @@ const CardEditView = () => {
                       <PopoverInput
                         source="assigned_user_ids"
                         input={
-                          <ReferenceArrayInput
-                            source="assigned_user_ids"
-                            reference="board_members_with_profiles"
-                            filter={{ board_id: params.boardId }}
-                            sort={{ field: "email", order: "ASC" }}
-                          >
-                            <ListSelectorInput optionText="email" multiple />
-                          </ReferenceArrayInput>
+                          <Form>
+                            <ReferenceArrayInput
+                              source="assigned_user_ids"
+                              reference="board_members_with_profiles"
+                              filter={{ board_id: params.boardId }}
+                              sort={{ field: "email", order: "ASC" }}
+                            >
+                              <ListSelectorInput
+                                optionText="email"
+                                multiple
+                                mutationOptions={{
+                                  onSuccess: (data: RaRecord) => {
+                                    updateCard({
+                                      board_id: params.boardId!,
+                                      record: data,
+                                      update: () => data,
+                                    });
+                                  },
+                                }}
+                              />
+                            </ReferenceArrayInput>
+                          </Form>
                         }
                       >
                         <ReferenceArrayField
@@ -318,9 +335,21 @@ const CardEditView = () => {
                       <PopoverInput
                         source="estimate"
                         input={
-                          <EstimatesChoicesInput source="estimate">
-                            <ListSelectorInput />
-                          </EstimatesChoicesInput>
+                          <Form>
+                            <EstimatesChoicesInput source="estimate">
+                              <ListSelectorInput
+                                mutationOptions={{
+                                  onSuccess: (data: RaRecord) => {
+                                    updateCard({
+                                      board_id: params.boardId!,
+                                      record: data,
+                                      update: () => data,
+                                    });
+                                  },
+                                }}
+                              />
+                            </EstimatesChoicesInput>
+                          </Form>
                         }
                       >
                         <FunctionField
@@ -343,12 +372,63 @@ const CardEditView = () => {
                         />
                       </PopoverInput>
                     </Stack>
+                    <PopoverInput
+                      source="tags_ids"
+                      input={
+                        <Form>
+                          <ReferenceArrayInput
+                            source="tags_ids"
+                            reference="tags"
+                            filter={{ board_id: params.boardId }}
+                            sort={{ field: "name", order: "ASC" }}
+                          >
+                            <TagsSelector
+                              mutationOptions={{
+                                onSuccess: (data: RaRecord) => {
+                                  updateCard({
+                                    board_id: params.boardId!,
+                                    record: data,
+                                    update: () => data,
+                                  });
+                                },
+                              }}
+                            />
+                          </ReferenceArrayInput>
+                        </Form>
+                      }
+                    >
+                      <ReferenceArrayField source="tags_ids" reference="tags">
+                        <SingleFieldList
+                          linkType={false}
+                          empty={
+                            <Chip
+                              label={translate("pm.no_tags")}
+                              icon={<TagIcon />}
+                            />
+                          }
+                        >
+                          <ChipField source="name" icon={<TagIcon />} />
+                        </SingleFieldList>
+                      </ReferenceArrayField>
+                    </PopoverInput>
                     <ReferenceManyField
                       reference="card_attachments"
                       target="card_id"
                     >
                       <AttachmentList openFileDialog={openFileDialog} />
                     </ReferenceManyField>
+                  </Stack>
+                  <FormWithLockSupport
+                    id="card-edit-form"
+                    sx={{
+                      p: 0,
+                      flexGrow: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                      "& > .MuiStack-root": { flexGrow: 1, gap: 2 },
+                    }}
+                    toolbar={<Fragment />}
+                  >
                     <EditInPlace
                       sx={{ mt: 4, flexGrow: 1 }}
                       input={
@@ -522,7 +602,7 @@ const AttachmentList = ({ openFileDialog }: { openFileDialog: () => void }) => {
   const { data } = useListContext();
 
   return (
-    <Stack direction="row" gap={1} alignItems="center" justifyContent="center">
+    <Stack direction="row" gap={1}>
       {data?.map((record) => (
         <AttachmentItem key={record.id} record={record} />
       ))}

@@ -35,5 +35,6 @@ export const generateData = () => {
     card_events,
     documents,
     card_attachments: [],
+    tags: [],
   };
 };

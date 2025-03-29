@@ -7,6 +7,7 @@ import {
   darken,
   Theme,
   Stack,
+  AvatarGroup,
 } from "@mui/material";
 import {
   ChipField,
@@ -87,7 +88,7 @@ export const Card = () => {
             </Stack>
             <CardMenu />
           </CardContent>
-          <CardActions>
+          <CardActions sx={{ gap: 1 }}>
             <ChipField
               source="estimate"
               size="small"
@@ -98,9 +99,16 @@ export const Card = () => {
               source="assigned_user_ids"
               reference="board_members_with_profiles"
             >
-              <SingleFieldList>
+              <SingleFieldList component={AvatarGroup} linkType={false}>
                 <AvatarField />
               </SingleFieldList>
+            </ReferenceArrayField>
+            <ReferenceArrayField
+              source="tags_ids"
+              reference="tags"
+              sx={{ display: "flex", flexGrow: 1, justifyContent: "end" }}
+            >
+              <SingleFieldList linkType={false} />
             </ReferenceArrayField>
           </CardActions>
         </MuiCard>

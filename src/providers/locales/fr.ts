@@ -78,6 +78,8 @@ export const frenchMessages = mergeTranslations(
       full_screen: "Plein écran",
       exit_full_screen: "Quitter le plein écran",
       newDocument: "Nouveau document",
+      no_tags: "Aucun tag",
+      new_tag: "Nouveau tag",
     },
   },
 );

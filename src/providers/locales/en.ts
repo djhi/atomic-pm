@@ -74,6 +74,8 @@ export const englishMessages = mergeTranslations(
       full_screen: "Full screen",
       exit_full_screen: "Exit full screen",
       newDocument: "New document",
+      no_tags: "No tags",
+      new_tag: "New tag"
     },
   },
 );
