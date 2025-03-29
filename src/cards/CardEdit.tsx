@@ -480,6 +480,7 @@ const CardEditView = () => {
                               p: 2,
                               bgcolor: (theme) => theme.palette.action.hover,
                               borderRadius: (theme) => theme.shape.borderRadius,
+                              textWrap: "auto",
                             }}
                           />
                         )}
