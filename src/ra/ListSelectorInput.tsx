@@ -8,7 +8,6 @@ import {
   useInput,
   useSuggestions,
   useTranslate,
-  UseUpdateOptions,
 } from "ra-core";
 import {
   ListItemText,
@@ -17,18 +16,14 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { SaveButton } from "react-admin";
-import { usePopoverInput } from "./PopoverInput";
 
 export const ListSelectorInput = ({
   multiple,
-  mutationOptions,
   ...props
 }: ListSelectorInputProps) => {
   const choicesContext = useChoicesContext(props);
   const { field } = useInput(choicesContext);
   const { getChoiceText, getChoiceValue } = useSuggestions(props);
-  const popoverContext = usePopoverInput();
   const translate = useTranslate();
   const { allChoices, selectedChoices, setFilters, total } = choicesContext;
 
@@ -74,31 +69,6 @@ export const ListSelectorInput = ({
           {props.children}
         </ListSelectorContext.Provider>
       </MenuList>
-      <SaveButton
-        icon={<div />}
-        variant="outlined"
-        color="inherit"
-        size="medium"
-        type="button"
-        mutationOptions={{
-          onSuccess: (data, variables, context) => {
-            mutationOptions?.onSuccess?.(data, variables, context);
-            popoverContext.close();
-          },
-        }}
-        sx={{
-          fontSize: (theme) => theme.typography.body1.fontSize,
-          textAlign: "left",
-          justifyContent: "start",
-          borderRadius: 0,
-          borderLeft: "none",
-          borderRight: "none",
-          borderBottom: "none",
-          width: "100%",
-        }}
-      >
-        {translate("ra.action.save")}
-      </SaveButton>
     </Stack>
   );
 };
@@ -107,7 +77,6 @@ export interface ListSelectorInputProps
     ChoicesProps {
   multiple?: boolean;
   children?: React.ReactNode;
-  mutationOptions?: UseUpdateOptions;
 }
 
 type ListSelectorContextValue = {

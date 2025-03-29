@@ -53,7 +53,7 @@ import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
 import { EditInPlace } from "../ra/EditInPlace";
 import { RichTextMarkdownInput } from "../ra/RichTextMarkdownInput";
-import { PopoverInput } from "../ra/PopoverInput";
+import { PopoverForm } from "../ra/PopoverForm";
 import { ReferenceField } from "../ra/ReferenceField";
 import { ListSelectorInput } from "../ra/ListSelectorInput";
 import { AvatarField } from "../ui/AvatarField";
@@ -67,6 +67,7 @@ import { useUpdateBoard } from "../useUpdateBoard";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { TagsSelector } from "./TagsSelector";
 import { UseMoveToEndOfColumnMiddleware } from "./useMoveToEndOfColumnMiddleware";
+import { AvatarList } from "../ui/AvatarList";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
@@ -185,18 +186,13 @@ const CardEditView = () => {
                 flexGrow={1}
                 sx={{
                   mt: -4,
-                  "& form": {
-                    flexGrow: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                  },
                 }}
               >
                 {/* disabled until locks can be removed on tab close <LockOnMount /> */}
                 <RecordLiveUpdate />
                 <CreateRevisionOnSave skipUserDetails>
                   <Stack direction="column" gap={1}>
-                    <Stack direction="row" gap={1} width="100%">
+                    <Stack direction="row" gap={1} width="100%" mb={2}>
                       <FunctionField
                         source="number"
                         variant="h3"
@@ -258,10 +254,10 @@ const CardEditView = () => {
                       alignItems="center"
                       width="100%"
                     >
-                      <PopoverInput
+                      <PopoverForm
                         source="column_id"
                         input={
-                          <Form>
+                          <>
                             <ReferenceInput
                               source="column_id"
                               reference="columns"
@@ -271,7 +267,7 @@ const CardEditView = () => {
                               <ListSelectorInput optionText="name" />
                             </ReferenceInput>
                             <UseMoveToEndOfColumnMiddleware />
-                          </Form>
+                          </>
                         }
                       >
                         <ReferenceField
@@ -287,69 +283,58 @@ const CardEditView = () => {
                         >
                           <ChipField source="name" icon={<ViewColumnIcon />} />
                         </ReferenceField>
-                      </PopoverInput>
-                      <PopoverInput
+                      </PopoverForm>
+                      <PopoverForm
                         source="assigned_user_ids"
+                        mutationOptions={{
+                          onSuccess: (data: RaRecord) => {
+                            updateCard({
+                              board_id: params.boardId!,
+                              record: data,
+                              update: () => data,
+                            });
+                          },
+                        }}
                         input={
-                          <Form>
-                            <ReferenceArrayInput
-                              source="assigned_user_ids"
-                              reference="board_members_with_profiles"
-                              filter={{ board_id: params.boardId }}
-                              sort={{ field: "email", order: "ASC" }}
-                            >
-                              <ListSelectorInput
-                                optionText="email"
-                                multiple
-                                mutationOptions={{
-                                  onSuccess: (data: RaRecord) => {
-                                    updateCard({
-                                      board_id: params.boardId!,
-                                      record: data,
-                                      update: () => data,
-                                    });
-                                  },
-                                }}
-                              />
-                            </ReferenceArrayInput>
-                          </Form>
+                          <ReferenceArrayInput
+                            source="assigned_user_ids"
+                            reference="board_members_with_profiles"
+                            filter={{ board_id: params.boardId }}
+                            sort={{ field: "email", order: "ASC" }}
+                          >
+                            <ListSelectorInput optionText="email" multiple />
+                          </ReferenceArrayInput>
                         }
                       >
                         <ReferenceArrayField
                           source="assigned_user_ids"
                           reference="board_members_with_profiles"
                         >
-                          <SingleFieldList
-                            linkType={false}
+                          <AvatarList
                             empty={
                               <Chip
                                 label={translate("pm.unnasigned")}
                                 icon={<AccountCircleIcon />}
                               />
                             }
-                          >
-                            <ChipField source="email" icon={<AvatarField />} />
-                          </SingleFieldList>
+                          />
                         </ReferenceArrayField>
-                      </PopoverInput>
-                      <PopoverInput
+                      </PopoverForm>
+                      <PopoverForm
                         source="estimate"
+                        mutationOptions={{
+                          onSuccess: (data: RaRecord) => {
+                            updateCard({
+                              board_id: params.boardId!,
+                              record: data,
+                              update: () => data,
+                            });
+                          },
+                        }}
                         input={
-                          <Form>
-                            <EstimatesChoicesInput source="estimate">
-                              <ListSelectorInput
-                                mutationOptions={{
-                                  onSuccess: (data: RaRecord) => {
-                                    updateCard({
-                                      board_id: params.boardId!,
-                                      record: data,
-                                      update: () => data,
-                                    });
-                                  },
-                                }}
-                              />
-                            </EstimatesChoicesInput>
-                          </Form>
+                          <EstimatesChoicesInput source="estimate">
+                            <ListSelectorInput />
+                          </EstimatesChoicesInput>
                         }
                       >
                         <FunctionField
@@ -370,31 +355,28 @@ const CardEditView = () => {
                             );
                           }}
                         />
-                      </PopoverInput>
+                      </PopoverForm>
                     </Stack>
-                    <PopoverInput
+                    <PopoverForm
                       source="tags_ids"
+                      mutationOptions={{
+                        onSuccess: (data: RaRecord) => {
+                          updateCard({
+                            board_id: params.boardId!,
+                            record: data,
+                            update: () => data,
+                          });
+                        },
+                      }}
                       input={
-                        <Form>
-                          <ReferenceArrayInput
-                            source="tags_ids"
-                            reference="tags"
-                            filter={{ board_id: params.boardId }}
-                            sort={{ field: "name", order: "ASC" }}
-                          >
-                            <TagsSelector
-                              mutationOptions={{
-                                onSuccess: (data: RaRecord) => {
-                                  updateCard({
-                                    board_id: params.boardId!,
-                                    record: data,
-                                    update: () => data,
-                                  });
-                                },
-                              }}
-                            />
-                          </ReferenceArrayInput>
-                        </Form>
+                        <ReferenceArrayInput
+                          source="tags_ids"
+                          reference="tags"
+                          filter={{ board_id: params.boardId }}
+                          sort={{ field: "name", order: "ASC" }}
+                        >
+                          <TagsSelector />
+                        </ReferenceArrayInput>
                       }
                     >
                       <ReferenceArrayField source="tags_ids" reference="tags">
@@ -410,7 +392,7 @@ const CardEditView = () => {
                           <ChipField source="name" icon={<TagIcon />} />
                         </SingleFieldList>
                       </ReferenceArrayField>
-                    </PopoverInput>
+                    </PopoverForm>
                     <ReferenceManyField
                       reference="card_attachments"
                       target="card_id"
