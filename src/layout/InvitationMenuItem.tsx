@@ -54,6 +54,10 @@ const InvitationNotifierListView = ({ onClick, ...props }: MenuItemProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  if (!data || data.length === 0) {
+    return null;
+  }
+  
   return (
     <>
       <MenuItem {...props} onClick={handleClick} disabled={!total}>
