@@ -12,11 +12,38 @@ import {
 import { visuallyHidden } from "@mui/utils";
 import { UseMutationOptions } from "@tanstack/react-query";
 import { useFormContext } from "react-hook-form";
+import { FormProps } from "react-router";
 
 export const PopoverForm = (props: PopoverFormProps) => {
+  const {
+    ButtonProps: { sx, ...ButtonProps } = {},
+    children,
+    input,
+    label,
+    mutationOptions,
+    PopoverProps,
+    resource,
+    source,
+    ...rest
+  } = props;
   return (
-    <Box component={Form} sx={{ display: 'inline-flex', flexGrow: 0, flexShrink: 1 }}>
-      <PopoverFormView {...props} />
+    // @ts-ignore
+    <Box
+      component={Form}
+      {...rest}
+      sx={{ display: "inline-flex", flexGrow: 0, flexShrink: 1 }}
+    >
+      <PopoverFormView
+        ButtonProps={ButtonProps}
+        input={input}
+        label={label}
+        mutationOptions={mutationOptions}
+        PopoverProps={PopoverProps}
+        resource={resource}
+        source={source}
+      >
+        {children}
+      </PopoverFormView>
     </Box>
   );
 };
@@ -108,7 +135,7 @@ const PopoverFormView = (props: PopoverFormProps) => {
   );
 };
 
-export interface PopoverFormProps {
+export interface PopoverFormProps extends FormProps {
   children: React.ReactNode;
   input: React.ReactNode;
   PopoverProps?: PopoverProps;

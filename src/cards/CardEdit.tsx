@@ -1,15 +1,16 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import {
   ChipField,
   Confirm,
   DateField,
   Form,
   FunctionField,
+  Identifier,
   RaRecord,
   ReferenceArrayField,
   ReferenceArrayInput,
-  ReferenceInput,
   ReferenceManyField,
+  SaveContextProvider,
   SimpleList,
   SingleFieldList,
   TextField,
@@ -66,8 +67,8 @@ import { useSignedUrl } from "../ra/useSignedUrl";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { TagsSelector } from "./TagsSelector";
-import { UseMoveToEndOfColumnMiddleware } from "./useMoveToEndOfColumnMiddleware";
 import { AvatarList } from "../ui/AvatarList";
+import { ColumnSelector } from "./ColumnSelector";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
@@ -158,7 +159,22 @@ const CardEditView = () => {
   const record = useRecordContext();
   const navigate = useNavigate();
   const [create] = useCreate("card_attachments");
-  const { updateColumn, updateCard } = useUpdateBoard();
+  const { updateColumn, updateCard, moveCard } = useUpdateBoard();
+
+  const columnSelectorSaveContext = useMemo(
+    () => ({
+      save: (data: { column_id: Identifier; position: number }) => {
+        moveCard({
+          board_id: params.boardId!,
+          cardId: record!.id,
+          sourceColumnId: record!.column_id,
+          destinationColumnId: data.column_id,
+          position: data.position,
+        });
+      },
+    }),
+    [],
+  );
 
   const handleDropFile = useEvent((files: File[]) => {
     if (!record) return;
@@ -254,36 +270,29 @@ const CardEditView = () => {
                       alignItems="center"
                       width="100%"
                     >
-                      <PopoverForm
-                        source="column_id"
-                        input={
-                          <>
-                            <ReferenceInput
-                              source="column_id"
-                              reference="columns"
-                              filter={{ board_id: params.boardId }}
-                              sort={{ field: "position", order: "ASC" }}
-                            >
-                              <ListSelectorInput optionText="name" />
-                            </ReferenceInput>
-                            <UseMoveToEndOfColumnMiddleware />
-                          </>
-                        }
-                      >
-                        <ReferenceField
+                      <SaveContextProvider value={columnSelectorSaveContext}>
+                        <PopoverForm
                           source="column_id"
-                          reference="columns"
-                          link={false}
-                          emptyText={
-                            <Chip
-                              label={translate("pm.no_column")}
+                          input={<ColumnSelector />}
+                        >
+                          <ReferenceField
+                            source="column_id"
+                            reference="columns"
+                            link={false}
+                            emptyText={
+                              <Chip
+                                label={translate("pm.no_column")}
+                                icon={<ViewColumnIcon />}
+                              />
+                            }
+                          >
+                            <ChipField
+                              source="name"
                               icon={<ViewColumnIcon />}
                             />
-                          }
-                        >
-                          <ChipField source="name" icon={<ViewColumnIcon />} />
-                        </ReferenceField>
-                      </PopoverForm>
+                          </ReferenceField>
+                        </PopoverForm>
+                      </SaveContextProvider>
                       <PopoverForm
                         source="assigned_user_ids"
                         mutationOptions={{

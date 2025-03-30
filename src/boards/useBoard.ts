@@ -1,37 +1,18 @@
-import { useEffect, useState } from "react";
-import { RaRecord, useRecordContext } from "react-admin";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { type RaRecord, useRecordContext } from "react-admin";
 import cloneDeep from "lodash/cloneDeep";
-import { useBoardDragAndDrop } from "./useBoardDragAndDrop";
 import { useBoardLiveUpdates } from "./useBoardLiveUpdates";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const useBoard = (): [
   RaRecord | undefined,
-  {
-    moveCard: ({
-      cardId,
-      sourceColumnId,
-      destinationColumnId,
-      position,
-    }: {
-      cardId: number;
-      sourceColumnId: number;
-      destinationColumnId: number;
-      position: number;
-    }) => void;
-    moveColumn: ({
-      columnId,
-      position,
-    }: {
-      columnId: number;
-      position: number;
-    }) => void;
-  },
+  Dispatch<SetStateAction<RaRecord | undefined>>,
 ] => {
   const record = useRecordContext();
   const queryClient = useQueryClient();
 
-  const [board, setBoard] = useState(cloneDeep(record));
+  const boardState = useState(cloneDeep(record));
+  const [board, setBoard] = boardState;
   useEffect(() => {
     if (record) {
       const updatedAt = Date.now() + 5 * 1000;
@@ -47,7 +28,12 @@ export const useBoard = (): [
           { updatedAt },
         );
         queryClient.setQueryData(
-          ["cards", "getCardFromBoardAndNumber", String(record.id), String(card.number)],
+          [
+            "cards",
+            "getCardFromBoardAndNumber",
+            String(record.id),
+            String(card.number),
+          ],
           card,
           { updatedAt },
         );
@@ -65,7 +51,6 @@ export const useBoard = (): [
   }, [record]);
 
   useBoardLiveUpdates(board);
-  const functions = useBoardDragAndDrop({ board, setBoard });
 
-  return [board, functions];
+  return boardState;
 };

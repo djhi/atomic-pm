@@ -25,40 +25,49 @@ import { useBoard } from "./useBoard";
 import { CardEdit } from "../cards/CardEdit";
 import { DocumentCreate } from "../documents/DocumentCreate";
 import { DocumentEdit } from "../documents/DocumentEdit";
+import { useUpdateBoard } from "../useUpdateBoard";
+import { BoardContext, useBoardContext } from "../BoardContext";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
 
   return (
-    <>
-      <Show
-        id={params.boardId}
-        resource="boards"
-        component={Box}
-        actions={<BoardShowActions />}
-        sx={{
+    <Show
+      id={params.boardId}
+      resource="boards"
+      component={Box}
+      actions={<BoardShowActions />}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        [`& .${ShowClasses.main}`]: {
           display: "flex",
           flexDirection: "column",
           flexGrow: 1,
-          [`& .${ShowClasses.main}`]: {
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 1,
-          },
-          [`& .${ShowClasses.card}`]: {
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 1,
-            mt: 1,
-            bgcolor: "transparent",
-          },
-        }}
-        queryOptions={{
-          meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-        }}
-      >
-        <BoardShowLayout />
-      </Show>
+        },
+        [`& .${ShowClasses.card}`]: {
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          mt: 1,
+          bgcolor: "transparent",
+        },
+      }}
+      queryOptions={{
+        meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+      }}
+    >
+      <BoardShowLayout />
+    </Show>
+  );
+};
+
+const BoardShowLayout = () => {
+  const boardState = useBoard();
+  return (
+    <BoardContext.Provider value={boardState}>
+      <BoardShowDragAndDropLayout />
       <Routes>
         <Route
           path="columns/*"
@@ -85,12 +94,13 @@ export const BoardShow = () => {
         />
       </Routes>
       <DocumentList />
-    </>
+    </BoardContext.Provider>
   );
 };
 
-const BoardShowLayout = () => {
-  const [board, { moveCard, moveColumn }] = useBoard();
+const BoardShowDragAndDropLayout = () => {
+  const [board] = useBoardContext();
+  const { moveCard, moveColumn } = useUpdateBoard();
 
   const onDragEnd: OnDragEndResponder = useEvent(async (result) => {
     const { destination, source, draggableId, type } = result;
@@ -114,6 +124,7 @@ const BoardShowLayout = () => {
       const sourceColumnId = parseInt(columnIdString);
       const destinationColumnId = parseInt(destination.droppableId);
       await moveCard({
+        board_id: board!.id,
         cardId,
         sourceColumnId,
         destinationColumnId,
@@ -122,6 +133,7 @@ const BoardShowLayout = () => {
     }
     if (type === "column") {
       await moveColumn({
+        board_id: board!.id,
         columnId: parseInt(draggableId.replace("column-", "")),
         position: destination.index,
       });
