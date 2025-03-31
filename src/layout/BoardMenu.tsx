@@ -71,13 +71,7 @@ const BoardMenuView = () => {
       >
         <SimpleForm
           toolbar={
-            <Toolbar
-              sx={{
-                "&.RaToolbar-desktopToolbar": { px: 2 },
-                bgcolor: "transparent",
-                justifyContent: "end",
-              }}
-            >
+            <Toolbar>
               <SaveButton variant="outlined" color="inherit" alwaysEnable />
             </Toolbar>
           }

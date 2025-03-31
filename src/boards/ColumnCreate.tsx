@@ -26,10 +26,7 @@ export const ColumnCreate = () => {
     >
       <SimpleForm
         toolbar={
-          <Toolbar
-            disableGutters
-            sx={{ px: 2, bgcolor: "transparent", justifyContent: "end" }}
-          >
+          <Toolbar>
             <SaveButton variant="outlined" color="inherit" alwaysEnable />
           </Toolbar>
         }

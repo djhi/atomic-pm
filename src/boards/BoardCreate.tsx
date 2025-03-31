@@ -24,22 +24,12 @@ export const BoardCreate = () => {
     >
       <SimpleForm
         toolbar={
-          <Toolbar
-            sx={{
-              "&.RaToolbar-desktopToolbar": { px: 2 },
-              bgcolor: "transparent",
-              justifyContent: "end",
-            }}
-          >
+          <Toolbar>
             <SaveButton variant="outlined" color="inherit" alwaysEnable />
           </Toolbar>
         }
       >
-        <TextInput
-          source="name"
-          validate={required()}
-          autoFocus
-        />
+        <TextInput source="name" validate={required()} autoFocus />
         <TextInput source="description" multiline minRows={4} />
       </SimpleForm>
     </CreateInDialogButton>

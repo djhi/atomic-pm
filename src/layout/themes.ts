@@ -1,5 +1,6 @@
 import { bwLightTheme, bwDarkTheme } from "react-admin";
 
+const spacing = (times: number) => times * (bwLightTheme.spacing as number);
 const components = {
   MuiCssBaseline: {
     styleOverrides: {
@@ -21,7 +22,16 @@ const components = {
   RaToolbar: {
     styleOverrides: {
       root: {
+        "&.RaToolbar-desktopToolbar": {
+          paddingLeft: spacing(2),
+          paddingRight: spacing(2),
+          backgroundColor: "transparent",
+          justifyContent: "end",
+        },
+        paddingLeft: spacing(2),
+        paddingRight: spacing(2),
         backgroundColor: "transparent",
+        justifyContent: "end",
       },
     },
   },

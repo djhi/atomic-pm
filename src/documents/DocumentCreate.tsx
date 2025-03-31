@@ -7,7 +7,6 @@ import {
   SimpleForm,
   TextInput,
   Toolbar,
-  ToolbarClasses,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -50,18 +49,8 @@ export const DocumentCreate = () => {
     >
       <SimpleForm
         toolbar={
-          <Toolbar
-            sx={{
-              bgcolor: "transparent",
-              "&.RaToolbar-desktopToolbar": { px: 2 },
-              [`& .${ToolbarClasses.defaultToolbar}`]: {
-                justifyContent: "end",
-              },
-            }}
-          >
-            <div className={ToolbarClasses.defaultToolbar}>
-              <SaveButton alwaysEnable variant="outlined" color="inherit" />
-            </div>
+          <Toolbar>
+            <SaveButton alwaysEnable variant="outlined" color="inherit" />
           </Toolbar>
         }
       >

@@ -55,20 +55,10 @@ export const DocumentEdit = () => {
     >
       <SimpleForm
         toolbar={
-          <Toolbar
-            sx={{
-              "&.RaToolbar-desktopToolbar": { px: 2 },
-              bgcolor: "transparent",
-              justifyContent: "end",
-            }}
-          >
+          <Toolbar>
             <div className={ToolbarClasses.defaultToolbar}>
               <DeleteButton color="inherit" />
-              <SaveButton
-                alwaysEnable
-                variant="outlined"
-                color="inherit"
-              />
+              <SaveButton alwaysEnable variant="outlined" color="inherit" />
             </div>
           </Toolbar>
         }
