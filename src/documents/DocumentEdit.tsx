@@ -2,13 +2,9 @@ import { IconButton, Stack, Tooltip } from "@mui/material";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import {
-  DeleteButton,
   required,
-  SaveButton,
   SimpleForm,
   TextInput,
-  Toolbar,
-  ToolbarClasses,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -19,6 +15,7 @@ import { useMatch, useNavigate, useParams } from "react-router";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
+import { FormToolbar } from "../ra/FormToolbar";
 
 export const DocumentEdit = () => {
   const navigate = useNavigate();
@@ -53,16 +50,7 @@ export const DocumentEdit = () => {
         },
       }}
     >
-      <SimpleForm
-        toolbar={
-          <Toolbar>
-            <div className={ToolbarClasses.defaultToolbar}>
-              <DeleteButton color="inherit" />
-              <SaveButton alwaysEnable variant="outlined" color="inherit" />
-            </div>
-          </Toolbar>
-        }
-      >
+      <SimpleForm toolbar={<FormToolbar />}>
         <Stack
           width="100%"
           direction="row"

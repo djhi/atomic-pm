@@ -2,6 +2,7 @@ import { EditDialog } from "@react-admin/ra-form-layout";
 import {
   NumberInput,
   required,
+  SimpleForm,
   TextInput,
   useDefaultTitle,
   useGetOne,
@@ -12,8 +13,8 @@ import { useNavigate, useParams } from "react-router";
 import { Stack } from "@mui/material";
 import { LockOnMount } from "../ra/LockOnMount";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
-import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { useUpdateBoard } from "../useUpdateBoard";
+import { FormToolbar } from "../ra/FormToolbar";
 
 export const ColumnEdit = () => {
   const navigate = useNavigate();
@@ -48,13 +49,13 @@ export const ColumnEdit = () => {
     >
       <LockOnMount />
       <RecordLiveUpdate />
-      <FormWithLockSupport>
+      <SimpleForm toolbar={<FormToolbar />}>
         <TextInput source="name" validate={required()} />
         <Stack direction="row" gap={1} width="100%">
           <NumberInput source="maxCards" />
           <NumberInput source="maxEstimates" />
         </Stack>
-      </FormWithLockSupport>
+      </SimpleForm>
     </EditDialog>
   );
 };

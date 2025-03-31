@@ -20,10 +20,8 @@ import {
   ImageInput,
   Logout,
   UserMenu as RaUserMenu,
-  SaveButton,
   SimpleForm,
   TextInput,
-  Toolbar,
   useGetIdentity,
   useGetList,
   useLocale,
@@ -39,6 +37,7 @@ import { EditDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { InvitationMenuItem } from "./InvitationMenuItem";
+import { FormToolbar } from "../ra/FormToolbar";
 
 export const UserMenu = () => {
   const { identity } = useGetIdentity();
@@ -104,13 +103,7 @@ export const UserMenu = () => {
           setEditDialogOpen(false);
         }}
       >
-        <SimpleForm
-          toolbar={
-            <Toolbar>
-              <SaveButton variant="outlined" color="inherit" alwaysEnable />
-            </Toolbar>
-          }
-        >
+        <SimpleForm toolbar={<FormToolbar />}>
           <TextInput source="first_name" />
           <TextInput source="last_name" />
           <ImageInput source="avatar">

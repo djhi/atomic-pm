@@ -3,14 +3,13 @@ import { CreateDialog } from "@react-admin/ra-form-layout";
 import {
   NumberInput,
   required,
-  SaveButton,
   SimpleForm,
   TextInput,
-  Toolbar,
   useDefaultTitle,
   useGetOne,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
+import { FormToolbar } from "../ra/FormToolbar";
 
 export const ColumnCreate = () => {
   const navigate = useNavigate();
@@ -24,13 +23,7 @@ export const ColumnCreate = () => {
       maxWidth="md"
       title={<ColumnTitle />}
     >
-      <SimpleForm
-        toolbar={
-          <Toolbar>
-            <SaveButton variant="outlined" color="inherit" alwaysEnable />
-          </Toolbar>
-        }
-      >
+      <SimpleForm toolbar={<FormToolbar />}>
         <TextInput source="name" validate={required()} autoFocus />
         <Stack direction="row" gap={1} width="100%">
           <NumberInput source="maxCards" />

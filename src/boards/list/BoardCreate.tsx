@@ -1,13 +1,7 @@
 import { CreateInDialogButton } from "@react-admin/ra-form-layout";
-import {
-  required,
-  SaveButton,
-  SimpleForm,
-  TextInput,
-  Toolbar,
-  useGetIdentity,
-} from "react-admin";
+import { useGetIdentity } from "react-admin";
 import { useNavigate } from "react-router";
+import { BoardForm } from "./BoardForm";
 
 export const BoardCreate = () => {
   const { identity } = useGetIdentity();
@@ -22,16 +16,7 @@ export const BoardCreate = () => {
       record={{ user_id: identity?.id, created_at: new Date().toISOString() }}
       mutationOptions={{ onSuccess: (data) => navigate(`/boards/${data.id}`) }}
     >
-      <SimpleForm
-        toolbar={
-          <Toolbar>
-            <SaveButton variant="outlined" color="inherit" alwaysEnable />
-          </Toolbar>
-        }
-      >
-        <TextInput source="name" validate={required()} autoFocus />
-        <TextInput source="description" multiline minRows={4} />
-      </SimpleForm>
+      <BoardForm />
     </CreateInDialogButton>
   );
 };

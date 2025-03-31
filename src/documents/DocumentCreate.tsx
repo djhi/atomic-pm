@@ -3,10 +3,8 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import {
   required,
-  SaveButton,
   SimpleForm,
   TextInput,
-  Toolbar,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -16,6 +14,7 @@ import { useNavigate, useParams } from "react-router";
 import { MarkdownInput } from "@react-admin/ra-markdown";
 import { CreateDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
+import { FormToolbar } from "../ra/FormToolbar";
 
 export const DocumentCreate = () => {
   const navigate = useNavigate();
@@ -47,13 +46,7 @@ export const DocumentCreate = () => {
         },
       }}
     >
-      <SimpleForm
-        toolbar={
-          <Toolbar>
-            <SaveButton alwaysEnable variant="outlined" color="inherit" />
-          </Toolbar>
-        }
-      >
+      <SimpleForm toolbar={<FormToolbar />}>
         <Stack
           width="100%"
           direction="row"

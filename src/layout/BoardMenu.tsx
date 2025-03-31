@@ -3,11 +3,6 @@ import {
   Button,
   ListBase,
   RaRecord,
-  required,
-  SaveButton,
-  SimpleForm,
-  TextInput,
-  Toolbar,
   useEvent,
   useGetIdentity,
   useListContext,
@@ -20,6 +15,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { useMenuButton } from "../ra/MenuButton/useMenuButton";
 import { MenuItem, MenuItemProps } from "@mui/material";
+import { BoardForm } from "../boards/list/BoardForm";
 
 export const BoardMenu = () => (
   <ListBase resource="boards">
@@ -69,16 +65,7 @@ const BoardMenuView = () => {
           onSuccess: (data) => navigate(`/boards/${data.id}`),
         }}
       >
-        <SimpleForm
-          toolbar={
-            <Toolbar>
-              <SaveButton variant="outlined" color="inherit" alwaysEnable />
-            </Toolbar>
-          }
-        >
-          <TextInput source="name" validate={required()} autoFocus />
-          <TextInput source="description" multiline minRows={4} />
-        </SimpleForm>
+        <BoardForm />
       </CreateDialog>
     </>
   );

@@ -4,7 +4,7 @@ import { ForgotPasswordPage, LoginPage, SetPasswordPage } from "ra-supabase";
 
 import { queryClient } from "./providers/queryClient";
 import { Layout } from "./layout/Layout";
-import { BoardList } from "./boards/BoardList";
+import { BoardList } from "./boards/list/BoardList";
 import { BoardShow } from "./boards/BoardShow";
 import { useEffect, useState } from "react";
 import { darkTheme, lightTheme } from "./layout/themes";
