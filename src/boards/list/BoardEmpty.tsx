@@ -3,6 +3,7 @@ import Inbox from "@mui/icons-material/Inbox";
 import {
   EmptyClasses,
   EmptyProps,
+  Translate,
   useGetResourceLabel,
   useResourceContext,
   useResourceDefinition,
@@ -53,15 +54,21 @@ export const BoardEmpty = (props: EmptyProps) => {
       <div className={EmptyClasses.message}>
         <Inbox className={EmptyClasses.icon} />
         <Typography variant="h4" paragraph>
-          {translate(`resources.${resource}.empty`, {
-            _: emptyMessage,
-          })}
+          <Translate
+            i18nKey={`resources.${resource}.empty`}
+            options={{
+              _: emptyMessage,
+            }}
+          />
         </Typography>
         {hasCreate && (
           <Typography variant="body1">
-            {translate(`resources.${resource}.invite`, {
-              _: inviteMessage,
-            })}
+            <Translate
+              i18nKey={`resources.${resource}.invite`}
+              options={{
+                _: inviteMessage,
+              }}
+            />
           </Typography>
         )}
       </div>

@@ -11,6 +11,7 @@ import {
   EditBase,
   Form,
   TextField,
+  Translate,
   useRecordContext,
   useTranslate,
 } from "react-admin";
@@ -125,7 +126,6 @@ const ColumnMenu = () => {
   const column = useRecordContext();
   const params = useParams<"boardId">();
   const { updateBoard } = useUpdateBoard();
-  const translate = useTranslate();
   if (!column) return null;
 
   return (
@@ -149,7 +149,12 @@ const ColumnMenu = () => {
         resource="columns"
         record={column!}
         mutationMode="pessimistic"
-        confirmTitle={translate("ra.message.delete_title", { id: column.name })}
+        confirmTitle={
+          <Translate
+            i18nKey="ra.message.delete_title"
+            options={{ id: column.name }}
+          />
+        }
         mutationOptions={{
           onSuccess: () => {
             updateBoard({
@@ -181,14 +186,18 @@ const ChipWithMax = ({
   max?: number;
   labelWithMax?: string;
 }) => {
-  const translate = useTranslate();
   const hasTooMany = max != null && value > max;
   return (
     <Tooltip
-      title={translate(max != null && labelWithMax ? labelWithMax : label, {
-        smart_count: max ?? value,
-        value: value,
-      })}
+      title={
+        <Translate
+          i18nKey={max != null && labelWithMax ? labelWithMax : label}
+          options={{
+            smart_count: max ?? value,
+            value: value,
+          }}
+        />
+      }
     >
       <Chip
         label={max != null ? `${value} / ${max}` : value}

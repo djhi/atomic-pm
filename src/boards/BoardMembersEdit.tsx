@@ -9,11 +9,11 @@ import {
   SimpleShowLayout,
   TextField,
   TextInput,
+  Translate,
   useDataProvider,
   useGetIdentity,
   useNotify,
   useRecordContext,
-  useTranslate,
 } from "react-admin";
 import { ShowInDialogButton } from "@react-admin/ra-form-layout";
 import GroupIcon from "@mui/icons-material/Group";
@@ -53,7 +53,6 @@ export const BoardMembersEdit = () => {
 
 const ListMemberItem = ({ owner_id }: { owner_id?: number }) => {
   const listMemberRecord = useRecordContext();
-  const translate = useTranslate();
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -63,7 +62,9 @@ const ListMemberItem = ({ owner_id }: { owner_id?: number }) => {
           <TextField source="email" variant="body1" />
           <FunctionField
             render={(record) =>
-              record?.id === owner_id ? <Chip label={translate('pm.board_owner')} /> : null
+              record?.id === owner_id ? (
+                <Chip label={<Translate i18nKey="pm.board_owner" />} />
+              ) : null
             }
           />
         </Stack>

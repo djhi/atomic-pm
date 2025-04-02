@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Box, Button, ButtonProps, Stack, StackProps } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
-import { useEvent, useSaveContext, useTranslate } from "react-admin";
+import { Translate, useEvent, useSaveContext } from "react-admin";
 import { useFormContext } from "react-hook-form";
 
 export const EditInPlace = (props: EditInPlaceProps) => {
@@ -14,7 +14,6 @@ export const EditInPlace = (props: EditInPlaceProps) => {
     ...rest
   } = props;
   const [isEditing, setIsEditing] = React.useState(false);
-  const translate = useTranslate();
   const submitButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const handleEdit = () => {
@@ -80,7 +79,7 @@ export const EditInPlace = (props: EditInPlaceProps) => {
                 type="submit"
                 style={visuallyHidden}
               >
-                {translate("ra.action.save")}
+                <Translate i18nKey="ra.action.save" />
               </button>
             </Box>
           )
@@ -96,7 +95,7 @@ export const EditInPlace = (props: EditInPlaceProps) => {
                 handleEdit();
               }
             }}
-            sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+            sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}
           >
             {children}
           </Box>
@@ -136,16 +135,16 @@ export const useEditInPlace = () => {
 const CancelEditInPlaceButton = (props: Partial<ButtonProps>) => {
   const { children = "ra.action.cancel", ...rest } = props;
   const { setIsEditing } = useEditInPlace();
-  const translate = useTranslate();
 
   return (
-    <Button
-      onClick={() => setIsEditing(false)}
-      {...rest}
-    >
-      {typeof children === 'string' ? translate(children) : children}
+    <Button onClick={() => setIsEditing(false)} {...rest}>
+      {typeof children === "string" ? (
+        <Translate i18nKey={children}>{children}</Translate>
+      ) : (
+        children
+      )}
     </Button>
   );
-}
+};
 
 EditInPlace.CancelButton = CancelEditInPlaceButton;

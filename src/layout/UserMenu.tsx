@@ -22,6 +22,7 @@ import {
   UserMenu as RaUserMenu,
   SimpleForm,
   TextInput,
+  Translate,
   useGetIdentity,
   useGetList,
   useLocale,
@@ -30,7 +31,6 @@ import {
   useSetLocale,
   useTheme,
   useThemesContext,
-  useTranslate,
   useUserMenu,
 } from "react-admin";
 import { EditDialog } from "@react-admin/ra-form-layout";
@@ -116,7 +116,6 @@ export const UserMenu = () => {
 };
 
 const EditProfileMenuItem = ({ onClick, ...props }: MenuItemProps) => {
-  const translate = useTranslate();
   const userMenuContext = useUserMenu();
   if (!userMenuContext) {
     throw new Error("<EditProfileButton> should be used inside a <UserMenu>");
@@ -133,13 +132,12 @@ const EditProfileMenuItem = ({ onClick, ...props }: MenuItemProps) => {
       <ListItemIcon>
         <PersonIcon />
       </ListItemIcon>
-      <ListItemText primary={translate("pm.editProfile")} />
+      <ListItemText primary={<Translate i18nKey="pm.editProfile" />} />
     </MenuItem>
   );
 };
 
 const ThemeMenu = () => {
-  const translate = useTranslate();
   const { darkTheme, defaultTheme } = useThemesContext();
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)", {
     noSsr: true,
@@ -151,16 +149,17 @@ const ThemeMenu = () => {
   const handleTogglePaletteType = (): void => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
-  const toggleThemeTitle = translate("ra.action.toggle_theme", {
-    _: "Toggle Theme",
-  });
 
   return (
     <MenuItem onClick={handleTogglePaletteType}>
       <ListItemIcon>
         {theme === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
       </ListItemIcon>
-      <ListItemText primary={toggleThemeTitle} />
+      <ListItemText
+        primary={
+          <Translate i18nKey="ra.action.toggle_theme">Toggle Theme</Translate>
+        }
+      />
     </MenuItem>
   );
 };

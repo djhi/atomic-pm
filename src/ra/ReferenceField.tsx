@@ -6,11 +6,11 @@ import ErrorIcon from "@mui/icons-material/Error";
 import {
   LinkToType,
   useGetRecordRepresentation,
-  useTranslate,
   RaRecord,
   ReferenceFieldBase,
   useReferenceFieldContext,
   useFieldValue,
+  Translate,
 } from "ra-core";
 import { UseQueryOptions } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -57,14 +57,13 @@ export const ReferenceField = <
   props: ReferenceFieldProps<RecordType, ReferenceRecordType>,
 ) => {
   const { emptyText } = props;
-  const translate = useTranslate();
   const id = useFieldValue(props);
 
   if (id == null) {
     return emptyText ? (
       typeof emptyText === "string" ? (
         <Typography component="span" variant="body2">
-          {translate(emptyText, { _: emptyText })}
+          <Translate i18nKey={emptyText}>{emptyText}</Translate>
         </Typography>
       ) : (
         emptyText
@@ -109,7 +108,6 @@ export const ReferenceFieldView = <
     useReferenceFieldContext();
 
   const getRecordRepresentation = useGetRecordRepresentation(reference);
-  const translate = useTranslate();
 
   if (error) {
     return (
@@ -131,7 +129,7 @@ export const ReferenceFieldView = <
     return emptyText ? (
       typeof emptyText === "string" ? (
         <Typography component="span" variant="body2">
-          {translate(emptyText, { _: emptyText })}
+          <Translate i18nKey={emptyText}>{emptyText}</Translate>
         </Typography>
       ) : (
         emptyText

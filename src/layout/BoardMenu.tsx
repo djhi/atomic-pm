@@ -3,10 +3,10 @@ import {
   Button,
   ListBase,
   RaRecord,
+  Translate,
   useEvent,
   useGetIdentity,
   useListContext,
-  useTranslate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
@@ -74,7 +74,6 @@ const BoardMenuView = () => {
 const CreateBoardMenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
   ({ onClick, ...props }, ref) => {
     const { closeMenu } = useMenuButton();
-    const translate = useTranslate();
     return (
       <MenuItem
         {...props}
@@ -84,7 +83,7 @@ const CreateBoardMenuItem = React.forwardRef<HTMLLIElement, MenuItemProps>(
           onClick && onClick(event);
         }}
       >
-        {translate("pm.newBoard")}
+        <Translate i18nKey="pm.newBoard" />
       </MenuItem>
     );
   },

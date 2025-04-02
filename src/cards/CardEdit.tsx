@@ -14,6 +14,7 @@ import {
   SimpleList,
   SingleFieldList,
   TextField,
+  Translate,
   useCreate,
   useDefaultTitle,
   useDeleteWithConfirmController,
@@ -111,9 +112,11 @@ export const CardEdit = () => {
         <Tooltip
           // Prevent ghost tooltip
           key={String(fullScreen)}
-          title={translate(
-            fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
-          )}
+          title={
+            <Translate
+              i18nKey={fullScreen ? "pm.exit_full_screen" : "pm.full_screen"}
+            />
+          }
           placement="top"
         >
           <IconButton
@@ -155,7 +158,6 @@ export const CardEdit = () => {
 
 const CardEditView = () => {
   const params = useParams<"boardId" | "id">();
-  const translate = useTranslate();
   const record = useRecordContext();
   const navigate = useNavigate();
   const [create] = useCreate("card_attachments");
@@ -281,7 +283,7 @@ const CardEditView = () => {
                             link={false}
                             emptyText={
                               <Chip
-                                label={translate("pm.no_column")}
+                                label={<Translate i18nKey="pm.no_column" />}
                                 icon={<ViewColumnIcon />}
                               />
                             }
@@ -322,7 +324,7 @@ const CardEditView = () => {
                           <AvatarList
                             empty={
                               <Chip
-                                label={translate("pm.unnasigned")}
+                                label={<Translate i18nKey="pm.unnasigned" />}
                                 icon={<AccountCircleIcon />}
                               />
                             }
@@ -358,7 +360,7 @@ const CardEditView = () => {
                             }
                             return (
                               <Chip
-                                label={translate("pm.no_estimate")}
+                                label={<Translate i18nKey="pm.no_estimate" />}
                                 icon={<AddCircleIcon />}
                               />
                             );
@@ -393,7 +395,7 @@ const CardEditView = () => {
                           linkType={false}
                           empty={
                             <Chip
-                              label={translate("pm.no_tags")}
+                              label={<Translate i18nKey="pm.no_tags" />}
                               icon={<TagIcon />}
                             />
                           }
@@ -432,7 +434,7 @@ const CardEditView = () => {
                           <Toolbar disableGutters>
                             <Stack direction="row" spacing={1}>
                               <MuiButton size="small" type="submit">
-                                {translate("ra.action.save")}
+                                <Translate i18nKey="ra.action.save" />
                               </MuiButton>
                               <EditInPlace.CancelButton size="small" />
                             </Stack>
@@ -458,7 +460,7 @@ const CardEditView = () => {
                                 />
                               ) : (
                                 <Typography variant="body1">
-                                  {translate("pm.no_description")}
+                                  <Translate i18nKey="pm.no_description" />
                                 </Typography>
                               )
                             }
@@ -484,7 +486,7 @@ const CardEditView = () => {
                     sx={{ "& li": { px: 0 } }}
                     empty={
                       <Typography variant="body2">
-                        {translate("pm.no_history")}
+                        <Translate i18nKey="pm.no_history" />
                       </Typography>
                     }
                     primaryText={(record) => (

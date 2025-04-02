@@ -12,10 +12,10 @@ import {
   InputProps,
   required,
   SaveButton,
+  Translate,
   useGetIdentity,
   useInput,
   useRecordContext,
-  useTranslate,
 } from "react-admin";
 import { useParams } from "react-router";
 
@@ -24,7 +24,6 @@ export const NewMessage = () => {
   const { identity } = useGetIdentity();
   const params = useParams<"boardId">();
   const [key, setKey] = useState(0);
-  const translate = useTranslate();
   const saveButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
@@ -69,7 +68,7 @@ export const NewMessage = () => {
             ref={saveButtonRef}
           />
           <Typography variant="caption" color="textSecondary">
-            {translate("pm.sendMessageInstructions")}
+            <Translate i18nKey="pm.sendMessageInstructions" />
           </Typography>
         </Stack>
       </Form>

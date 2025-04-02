@@ -1,7 +1,11 @@
 import { ListItemText, MenuItem } from "@mui/material";
-import { useCreate, useTranslate } from "react-admin";
+import { Translate, useCreate, useTranslate } from "react-admin";
 import { useParams } from "react-router";
-import { ListSelectorInput, type ListSelectorInputProps, useListSelectorContext } from "../ra/ListSelectorInput";
+import {
+  ListSelectorInput,
+  type ListSelectorInputProps,
+  useListSelectorContext,
+} from "../ra/ListSelectorInput";
 
 export const TagsSelector = (props: ListSelectorInputProps) => {
   return (
@@ -28,7 +32,9 @@ const CreateTagItem = () => {
         toggleChoice(record);
       }}
     >
-      <ListItemText>{translate("pm.new_tag")}</ListItemText>
+      <ListItemText>
+        <Translate i18nKey="pm.new_tag" />
+      </ListItemText>
     </MenuItem>
   );
 };

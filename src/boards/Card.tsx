@@ -14,8 +14,8 @@ import {
   ReferenceArrayField,
   SingleFieldList,
   TextField,
+  Translate,
   useRecordContext,
-  useTranslate,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
@@ -119,7 +119,6 @@ const CardMenu = () => {
   const params = useParams<"boardId">();
   const { updateColumn } = useUpdateBoard();
 
-  const translate = useTranslate();
   if (!card) return null;
 
   return (
@@ -144,7 +143,7 @@ const CardMenu = () => {
         resource="cards"
         id={`${params.boardId}-${card.id}`}
         mutationMode="pessimistic"
-        confirmTitle={translate("ra.message.delete_title", { id: card.title })}
+        confirmTitle={<Translate i18nKey="ra.message.delete_title" options={{ id: card.title }} />}
         mutationOptions={{
           onSuccess: () => {
             updateColumn({

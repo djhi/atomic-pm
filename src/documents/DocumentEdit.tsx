@@ -5,6 +5,7 @@ import {
   required,
   SimpleForm,
   TextInput,
+  Translate,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -88,7 +89,11 @@ const DocumentTitle = ({
       <Tooltip
         // Prevent ghost tooltip
         key={String(fullScreen)}
-        title={translate(fullScreen ? "pm.exit_full_screen" : "pm.full_screen")}
+        title={
+          <Translate
+            i18nKey={fullScreen ? "pm.exit_full_screen" : "pm.full_screen"}
+          />
+        }
         placement="top"
       >
         <IconButton

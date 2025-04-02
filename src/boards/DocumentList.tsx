@@ -16,13 +16,13 @@ import {
   CreateButton,
   RecordContextProvider,
   ReferenceManyField,
+  Translate,
   useCreate,
   useDefaultTitle,
   useGetOne,
   useListContext,
   useNotify,
   useRecordContext,
-  useTranslate,
   useUpdate,
 } from "react-admin";
 import { useMatch, useNavigate, useParams } from "react-router";
@@ -35,7 +35,6 @@ export const DocumentList = () => {
   const params = useParams<"boardId">();
   const match = useMatch("/boards/:boardId/documents/*");
   const [create] = useCreate("documents");
-  const translate = useTranslate();
 
   const handleDropFile = (documents: File[]) => {
     const title = prompt("Enter the document title");
@@ -104,7 +103,7 @@ export const DocumentList = () => {
           >
             <input {...getInputProps()} />
             <Typography variant="h6" color="textSecondary" align="center">
-              {translate('pm.document_drop_instructions')}
+              <Translate i18nKey="pm.document_drop_instructions" />
             </Typography>
           </Box>
         )}

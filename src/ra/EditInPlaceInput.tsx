@@ -1,12 +1,7 @@
 import * as React from "react";
 import { Box, Stack, useForkRef, useTheme } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
-import {
-  InputProps,
-  useInput,
-  useSaveContext,
-  useTranslate,
-} from "react-admin";
+import { InputProps, Translate, useInput, useSaveContext } from "react-admin";
 
 export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
   const {
@@ -16,7 +11,6 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
     renderField,
   } = props;
   const [isEditing, setIsEditing] = React.useState(false);
-  const translate = useTranslate();
   const submitButtonRef = React.useRef<HTMLButtonElement>(null);
   const { field, formState } = useInput(props);
   const initialValue = React.useRef(field.value);
@@ -66,7 +60,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
     }
     fieldBoundingBox.current = field.getBoundingClientRect();
     const computedStyle = window.getComputedStyle(field);
-    fieldStyles.current = getCssText(computedStyle, { width: '100%' });
+    fieldStyles.current = getCssText(computedStyle, { width: "100%" });
     setIsEditing(true);
   };
 
@@ -144,7 +138,7 @@ export const EditInPlaceInput = (props: EditInPlaceInputProps) => {
             }
           }}
         >
-          {translate("ra.action.save")}
+          <Translate i18nKey="ra.action.save" />
         </button>
       </Box>
       <Box
@@ -180,7 +174,10 @@ export interface EditInPlaceInputProps extends InputProps {
  * Convert the output of window.getComputedStyle() to a CSS string
  * @returns {string}
  */
-const getCssText = (cssStyleDeclaration: CSSStyleDeclaration, override: Record<string, unknown> = {}) => {
+const getCssText = (
+  cssStyleDeclaration: CSSStyleDeclaration,
+  override: Record<string, unknown> = {},
+) => {
   const nbProperties = cssStyleDeclaration.length;
   let css = "";
   for (let i = 0; i < nbProperties; i++) {

@@ -15,12 +15,12 @@ import MailIcon from "@mui/icons-material/Mail";
 import {
   Button,
   ListBase,
+  Translate,
   useDataProvider,
   useGetIdentity,
   useGetResourceLabel,
   useListContext,
   useNotify,
-  useTranslate,
 } from "react-admin";
 import { type MouseEvent, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -44,7 +44,6 @@ export const InvitationMenuItem = (props: MenuItemProps) => {
 const InvitationNotifierListView = ({ onClick, ...props }: MenuItemProps) => {
   const { data, total } = useListContext();
   const getResourceLabel = useGetResourceLabel();
-  const translate = useTranslate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLLIElement>) => {
@@ -57,7 +56,7 @@ const InvitationNotifierListView = ({ onClick, ...props }: MenuItemProps) => {
   if (!data || data.length === 0) {
     return null;
   }
-  
+
   return (
     <>
       <MenuItem {...props} onClick={handleClick} disabled={!total}>
@@ -73,9 +72,12 @@ const InvitationNotifierListView = ({ onClick, ...props }: MenuItemProps) => {
           {data?.length === 0 && (
             <ListItem>
               <ListItemText>
-                {translate("ra.page.empty", {
-                  name: getResourceLabel("invitations", 0),
-                })}
+                <Translate
+                  i18nKey="ra.page.empty"
+                  options={{
+                    name: getResourceLabel("invitations", 0),
+                  }}
+                />
               </ListItemText>
             </ListItem>
           )}
