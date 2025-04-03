@@ -11,14 +11,14 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
     <Stack
       direction="row"
       minHeight="100%"
-      gap={2}
+      gap={1}
       flexGrow={1}
       sx={{
         overflowX: "auto",
         maxWidth: "98vw",
         flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" },
         p: 2,
-        mx: -2,
+        mx: -4,
         ...sx,
       }}
       {...props}

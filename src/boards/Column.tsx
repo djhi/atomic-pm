@@ -1,6 +1,5 @@
 import { Draggable } from "@hello-pangea/dnd";
 import {
-  alpha,
   Chip,
   ChipProps,
   Stack,
@@ -57,8 +56,10 @@ export const Column = ({ sx, ...props }: StackProps) => {
             flexShrink: 0,
             maxHeight: "85vh",
             transition: "bgcolor 300ms ease",
+            p: 2,
             "&.warning": {
-              bgcolor: (theme) => alpha(theme.palette.warning.dark, 0.2),
+              bgcolor: (theme) =>
+                `color-mix(in srgb, ${theme.palette.warning.dark}, transparent 20%)`,
             },
           }}
           {...provided?.draggableProps}
