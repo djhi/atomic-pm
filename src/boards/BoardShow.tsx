@@ -1,7 +1,9 @@
 import {
   CreateButton,
+  Form,
   RecordContextProvider,
-  Show,
+  SearchInput,
+  ShowBase,
   ShowClasses,
   TopToolbar,
   useDefaultTitle,
@@ -15,6 +17,7 @@ import {
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
 import { Box, Stack, Typography } from "@mui/material";
+import debounce from "lodash/debounce";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
@@ -27,16 +30,47 @@ import { DocumentCreate } from "../documents/DocumentCreate";
 import { DocumentEdit } from "../documents/DocumentEdit";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { BoardContext, useBoardContext } from "../BoardContext";
+import {
+  BoardFilterContext,
+  BoardSetFilterContext,
+  useBoardSetFilterContext,
+} from "./BoardFilterContext";
+import { useState } from "react";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
 
   return (
-    <Show
+    <ShowBase
       id={params.boardId}
       resource="boards"
-      component={Box}
-      actions={<BoardShowActions />}
+      queryOptions={{
+        meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
+      }}
+    >
+      <BoardShowLayout />
+    </ShowBase>
+  );
+};
+
+const BoardShowLayout = () => {
+  const boardState = useBoard();
+  const [cardFilter, setCardFilter] = useState<RegExp | undefined>(undefined);
+  const debouncedSetCardFilter = useEvent(
+    debounce((query: string) => {
+      setCardFilter(
+        new RegExp(
+          `${query
+            .split(" ")
+            .map((word) => `(?=.*${word})`)
+            .join("")}.*`,
+          "ig",
+        ),
+      );
+    }, 300),
+  );
+  return (
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -54,47 +88,43 @@ export const BoardShow = () => {
           bgcolor: "transparent",
         },
       }}
-      queryOptions={{
-        meta: { columns: ["*, documents(*), columns(*, cards(*))"] },
-      }}
     >
-      <BoardShowLayout />
-    </Show>
-  );
-};
-
-const BoardShowLayout = () => {
-  const boardState = useBoard();
-  return (
-    <BoardContext.Provider value={boardState}>
-      <BoardShowDragAndDropLayout />
-      <Routes>
-        <Route
-          path="columns/*"
-          element={
-            <>
-              <ColumnCreate />
-              <ColumnEdit />
-            </>
-          }
-        />
-      </Routes>
-      <Routes>
-        <Route path="cards/*" element={<CardEdit />} />
-      </Routes>
-      <Routes>
-        <Route
-          path="documents/*"
-          element={
-            <>
-              <DocumentCreate />
-              <DocumentEdit />
-            </>
-          }
-        />
-      </Routes>
-      <DocumentList />
-    </BoardContext.Provider>
+      <BoardContext.Provider value={boardState}>
+        {/* @ts-expect-error debounce type is wrong */}
+        <BoardSetFilterContext.Provider value={debouncedSetCardFilter}>
+          <BoardFilterContext.Provider value={cardFilter}>
+            <BoardShowActions />
+            <BoardShowDragAndDropLayout />
+            <Routes>
+              <Route
+                path="columns/*"
+                element={
+                  <>
+                    <ColumnCreate />
+                    <ColumnEdit />
+                  </>
+                }
+              />
+            </Routes>
+            <Routes>
+              <Route path="cards/*" element={<CardEdit />} />
+            </Routes>
+            <Routes>
+              <Route
+                path="documents/*"
+                element={
+                  <>
+                    <DocumentCreate />
+                    <DocumentEdit />
+                  </>
+                }
+              />
+            </Routes>
+            <DocumentList />
+          </BoardFilterContext.Provider>
+        </BoardSetFilterContext.Provider>
+      </BoardContext.Provider>
+    </Box>
   );
 };
 
@@ -176,11 +206,20 @@ const BoardTitle = () => {
 
 const BoardShowActions = () => {
   const board = useRecordContext();
+  const setFilter = useBoardSetFilterContext();
 
   return (
     <TopToolbar sx={{ justifyContent: "space-between", mb: 0, pt: 3, px: 0 }}>
       <BoardTitle />
       <Stack direction="row" spacing={1} ml="auto">
+        <Box component={Form}>
+          <SearchInput
+            source="q"
+            helperText={false}
+            sx={{ mb: 0 }}
+            onChange={(event) => setFilter(event.target.value)}
+          />
+        </Box>
         <DocumentsButton />
         <BoardMembersEdit />
         <CreateButton

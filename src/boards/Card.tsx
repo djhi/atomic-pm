@@ -21,10 +21,18 @@ import { useNavigate, useParams } from "react-router";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { AvatarList } from "../ui/AvatarList";
+import { useBoardFilterContext } from "./BoardFilterContext";
 
 export const Card = () => {
   const card = useRecordContext();
   if (!card) return null;
+  const filter = useBoardFilterContext();
+  if (filter) {
+    if (!card.title.match(filter)) {
+      return null;
+    }
+  }
+
   const navigate = useNavigate();
   const params = useParams<"boardId">();
   return (
@@ -143,7 +151,12 @@ const CardMenu = () => {
         resource="cards"
         id={`${params.boardId}-${card.id}`}
         mutationMode="pessimistic"
-        confirmTitle={<Translate i18nKey="ra.message.delete_title" options={{ id: card.title }} />}
+        confirmTitle={
+          <Translate
+            i18nKey="ra.message.delete_title"
+            options={{ id: card.title }}
+          />
+        }
         mutationOptions={{
           onSuccess: () => {
             updateColumn({
