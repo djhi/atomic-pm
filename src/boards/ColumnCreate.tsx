@@ -7,6 +7,7 @@ import {
   TextInput,
   useDefaultTitle,
   useGetOne,
+  useTranslate,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
 import { FormToolbar } from "../ra/FormToolbar";
@@ -36,16 +37,18 @@ export const ColumnCreate = () => {
 
 const ColumnTitle = () => {
   const params = useParams<"boardId">();
+  const translate = useTranslate();
   const { data: board } = useGetOne(
     "boards",
     { id: params.boardId },
     { enabled: !!params.boardId },
   );
   const appTitle = useDefaultTitle();
+  const title = translate("pm.newColumn");
   return (
     <>
-      <span>New column - {board?.name}</span>
-      <title>{`New column - ${board?.name} - ${appTitle}`}</title>
+      <span>{title} - {board?.name}</span>
+      <title>{`${title} - ${board?.name} - ${appTitle}`}</title>
     </>
   );
 };
