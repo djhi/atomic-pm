@@ -16,7 +16,7 @@ import {
   OnDragEndResponder,
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, BoxProps, Stack, Typography } from "@mui/material";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
@@ -50,25 +50,7 @@ export const BoardShow = () => {
 const BoardShowLayout = () => {
   const boardState = useBoard();
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        flexGrow: 1,
-        [`& .${ShowClasses.main}`]: {
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
-        },
-        [`& .${ShowClasses.card}`]: {
-          display: "flex",
-          flexDirection: "column",
-          flexGrow: 1,
-          mt: 1,
-          bgcolor: "transparent",
-        },
-      }}
-    >
+    <BoardLayoutRoot>
       <BoardContext.Provider value={boardState}>
         <BoardShowActions />
         <BoardShowDragAndDropLayout />
@@ -99,7 +81,7 @@ const BoardShowLayout = () => {
         </Routes>
         <DocumentList />
       </BoardContext.Provider>
-    </Box>
+    </BoardLayoutRoot>
   );
 };
 
@@ -194,7 +176,9 @@ const BoardShowActions = () => {
             sx={{ mb: 0 }}
             onChange={(eventOrValue) =>
               setCardFilter(
-                typeof eventOrValue === "string" ? eventOrValue : eventOrValue.target.value,
+                typeof eventOrValue === "string"
+                  ? eventOrValue
+                  : eventOrValue.target.value,
               )
             }
             defaultValue={cardFilter}
@@ -218,3 +202,26 @@ const BoardShowActions = () => {
     </TopToolbar>
   );
 };
+
+const BoardLayoutRoot = (props: BoxProps) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      [`& .${ShowClasses.main}`]: {
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+      },
+      [`& .${ShowClasses.card}`]: {
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        mt: 1,
+        bgcolor: "transparent",
+      },
+    }}
+    {...props}
+  />
+);

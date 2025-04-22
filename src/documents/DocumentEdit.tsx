@@ -1,11 +1,8 @@
-import { IconButton, Stack, Tooltip } from "@mui/material";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import { Stack } from "@mui/material";
 import {
   required,
   SimpleForm,
   TextInput,
-  Translate,
   useDefaultTitle,
   useGetOne,
   useNotify,
@@ -17,6 +14,7 @@ import { MarkdownInput } from "@react-admin/ra-markdown";
 import { EditDialog } from "@react-admin/ra-form-layout";
 import { useState } from "react";
 import { FormToolbar } from "../ra/FormToolbar";
+import { FullscreenDialogButton } from "../ui/FullscreenDialogButton";
 
 export const DocumentEdit = () => {
   const navigate = useNavigate();
@@ -76,7 +74,6 @@ const DocumentTitle = ({
 }) => {
   const record = useRecordContext();
   const params = useParams<"boardId">();
-  const translate = useTranslate();
   const { data: board } = useGetOne(
     "boards",
     { id: params.boardId },
@@ -86,35 +83,10 @@ const DocumentTitle = ({
   return (
     <>
       {record?.title}
-      <Tooltip
-        // Prevent ghost tooltip
-        key={String(fullScreen)}
-        title={
-          <Translate
-            i18nKey={fullScreen ? "pm.exit_full_screen" : "pm.full_screen"}
-          />
-        }
-        placement="top"
-      >
-        <IconButton
-          aria-label={translate(
-            fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
-          )}
-          onClick={(event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            setFullScreen((prev) => !prev);
-          }}
-          sx={{
-            position: "absolute",
-            right: (theme) => theme.spacing(4),
-            top: (theme) => theme.spacing(1),
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-        </IconButton>
-      </Tooltip>
+      <FullscreenDialogButton
+        fullScreen={fullScreen}
+        onClick={() => setFullScreen((previous) => !previous)}
+      />
       <title>{`${record?.title} - ${board?.name} - ${appTitle}`}</title>
     </>
   );

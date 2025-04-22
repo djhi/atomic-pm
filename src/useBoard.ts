@@ -1,8 +1,8 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { type RaRecord, useRecordContext } from "react-admin";
 import cloneDeep from "lodash/cloneDeep";
-import { useBoardLiveUpdates } from "./useBoardLiveUpdates";
 import { useQueryClient } from "@tanstack/react-query";
+import { useBoardLiveUpdates } from "./useBoardLiveUpdates";
 import { useCardFilter } from "./useCardFilter";
 
 export const useBoard = (): [

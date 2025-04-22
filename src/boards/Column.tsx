@@ -1,25 +1,17 @@
 import { Draggable } from "@hello-pangea/dnd";
-import {
-  Chip,
-  ChipProps,
-  Stack,
-  StackProps,
-  Tooltip,
-} from "@mui/material";
+import { Stack, StackProps } from "@mui/material";
 import {
   EditBase,
   Form,
   TextField,
-  Translate,
   useRecordContext,
   useTranslate,
 } from "react-admin";
-import { useParams } from "react-router";
 import clsx from "clsx";
-import { CardList } from "./CardList";
-import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
-import { useUpdateBoard } from "../useUpdateBoard";
+import { CardList } from "./CardList";
+import { ColumnMenu } from "./ColumnMenu";
+import { ChipWithMax } from "./ChipWithMax";
 
 export const Column = ({ sx, ...props }: StackProps) => {
   const column = useRecordContext();
@@ -32,8 +24,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
     column?.maxCards != null && (column?.cards.length || 0) > column?.maxCards;
   const hasTooManyEstimates =
     column?.maxEstimates != null && totalEstimates > column?.maxEstimates;
-  const hasWarning =
-    hasTooManyCards || hasTooManyEstimates;
+  const hasWarning = hasTooManyCards || hasTooManyEstimates;
 
   return (
     <Draggable
@@ -43,28 +34,12 @@ export const Column = ({ sx, ...props }: StackProps) => {
       type="column"
     >
       {(provided, snapshot) => (
-        <Stack
+        <ColumnRoot
           {...props}
           className={clsx({
             warning: hasTooManyCards || hasTooManyEstimates,
           })}
-          sx={{
-            ...sx,
-            borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-            bgcolor: (theme) =>
-              snapshot.isDragging ? theme.palette.background.paper : "inherit",
-            transform: snapshot?.isDragging ? "rotate(-2deg)" : "",
-            width: { xs: "100%", sm: "100%", md: "350px" },
-            flexShrink: 0,
-            maxHeight: "85vh",
-            transition: "bgcolor 300ms ease",
-            px: 2,
-            py: 1,
-            "&.warning": {
-              bgcolor: (theme) =>
-                `color-mix(in srgb, ${theme.palette.warning.dark}, transparent 20%)`,
-            },
-          }}
+          isDragging={snapshot.isDragging}
           {...provided?.draggableProps}
           ref={provided?.innerRef}
         >
@@ -122,92 +97,31 @@ export const Column = ({ sx, ...props }: StackProps) => {
             </EditBase>
           </Stack>
           <CardList />
-        </Stack>
+        </ColumnRoot>
       )}
     </Draggable>
   );
 };
 
-const ColumnMenu = () => {
-  const column = useRecordContext();
-  const params = useParams<"boardId">();
-  const { updateBoard } = useUpdateBoard();
-  if (!column) return null;
-
-  return (
-    <MenuButton ButtonProps={{ label: "pm.actionList" }}>
-      <MenuButton.LinkItem
-        label="pm.newCard"
-        to={{
-          pathname: `/boards/${params.boardId}/cards/create`,
-          search: `?source=${JSON.stringify({
-            column_id: column?.id,
-            position: column.cards?.length,
-            created_at: new Date().toISOString(),
-          })}`,
-        }}
-      />
-      <MenuButton.LinkItem
-        label="ra.action.edit"
-        to={`/boards/${params.boardId}/columns/${column?.id}`}
-      />
-      <MenuButton.DeleteItem
-        resource="columns"
-        record={column!}
-        mutationMode="pessimistic"
-        confirmTitle={
-          <Translate
-            i18nKey="ra.message.delete_title"
-            options={{ id: column.name }}
-          />
-        }
-        mutationOptions={{
-          onSuccess: () => {
-            updateBoard({
-              board_id: params.boardId!,
-              update: (record: any) => ({
-                ...record,
-                columns: record.columns.filter(
-                  (oldColumn: any) => oldColumn.id !== column.id,
-                ),
-              }),
-            });
-          },
-        }}
-      />
-    </MenuButton>
-  );
-};
-
-const ChipWithMax = ({
-  value,
-  max,
-  labelWithMax,
-  label,
-  ...rest
-}: {
-  value: number;
-  label: string;
-  max?: number;
-  labelWithMax?: string;
-} & ChipProps) => {
-  return (
-    <Tooltip
-      title={
-        <Translate
-          i18nKey={max != null && labelWithMax ? labelWithMax : label}
-          options={{
-            smart_count: max ?? value,
-            value: value,
-          }}
-        />
-      }
-    >
-      <Chip
-        label={max != null ? `${value} / ${max}` : value}
-        size="small"
-        {...rest}
-      />
-    </Tooltip>
-  );
-};
+const ColumnRoot = ({ isDragging, sx, ...rest }: StackProps & { isDragging: boolean }) => (
+  <Stack
+    sx={{
+      ...sx,
+      borderRadius: (theme) => `${theme.shape.borderRadius}px`,
+      bgcolor: (theme) =>
+        isDragging ? theme.palette.background.paper : "inherit",
+      transform: isDragging ? "rotate(-2deg)" : "",
+      width: { xs: "100%", sm: "100%", md: "350px" },
+      flexShrink: 0,
+      maxHeight: "85vh",
+      transition: "bgcolor 300ms ease",
+      px: 2,
+      py: 1,
+      "&.warning": {
+        bgcolor: (theme) =>
+          `color-mix(in srgb, ${theme.palette.warning.dark}, transparent 20%)`,
+      },
+    }}
+    {...rest}
+  />
+)

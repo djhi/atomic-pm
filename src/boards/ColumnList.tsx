@@ -8,7 +8,18 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
   if (board.columns.length === 0) return <Empty resource="columns" />;
 
   return (
-    <Stack
+    <ColumnListRoot {...props}>
+      {board.columns?.map((record: any) => (
+        <RecordContextProvider key={record.id} value={record}>
+          <Column sx={{ width: { xs: "100%", sm: "100%", md: "400px" } }} />
+        </RecordContextProvider>
+      ))}
+    </ColumnListRoot>
+  );
+};
+
+const ColumnListRoot = ({ sx, ...rest }: StackProps) => (
+  <Stack
       direction="row"
       minHeight="100%"
       gap={1}
@@ -21,15 +32,6 @@ export const ColumnList = ({ sx, ...props }: StackProps) => {
         mx: -4,
         ...sx,
       }}
-      {...props}
-    >
-      {board.columns?.map((record: any) => (
-        <RecordContextProvider key={record.id} value={record}>
-          <Column
-            sx={{ width: { xs: "100%", sm: "100%", md: "400px" } }}
-          />
-        </RecordContextProvider>
-      ))}
-    </Stack>
-  );
-};
+      {...rest}
+    />
+)

@@ -1,7 +1,6 @@
 import { Fragment, useMemo, useRef, useState } from "react";
 import {
   ChipField,
-  Confirm,
   DateField,
   Form,
   FunctionField,
@@ -17,12 +16,9 @@ import {
   Translate,
   useCreate,
   useDefaultTitle,
-  useDeleteWithConfirmController,
   useEvent,
   useGetOne,
-  useListContext,
   useRecordContext,
-  useTranslate,
   WithRecord,
 } from "react-admin";
 import { useNavigate, useParams } from "react-router";
@@ -34,22 +30,17 @@ import {
   Chip,
   Toolbar,
   Button as MuiButton,
-  IconButton,
   CardContent,
 } from "@mui/material";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import FileIcon from "@mui/icons-material/InsertDriveFile";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
-import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import TagIcon from "@mui/icons-material/Sell";
 import { ListLiveUpdate } from "@react-admin/ra-realtime";
 import { CreateRevisionOnSave } from "@react-admin/ra-history";
 import { MarkdownField } from "@react-admin/ra-markdown";
 import { EditDialog } from "@react-admin/ra-form-layout";
 import Dropzone from "react-dropzone";
-// import { LockOnMount } from "../ra/LockOnMount";
 import { FormWithLockSupport } from "../ra/FormWithLockSupport";
 import { RecordLiveUpdate } from "../ra/RecordLiveUpdate";
 import { EditInPlaceInput } from "../ra/EditInPlaceInput";
@@ -64,12 +55,13 @@ import { HideHistoryButton } from "./HideHistoryButton";
 import { CardRevisionDetails } from "./CardRevisionDetails";
 import { EstimatesChoicesInput } from "./EstimatesChoicesInput";
 import { useCardFromBoardAndNumber } from "./useCardFromBoardAndNumber";
-import { useSignedUrl } from "../ra/useSignedUrl";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { TagsSelector } from "./TagsSelector";
 import { AvatarList } from "../ui/AvatarList";
 import { ColumnSelector } from "./ColumnSelector";
+import { AttachmentList } from "./AttachmentList";
+import { FullscreenDialogButton } from "../ui/FullscreenDialogButton";
 
 export const CardEdit = () => {
   const params = useParams<"boardId">();
@@ -77,7 +69,6 @@ export const CardEdit = () => {
   const { updateCard } = useUpdateBoard();
   const [fullScreen, setFullScreen] = useState(false);
   const navigate = useNavigate();
-  const translate = useTranslate();
   const closeIsFromMutationSuccess = useRef(false);
   if (!card) return null;
 
@@ -109,31 +100,10 @@ export const CardEdit = () => {
       }}
       maxWidth="lg"
       title={
-        <Tooltip
-          // Prevent ghost tooltip
-          key={String(fullScreen)}
-          title={
-            <Translate
-              i18nKey={fullScreen ? "pm.exit_full_screen" : "pm.full_screen"}
-            />
-          }
-          placement="top"
-        >
-          <IconButton
-            aria-label={translate(
-              fullScreen ? "pm.exit_full_screen" : "pm.full_screen",
-            )}
-            onClick={() => setFullScreen(!fullScreen)}
-            sx={{
-              position: "absolute",
-              right: (theme) => theme.spacing(4),
-              top: (theme) => theme.spacing(1),
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-          </IconButton>
-        </Tooltip>
+        <FullscreenDialogButton
+          fullScreen={fullScreen}
+          onClick={() => setFullScreen((previous) => !previous)}
+        />
       }
       sx={{
         display: "flex",
@@ -588,70 +558,5 @@ const CardTitle = () => {
   if (!record) return null;
   return (
     <title>{`${record?.title} - ${column?.name} - ${board?.name} - ${appTitle}`}</title>
-  );
-};
-
-const AttachmentList = ({ openFileDialog }: { openFileDialog: () => void }) => {
-  const { data } = useListContext();
-
-  return (
-    <Stack direction="row" gap={1}>
-      {data?.map((record) => (
-        <AttachmentItem key={record.id} record={record} />
-      ))}
-      <Tooltip title="Add attachment">
-        <IconButton
-          onClick={() => openFileDialog()}
-          aria-label="Add attachment"
-        >
-          <AddCircleIcon />
-        </IconButton>
-      </Tooltip>
-    </Stack>
-  );
-};
-
-const AttachmentItem = ({ record }: { record: RaRecord }) => {
-  const fileName = record.path.split("/").pop().split(".")[0];
-  const { data: signedUrl } = useSignedUrl({
-    bucket: "documents",
-    filePath: record?.path,
-  });
-  const { open, isPending, handleDialogOpen, handleDialogClose, handleDelete } =
-    useDeleteWithConfirmController({
-      resource: "card_attachments",
-      record,
-      redirect: false,
-    });
-  const handleDeleteButtonClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    event.preventDefault();
-    handleDialogOpen(event);
-  };
-  return (
-    <>
-      <Chip
-        clickable
-        component="a"
-        download
-        target="_blank"
-        href={signedUrl}
-        label={fileName}
-        icon={<FileIcon />}
-        onDelete={handleDeleteButtonClick}
-      />
-      <Confirm
-        isOpen={open}
-        loading={isPending}
-        title="ra.message.delete_title"
-        content="ra.message.delete_content"
-        translateOptions={{
-          name: "",
-          id: fileName,
-        }}
-        onConfirm={handleDelete}
-        onClose={handleDialogClose}
-      />
-    </>
   );
 };
