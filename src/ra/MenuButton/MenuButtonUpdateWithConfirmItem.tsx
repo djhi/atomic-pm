@@ -4,18 +4,18 @@ import {
   MenuItem,
   type MenuItemProps,
 } from "@mui/material";
-import type { DefaultError, UseMutationOptions } from "@tanstack/react-query";
+import type { DefaultError } from "@tanstack/react-query";
 import { humanize, inflect } from "inflection";
 import {
   type MutationMode,
   type RaRecord,
   Translate,
-  type UpdateParams,
   useNotify,
   useRecordContext,
   useResourceContext,
   useTranslate,
   useUpdate,
+  UseUpdateOptions,
 } from "ra-core";
 import { Confirm } from "ra-ui-materialui";
 import * as React from "react";
@@ -25,6 +25,7 @@ export const MenuButtonUpdateWithConfirmItemComponent = <
   MutationOptionsError = DefaultError,
 >(
   props: MenuButtonUpdateWithConfirmItemProps<RecordType, MutationOptionsError>,
+  ref: React.Ref<HTMLLIElement>,
 ) => {
   const notify = useNotify();
   const translate = useTranslate();
@@ -91,16 +92,16 @@ export const MenuButtonUpdateWithConfirmItemComponent = <
     },
   );
 
-  const handleClick = (e) => {
+  const handleClick = (event: React.MouseEvent) => {
     setOpen(true);
-    e.stopPropagation();
+    event.stopPropagation();
   };
 
   const handleDialogClose = () => {
     setOpen(false);
   };
 
-  const handleUpdate = (e) => {
+  const handleUpdate = (event: React.MouseEvent<HTMLLIElement>) => {
     update(resource, {
       id: record?.id,
       data,
@@ -109,13 +110,13 @@ export const MenuButtonUpdateWithConfirmItemComponent = <
     });
 
     if (typeof onClick === "function") {
-      onClick(e);
+      onClick(event);
     }
   };
 
   return (
     <>
-      <MenuItem onClick={handleClick}>
+      <MenuItem onClick={handleClick} ref={ref} {...rest}>
         {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
         <ListItemText>
           <Translate i18nKey={label}>{label}</Translate>
@@ -149,12 +150,7 @@ export const MenuButtonUpdateWithConfirmItemComponent = <
 export const MenuButtonUpdateWithConfirmItem = React.forwardRef(
   MenuButtonUpdateWithConfirmItemComponent,
 ) as <RecordType extends RaRecord = RaRecord, MutationOptionsError = unknown>(
-  props: MenuButtonUpdateWithConfirmItemProps<
-    RecordType,
-    MutationOptionsError
-  > & {
-    ref?: React.Ref<HTMLLIElement>;
-  },
+  props: MenuButtonUpdateWithConfirmItemProps<RecordType, MutationOptionsError>,
 ) => ReturnType<typeof MenuButtonUpdateWithConfirmItemComponent>;
 
 export interface MenuButtonUpdateWithConfirmItemProps<
@@ -167,9 +163,5 @@ export interface MenuButtonUpdateWithConfirmItemProps<
   data: RecordType;
   label?: string;
   mutationMode?: MutationMode;
-  mutationOptions?: UseMutationOptions<
-    RecordType,
-    MutationOptionsError,
-    UpdateParams<RecordType>
-  > & { meta?: Record<string, unknown> };
+  mutationOptions?: UseUpdateOptions<RecordType, MutationOptionsError>;
 }

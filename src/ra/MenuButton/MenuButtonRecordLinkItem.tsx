@@ -1,10 +1,10 @@
 import { type MenuItemProps } from "@mui/material";
 import {
-	LinkToFunctionType,
-	type RaRecord,
-	useGetPathForRecord,
-	useRecordContext,
-	useResourceContext,
+  LinkToFunctionType,
+  type RaRecord,
+  useGetPathForRecord,
+  useRecordContext,
+  useResourceContext,
 } from "ra-core";
 import * as React from "react";
 import { Link } from "react-router-dom";
@@ -12,14 +12,10 @@ import { MenuButtonLinkItem } from "./MenuButtonLinkItem";
 
 const MenuButtonRecordLinkItemComponent = <
   RecordType extends RaRecord = RaRecord,
->({
-  label,
-  link,
-  ref,
-  ...props
-}: MenuButtonRecordLinkItemProps<RecordType> & {
-  ref?: React.Ref<HTMLLIElement | HTMLAnchorElement>;
-}) => {
+>(
+  { label, link, ...props }: MenuButtonRecordLinkItemProps<RecordType>,
+  ref: React.Ref<HTMLLIElement>,
+) => {
   const record = useRecordContext<RecordType>();
   const resource = useResourceContext();
   const path = useGetPathForRecord({
@@ -43,13 +39,12 @@ const MenuButtonRecordLinkItemComponent = <
 export const MenuButtonRecordLinkItem = React.forwardRef(
   MenuButtonRecordLinkItemComponent,
 ) as <RecordType extends RaRecord = RaRecord>(
-  props: MenuButtonRecordLinkItemProps<RecordType> & {
-    ref?: React.Ref<HTMLAnchorElement>;
-  },
+  props: MenuButtonRecordLinkItemProps<RecordType>,
 ) => ReturnType<typeof MenuButtonRecordLinkItemComponent>;
 
-export interface MenuButtonRecordLinkItemProps<RecordType extends RaRecord = RaRecord>
-  extends Omit<MenuItemProps<typeof Link>, 'to'> {
+export interface MenuButtonRecordLinkItemProps<
+  RecordType extends RaRecord = RaRecord,
+> extends Omit<MenuItemProps<typeof Link>, "to"> {
   label: string;
   link: string | LinkToFunctionType<RecordType>;
   record?: RecordType;

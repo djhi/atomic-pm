@@ -24,7 +24,7 @@ const MenuButtonDeleteWithConfirmItemComponent = <
   MutationOptionsError = unknown,
 >(
   props: MenuButtonDeleteWithConfirmItemProps<RecordType, MutationOptionsError>,
-  ref,
+  ref: React.Ref<HTMLLIElement>,
 ) => {
   const {
     className,
@@ -103,9 +103,7 @@ export const MenuButtonDeleteWithConfirmItem = React.forwardRef(
   props: MenuButtonDeleteWithConfirmItemProps<
     RecordType,
     MutationOptionsError
-  > & {
-    ref?: React.Ref<HTMLLIElement>;
-  },
+  >,
 ) => ReturnType<typeof MenuButtonDeleteWithConfirmItemComponent>;
 
 export interface MenuButtonDeleteWithConfirmItemProps<

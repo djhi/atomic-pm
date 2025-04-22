@@ -20,6 +20,7 @@ export const MenuButtonDeleteWithUndoItemComponent = <
   MutationOptionsError = unknown,
 >(
   props: MenuButtonDeleteWithUndoItemProps<RecordType, MutationOptionsError>,
+  ref: React.Ref<HTMLLIElement>,
 ) => {
   const {
     label = "ra.action.delete",
@@ -51,6 +52,7 @@ export const MenuButtonDeleteWithUndoItemComponent = <
       className={clsx("ra-delete-button", className)}
       key="button"
       color={color}
+      ref={ref}
       {...rest}
     >
       {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
@@ -64,9 +66,7 @@ export const MenuButtonDeleteWithUndoItemComponent = <
 export const MenuButtonDeleteWithUndoItem = React.forwardRef(
   MenuButtonDeleteWithUndoItemComponent,
 ) as <RecordType extends RaRecord = RaRecord, MutationOptionsError = unknown>(
-  props: MenuButtonDeleteWithUndoItemProps<RecordType, MutationOptionsError> & {
-    ref?: React.Ref<HTMLLIElement>;
-  },
+  props: MenuButtonDeleteWithUndoItemProps<RecordType, MutationOptionsError>,
 ) => ReturnType<typeof MenuButtonDeleteWithUndoItemComponent>;
 
 export interface MenuButtonDeleteWithUndoItemProps<

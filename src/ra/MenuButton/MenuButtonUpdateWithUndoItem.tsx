@@ -4,17 +4,16 @@ import {
   MenuItem,
   type MenuItemProps,
 } from "@mui/material";
-import type { UseMutationOptions } from "@tanstack/react-query";
 import {
   type RaRecord,
   Translate,
-  type UpdateParams,
   useNotify,
   useRecordContext,
   useRefresh,
   useResourceContext,
   useTranslate,
   useUpdate,
+  UseUpdateOptions,
 } from "ra-core";
 import * as React from "react";
 
@@ -23,6 +22,7 @@ const MenuButtonUpdateWithUndoItemComponent = <
   MutationOptionsError = unknown,
 >(
   props: MenuButtonUpdateWithUndoItemProps<RecordType, MutationOptionsError>,
+  ref: React.Ref<HTMLLIElement>,
 ) => {
   const record = useRecordContext<RecordType>(props);
   const notify = useNotify();
@@ -78,7 +78,7 @@ const MenuButtonUpdateWithUndoItemComponent = <
     ...otherMutationOptions
   } = mutationOptions;
 
-  const handleClick = (e) => {
+  const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
     if (!record) {
       throw new Error(
         "The UpdateWithUndoButton must be used inside a RecordContext.Provider or must be passed a record prop.",
@@ -95,13 +95,13 @@ const MenuButtonUpdateWithUndoItemComponent = <
       },
     );
     if (typeof onClick === "function") {
-      onClick(e);
+      onClick(event);
     }
-    e.stopPropagation();
+    event.stopPropagation();
   };
 
   return (
-    <MenuItem onClick={handleClick} disabled={isPending} {...rest}>
+    <MenuItem onClick={handleClick} disabled={isPending} ref={ref} {...rest}>
       {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
       <ListItemText>
         <Translate i18nKey={label}>{label}</Translate>
@@ -125,9 +125,6 @@ export interface MenuButtonUpdateWithUndoItemProps<
   icon?: React.ReactNode;
   label?: string;
   data: RecordType;
-  mutationOptions?: UseMutationOptions<
-    RecordType,
-    MutationOptionsError,
-    UpdateParams<RecordType>
-  > & { meta?: Record<string, unknown> };
+    mutationOptions?: UseUpdateOptions<RecordType, MutationOptionsError>;
+  
 }
