@@ -32,6 +32,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
     column?.maxCards != null && (column?.cards.length || 0) > column?.maxCards;
   const hasTooManyEstimates =
     column?.maxEstimates != null && totalEstimates > column?.maxEstimates;
+  const hasWarning =
+    hasTooManyCards || hasTooManyEstimates;
 
   return (
     <Draggable
@@ -56,7 +58,8 @@ export const Column = ({ sx, ...props }: StackProps) => {
             flexShrink: 0,
             maxHeight: "85vh",
             transition: "bgcolor 300ms ease",
-            p: 2,
+            px: 2,
+            py: 1,
             "&.warning": {
               bgcolor: (theme) =>
                 `color-mix(in srgb, ${theme.palette.warning.dark}, transparent 20%)`,
@@ -85,7 +88,7 @@ export const Column = ({ sx, ...props }: StackProps) => {
                     placeholder: translate("pm.newColumn"),
                   }}
                   renderField={(ref) => (
-                    <Stack direction="row" alignItems="start" gap={1}>
+                    <Stack direction="row" alignItems="center" gap={1}>
                       <TextField
                         source="name"
                         gutterBottom
@@ -100,13 +103,15 @@ export const Column = ({ sx, ...props }: StackProps) => {
                           value={column?.cards?.length || 0}
                           label="pm.cardCount"
                           labelWithMax="pm.cardCountWithLimit"
+                          variant={hasWarning ? "filled" : "outlined"}
                         />
                         <ChipWithMax
                           max={column?.maxEstimates}
                           value={totalEstimates}
                           label="pm.pointCount"
                           labelWithMax="pm.pointCountWithLimit"
-                          color="info"
+                          color={hasWarning ? "default" : "info"}
+                          variant={hasWarning ? "filled" : "outlined"}
                         />
                         <ColumnMenu />
                       </Stack>
@@ -179,15 +184,13 @@ const ChipWithMax = ({
   max,
   labelWithMax,
   label,
-  color = "default",
+  ...rest
 }: {
-  color?: ChipProps["color"];
   value: number;
   label: string;
   max?: number;
   labelWithMax?: string;
-}) => {
-  const hasTooMany = max != null && value > max;
+} & ChipProps) => {
   return (
     <Tooltip
       title={
@@ -203,7 +206,7 @@ const ChipWithMax = ({
       <Chip
         label={max != null ? `${value} / ${max}` : value}
         size="small"
-        color={hasTooMany ? "warning" : color}
+        {...rest}
       />
     </Tooltip>
   );

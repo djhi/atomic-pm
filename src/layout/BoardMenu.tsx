@@ -108,6 +108,10 @@ const BoardMenuButton = () => {
       color="inherit"
       endIcon={<KeyboardArrowDownIcon />}
       label="pm.boards"
+      sx={{
+        fontSize: (theme) => theme.typography.fontSize,
+        fontWeight: theme => theme.typography.h6.fontWeight
+      }}
     />
   );
 };
