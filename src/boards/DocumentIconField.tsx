@@ -1,7 +1,7 @@
 import { FieldProps, useFieldValue } from "react-admin";
 import DocumentIcon from "@mui/icons-material/Notes";
 import DefaultFileIcon from "@mui/icons-material/InsertDriveFile";
-import { extension } from "mime-types";
+import mime from "mime";
 import { Chip, ChipProps } from "@mui/material";
 
 export const DocumentIconField = ({
@@ -13,7 +13,7 @@ export const DocumentIconField = ({
     return <DocumentIcon />;
   }
 
-  const fileExtension = extension(value);
+  const fileExtension = mime.getExtension(value);
   if (fileExtension) {
     return (
       <Chip

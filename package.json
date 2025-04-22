@@ -28,7 +28,8 @@
     "@tanstack/react-query-devtools": "^5.74.4",
     "cross-env": "^7.0.3",
     "lodash": "^4.17.21",
-    "mime-types": "^3.0.1",
+    "mime": "^4.0.7",
+    "nuqs": "^2.4.3",
     "ra-data-simple-rest": "^5.7.3",
     "ra-i18n-polyglot": "^5.7.3",
     "ra-input-rich-text": "^5.7.3",
@@ -47,7 +48,6 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
-    "@types/mime-types": "^2.1.4",
     "@types/node": "^22.14.1",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",

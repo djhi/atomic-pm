@@ -3,6 +3,7 @@ import { type RaRecord, useRecordContext } from "react-admin";
 import cloneDeep from "lodash/cloneDeep";
 import { useBoardLiveUpdates } from "./useBoardLiveUpdates";
 import { useQueryClient } from "@tanstack/react-query";
+import { useCardFilter } from "./useCardFilter";
 
 export const useBoard = (): [
   RaRecord | undefined,
@@ -10,12 +11,33 @@ export const useBoard = (): [
 ] => {
   const record = useRecordContext();
   const queryClient = useQueryClient();
+  const [cardFilter] = useCardFilter();
 
   const boardState = useState(cloneDeep(record));
   const [board, setBoard] = boardState;
   useEffect(() => {
     if (!record) return;
+    const filterRegexp = cardFilter
+      ? new RegExp(
+          `${cardFilter
+            .split(" ")
+            .map((word) => `(?=.*${word})`)
+            .join("")}.*`,
+          "ig",
+        )
+      : null;
     const updatedAt = Date.now() + 5 * 1000;
+    const board = {
+      ...record,
+      columns: record.columns.map((column: RaRecord) => ({
+        ...column,
+        cards: filterRegexp
+          ? column.cards.filter((card: RaRecord) =>
+              card.title.match(filterRegexp),
+            )
+          : column.cards,
+      })),
+    };
 
     const cards = record.columns.flatMap((column: RaRecord) => column.cards);
     const columns = record.columns.flatMap(
@@ -46,8 +68,8 @@ export const useBoard = (): [
       );
     }
 
-    setBoard(cloneDeep(record));
-  }, [record]);
+    setBoard(board);
+  }, [cardFilter,record]);
 
   useBoardLiveUpdates(board);
 

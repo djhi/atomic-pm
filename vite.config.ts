@@ -61,7 +61,7 @@ export default defineConfig(({ mode }) => ({
     host: true,
   },
   build: {
-    sourcemap: mode === "developement",
+    sourcemap: mode === "development",
   },
   resolve: { alias },
   base: process.env.VITE_BASE ?? "./",

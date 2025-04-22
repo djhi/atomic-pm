@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, RouterProviderProps } from "react-router";
 import { createBrowserRouter, createHashRouter } from "react-router-dom";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 import { App } from "./App";
 import { setupFakeServer } from "./providers/fakerest/setupFakeServer";
 
@@ -22,14 +23,16 @@ if (import.meta.env.VITE_PROVIDER === "fakerest") {
       onUnhandledRequest: "bypass", // Instruct MSW to ignore requests we don't handle
     })
     .then(() => {
-      const router = createHashRouter(
-        [
-          {
-            path: "*",
-            element: <App />,
-          },
-        ]
-      );
+      const router = createHashRouter([
+        {
+          path: "*",
+          element: (
+            <NuqsAdapter>
+              <App />
+            </NuqsAdapter>
+          ),
+        },
+      ]);
       initializeApp(router);
     });
 } else {
@@ -37,7 +40,11 @@ if (import.meta.env.VITE_PROVIDER === "fakerest") {
     [
       {
         path: "*",
-        element: <App />,
+        element: (
+          <NuqsAdapter>
+            <App />
+          </NuqsAdapter>
+        ),
       },
     ],
     { basename: import.meta.env.VITE_BASENAME },

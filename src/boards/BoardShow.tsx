@@ -17,25 +17,19 @@ import {
 } from "@hello-pangea/dnd";
 import { Route, Routes, useParams } from "react-router";
 import { Box, Stack, Typography } from "@mui/material";
-import debounce from "lodash/debounce";
 import { BoardMembersEdit } from "./BoardMembersEdit";
 import { ColumnList } from "./ColumnList";
 import { ColumnCreate } from "./ColumnCreate";
 import { ColumnEdit } from "./ColumnEdit";
 import { DocumentsButton } from "./DocumentsButton";
 import { DocumentList } from "./DocumentList";
-import { useBoard } from "./useBoard";
+import { useBoard } from "../useBoard";
 import { CardEdit } from "../cards/CardEdit";
 import { DocumentCreate } from "../documents/DocumentCreate";
 import { DocumentEdit } from "../documents/DocumentEdit";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { BoardContext, useBoardContext } from "../BoardContext";
-import {
-  BoardFilterContext,
-  BoardSetFilterContext,
-  useBoardSetFilterContext,
-} from "./BoardFilterContext";
-import { useState } from "react";
+import { useCardFilter } from "../useCardFilter";
 
 export const BoardShow = () => {
   const params = useParams<"boardId">();
@@ -55,20 +49,6 @@ export const BoardShow = () => {
 
 const BoardShowLayout = () => {
   const boardState = useBoard();
-  const [cardFilter, setCardFilter] = useState<RegExp | undefined>(undefined);
-  const debouncedSetCardFilter = useEvent(
-    debounce((query: string) => {
-      setCardFilter(
-        new RegExp(
-          `${query
-            .split(" ")
-            .map((word) => `(?=.*${word})`)
-            .join("")}.*`,
-          "ig",
-        ),
-      );
-    }, 300),
-  );
   return (
     <Box
       sx={{
@@ -90,39 +70,34 @@ const BoardShowLayout = () => {
       }}
     >
       <BoardContext.Provider value={boardState}>
-        {/* @ts-expect-error debounce type is wrong */}
-        <BoardSetFilterContext.Provider value={debouncedSetCardFilter}>
-          <BoardFilterContext.Provider value={cardFilter}>
-            <BoardShowActions />
-            <BoardShowDragAndDropLayout />
-            <Routes>
-              <Route
-                path="columns/*"
-                element={
-                  <>
-                    <ColumnCreate />
-                    <ColumnEdit />
-                  </>
-                }
-              />
-            </Routes>
-            <Routes>
-              <Route path="cards/*" element={<CardEdit />} />
-            </Routes>
-            <Routes>
-              <Route
-                path="documents/*"
-                element={
-                  <>
-                    <DocumentCreate />
-                    <DocumentEdit />
-                  </>
-                }
-              />
-            </Routes>
-            <DocumentList />
-          </BoardFilterContext.Provider>
-        </BoardSetFilterContext.Provider>
+        <BoardShowActions />
+        <BoardShowDragAndDropLayout />
+        <Routes>
+          <Route
+            path="columns/*"
+            element={
+              <>
+                <ColumnCreate />
+                <ColumnEdit />
+              </>
+            }
+          />
+        </Routes>
+        <Routes>
+          <Route path="cards/*" element={<CardEdit />} />
+        </Routes>
+        <Routes>
+          <Route
+            path="documents/*"
+            element={
+              <>
+                <DocumentCreate />
+                <DocumentEdit />
+              </>
+            }
+          />
+        </Routes>
+        <DocumentList />
       </BoardContext.Provider>
     </Box>
   );
@@ -206,7 +181,7 @@ const BoardTitle = () => {
 
 const BoardShowActions = () => {
   const board = useRecordContext();
-  const setFilter = useBoardSetFilterContext();
+  const [cardFilter, setCardFilter] = useCardFilter();
 
   return (
     <TopToolbar sx={{ justifyContent: "space-between", mb: 0, pt: 3, px: 0 }}>
@@ -217,7 +192,12 @@ const BoardShowActions = () => {
             source="q"
             helperText={false}
             sx={{ mb: 0 }}
-            onChange={(event) => setFilter(event.target.value)}
+            onChange={(eventOrValue) =>
+              setCardFilter(
+                typeof eventOrValue === "string" ? eventOrValue : eventOrValue.target.value,
+              )
+            }
+            defaultValue={cardFilter}
           />
         </Box>
         <DocumentsButton />

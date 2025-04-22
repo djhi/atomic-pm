@@ -1,7 +1,7 @@
 import { useRecordContext } from "react-admin";
 import { Link, useParams } from "react-router";
 import { useSignedUrl } from "../ra/useSignedUrl";
-import { extension } from "mime-types";
+import mime from "mime";
 
 export const DocumentLink = (
   props: React.HtmlHTMLAttributes<HTMLAnchorElement>,
@@ -28,7 +28,7 @@ export const DocumentLink = (
     );
   }
 
-  const fileExtension = extension(record.type);
+  const fileExtension = mime.getExtension(record.type);
   return (
     <a
       target="_blank"

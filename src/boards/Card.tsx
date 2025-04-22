@@ -21,17 +21,10 @@ import { useNavigate, useParams } from "react-router";
 import { MenuButton } from "../ra/MenuButton/MenuButton";
 import { useUpdateBoard } from "../useUpdateBoard";
 import { AvatarList } from "../ui/AvatarList";
-import { useBoardFilterContext } from "./BoardFilterContext";
 
 export const Card = () => {
   const card = useRecordContext();
   if (!card) return null;
-  const filter = useBoardFilterContext();
-  if (filter) {
-    if (!card.title.match(filter)) {
-      return null;
-    }
-  }
 
   const navigate = useNavigate();
   const params = useParams<"boardId">();
