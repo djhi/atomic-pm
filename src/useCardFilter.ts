@@ -9,7 +9,7 @@ export const useCardFilter = () => {
 
   const debouncedSetCardFilter = useEvent(
     debounce((query: string) => {
-      setValue(query);
+      setValue(query || null);
     }, 300),
   );
 
